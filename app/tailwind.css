@@ -9,4 +9,7 @@ body {
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
   }
+
+  min-height: 100vh;
+  min-width: 100vw;
 }
