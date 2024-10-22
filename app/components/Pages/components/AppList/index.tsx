@@ -8,6 +8,12 @@ export function AppListForOrg() {
   const params = useParams();
   const { data, isLoading, isError } = useGetAppListForOrg(params.org ?? "");
 
+  const _modData =
+    data?.map((item) => ({
+      ...item,
+      link: `/dashboard/${params.org}/${item.id}`,
+    })) ?? [];
+
   if (isLoading) {
     return (
       <Center>
@@ -35,7 +41,7 @@ export function AppListForOrg() {
   return (
     <Center>
       <Grid justify="center">
-        {data.map((item) => {
+        {_modData.map((item) => {
           return (
             <Grid.Col key={item.id} span="content">
               <AppCard {...item} key={item.id} />

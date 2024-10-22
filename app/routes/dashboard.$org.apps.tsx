@@ -1,5 +1,5 @@
 import { AppListForOrg } from "~/components/Pages/components/AppList";
 
-export default function Hello() {
+export default function AppsList() {
   return <AppListForOrg />;
 }

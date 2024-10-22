@@ -1,5 +1,6 @@
 import { Card, Avatar, Text, Group, Button } from "@mantine/core";
 import classes from "./index.module.css";
+import { useNavigate } from "@remix-run/react";
 enum PLATFORM {
   "ANDROID" = "ANDROID",
   "IOS" = "IOS",
@@ -26,7 +27,8 @@ const stats: StatsObject[] = [
   { label: "Releases", key: "numberOfReleases" },
 ];
 
-export function AppCard({ name, metrics, description }: AppCardProps) {
+export function AppCard({ name, metrics, description, link }: AppCardProps) {
+  const navigate = useNavigate();
   const items = stats.map((stat) => (
     <div key={stat.label}>
       <Text ta="center" fz="lg" fw={500}>
@@ -60,7 +62,16 @@ export function AppCard({ name, metrics, description }: AppCardProps) {
       <Group mt="md" justify="center" gap={30}>
         {items}
       </Group>
-      <Button fullWidth radius="md" mt="xl" size="md" variant="default">
+      <Button
+        fullWidth
+        radius="md"
+        mt="xl"
+        size="md"
+        variant="default"
+        onClick={() => {
+          navigate(link);
+        }}
+      >
         Go To App
       </Button>
     </Card>

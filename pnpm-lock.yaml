@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@mantine/core': ^7.13.2
   '@mantine/hooks': ^7.13.2
+  '@mantine/spotlight': ^7.13.3
   '@remix-run/dev': ^2.13.1
   '@remix-run/node': ^2.13.1
   '@remix-run/react': ^2.13.1
@@ -37,6 +38,7 @@ specifiers:
 dependencies:
   '@mantine/core': 7.13.2_400cd7bbc8a9faf5dbb4a7d3c841494b
   '@mantine/hooks': 7.13.2_react@18.3.1
+  '@mantine/spotlight': 7.13.3_e7d2f291e7419deacb786536bb273289
   '@remix-run/node': 2.13.1_typescript@5.6.3
   '@remix-run/react': 2.13.1_4117f3ed8d88042d1136609d66b0532c
   '@remix-run/serve': 2.13.1_typescript@5.6.3
@@ -936,6 +938,29 @@ packages:
 
   /@mantine/hooks/7.13.2_react@18.3.1:
     resolution: {integrity: sha512-NKfGl2sKZw6zF//AfAFJrVDftjg7DKCn0h8rwJBIZCKi9axhwlV0Mvlqe2dep8QuM7O/uLLJSymSKIv1gaxIJg==}
+    peerDependencies:
+      react: ^18.2.0
+    dependencies:
+      react: 18.3.1
+    dev: false
+
+  /@mantine/spotlight/7.13.3_e7d2f291e7419deacb786536bb273289:
+    resolution: {integrity: sha512-NvsePW2sL3JO0CuaetlJRGiiQuRRRqI12bfi0unk/gNB2ZaI/mJ1btD2N5weoL6akhKy6lV7S0xxX8YJSVXT+w==}
+    peerDependencies:
+      '@mantine/core': 7.13.3
+      '@mantine/hooks': 7.13.3
+      react: ^18.2.0
+      react-dom: ^18.2.0
+    dependencies:
+      '@mantine/core': 7.13.2_400cd7bbc8a9faf5dbb4a7d3c841494b
+      '@mantine/hooks': 7.13.2_react@18.3.1
+      '@mantine/store': 7.13.3_react@18.3.1
+      react: 18.3.1
+      react-dom: 18.3.1_react@18.3.1
+    dev: false
+
+  /@mantine/store/7.13.3_react@18.3.1:
+    resolution: {integrity: sha512-95nAgH6APhak1OwP2W3ogdWBiWkIDhDSbQEm2G9LTJLIJxzWSm1mLe5uDWluVEPZW2XFx137McuJb58i1A+QhQ==}
     peerDependencies:
       react: ^18.2.0
     dependencies:
