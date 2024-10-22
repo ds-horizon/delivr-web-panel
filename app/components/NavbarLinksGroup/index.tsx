@@ -7,15 +7,17 @@ import {
   Text,
   UnstyledButton,
   rem,
+  NavLink,
 } from "@mantine/core";
-import { Icon, IconCalendarStats, IconChevronRight } from "@tabler/icons-react";
+import { Icon, IconChevronRight } from "@tabler/icons-react";
 import classes from "./index.module.css";
-import { Link } from "@remix-run/react";
+import { useLocation, useNavigate, useParams } from "@remix-run/react";
 
-interface LinksGroupProps {
+export interface LinksGroupProps {
   icon: Icon;
   label: string;
   initiallyOpened?: boolean;
+  id: string;
   links?: { label: string; link: string }[];
 }
 
@@ -24,22 +26,29 @@ export function LinksGroup({
   label,
   initiallyOpened,
   links,
+  id,
 }: LinksGroupProps) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const params = useParams();
   const hasLinks = Array.isArray(links);
-  const [opened, setOpened] = useState(initiallyOpened || false);
+  const [opened, setOpened] = useState(
+    initiallyOpened || false || params.org === id
+  );
+
   const items = (hasLinks ? links : []).map((link) => (
-    <>
-      <Link to={link.link} />
-      <Text<"a">
-        component="a"
-        className={classes.link}
-        href={link.link}
-        key={link.label}
-        // onClick={(event) => event.preventDefault()}
-      >
-        {link.label}
-      </Text>
-    </>
+    <Text
+      className={classes.link}
+      key={id + link.label}
+      onClick={() => navigate(link.link)}
+    >
+      <NavLink
+        key={link.link}
+        label={link.label}
+        variant="subtle"
+        active={location.pathname === link.link}
+      />
+    </Text>
   ));
 
   return (
@@ -70,23 +79,5 @@ export function LinksGroup({
       </UnstyledButton>
       {hasLinks ? <Collapse in={opened}>{items}</Collapse> : null}
     </>
-  );
-}
-
-const mockdata = {
-  label: "Releases",
-  icon: IconCalendarStats,
-  links: [
-    { label: "Upcoming releases", link: "/" },
-    { label: "Previous releases", link: "/" },
-    { label: "Releases schedule", link: "/" },
-  ],
-};
-
-export function NavbarLinksGroup() {
-  return (
-    <Box mih={220} p="md">
-      <LinksGroup {...mockdata} />
-    </Box>
   );
 }

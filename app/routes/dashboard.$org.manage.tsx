@@ -1,3 +1,3 @@
 export default function Hello() {
-  return <div>name</div>;
+  return <div>manage tab</div>;
 }

@@ -1,5 +1,5 @@
 import { Intro } from "~/components/Pages/Intro";
 
-export default function IntoPage() {
+export default function IntroPage() {
   return <Intro />;
 }
