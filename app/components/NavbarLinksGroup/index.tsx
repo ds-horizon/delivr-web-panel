@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Group,
   Box,
@@ -35,6 +35,10 @@ export function LinksGroup({
   const [opened, setOpened] = useState(
     initiallyOpened || false || params.org === id
   );
+
+  useEffect(() => {
+    setOpened(params.org === id);
+  }, [params.org]);
 
   const items = (hasLinks ? links : []).map((link) => (
     <Text

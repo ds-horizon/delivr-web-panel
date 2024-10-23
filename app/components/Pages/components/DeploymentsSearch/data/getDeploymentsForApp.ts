@@ -76,7 +76,7 @@ const data: DeploymentData[] = [
   },
   {
     id: "deploy-012",
-    name: "Feature Release v3.0",
+    name: "Production",
     createdBy: "JaneSmith",
     deploymentKey: "ghi432jkl765",
   },

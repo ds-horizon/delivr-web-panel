@@ -1,5 +1,5 @@
-import { DeploymentsSearch } from "~/components/Pages/components/DeploymentsSearchList";
+import { DeploymentList } from "~/components/Pages/DeploymentList";
 
 export default function AppDetails() {
-  return <DeploymentsSearch />;
+  return <DeploymentList />;
 }

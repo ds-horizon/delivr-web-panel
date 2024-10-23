@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useGetDeploymentsForApp } from "./hooks/getDeploymentsForApp";
 import { spotlight, Spotlight } from "@mantine/spotlight";
-import { IconSearch } from "@tabler/icons-react";
+import { IconRocket, IconSearch } from "@tabler/icons-react";
 import { Box, Button, Group, ScrollArea, Text } from "@mantine/core";
 import { useSearchParams } from "@remix-run/react";
 
@@ -27,7 +27,8 @@ export const DeploymentsSearch = () => {
               });
             }}
           >
-            <Box p={10}>
+            <Box p={15} display={"flex"}>
+              <IconRocket stroke={1.5} />
               <Text>{item.name}</Text>
             </Box>
           </Spotlight.Action>
