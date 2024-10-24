@@ -38,7 +38,7 @@ export function LinksGroup({
 
   useEffect(() => {
     setOpened(params.org === id);
-  }, [params.org]);
+  }, [id, params.org]);
 
   const items = (hasLinks ? links : []).map((link) => (
     <Text
