@@ -1,6 +1,6 @@
 import { mockApiData } from "~/utils/mockApiData";
 
-type ReleaseListResponse = {
+export type ReleaseListResponse = {
   label: string;
   targetVersions: string;
   status: boolean;

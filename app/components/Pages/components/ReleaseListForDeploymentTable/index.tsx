@@ -4,33 +4,16 @@ import { Table, ScrollArea, Text } from "@mantine/core";
 import classes from "./index.module.css";
 import { useGetReleaseListForDeployment } from "./hooks/useGetReleaseListForDeployment";
 import { useSearchParams } from "@remix-run/react";
+import { ReleaseListResponse } from "./data/getReleaseListForDeployment";
+type RowsProps = {
+  isLoading: boolean;
+  isError: boolean;
+  data?: ReleaseListResponse[];
+};
 
-export function ReleaseListForDeploymentTable() {
-  const { data, isLoading, refetch, isFetching } =
-    useGetReleaseListForDeployment("");
-  const [searchParams] = useSearchParams();
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    console.log("helloooo");
-    refetch();
-  }, [searchParams.get("deployment")]);
-
-  let rows = data?.map((row) => (
-    <Table.Tr key={row.label}>
-      <Table.Td>{row.label}</Table.Td>
-      <Table.Td>{row.targetVersions}</Table.Td>
-      <Table.Td>{row.status ? "Active" : "Inactive"}</Table.Td>
-      <Table.Td>{row.mandatory ? "Yes" : "No"}</Table.Td>
-      <Table.Td>{row.rollbacks}</Table.Td>
-      <Table.Td>{row.activeDevices}</Table.Td>
-      <Table.Td>{row.rollout}%</Table.Td>
-      <Table.Td>{new Date(row.releasedAt).toLocaleDateString()}</Table.Td>
-    </Table.Tr>
-  ));
-
-  if (isLoading || isFetching) {
-    rows = (
+export const Rows = ({ isLoading, isError, data }: RowsProps) => {
+  if (isLoading) {
+    return (
       <Table.Tr>
         <Table.Td colSpan={8}>
           <Text>Loading</Text>
@@ -39,15 +22,54 @@ export function ReleaseListForDeploymentTable() {
     );
   }
 
-  // if (!data) {
-  //   rows = (
-  //     <Table.Tr>
-  //       <Table.Td colSpan={8}>
-  //         <Text>No Data</Text>
-  //       </Table.Td>
-  //     </Table.Tr>
-  //   );
-  // }
+  if (isError) {
+    return (
+      <Table.Tr>
+        <Table.Td colSpan={8}>
+          <Text>Something went Wrong!</Text>
+        </Table.Td>
+      </Table.Tr>
+    );
+  }
+
+  if (!data?.length) {
+    return (
+      <Table.Tr>
+        <Table.Td colSpan={8}>
+          <Text>No Data Found</Text>
+        </Table.Td>
+      </Table.Tr>
+    );
+  }
+
+  return (
+    <>
+      {data.map((row) => (
+        <Table.Tr key={row.label}>
+          <Table.Td>{row.label}</Table.Td>
+          <Table.Td>{row.targetVersions}</Table.Td>
+          <Table.Td>{row.status ? "Active" : "Inactive"}</Table.Td>
+          <Table.Td>{row.mandatory ? "Yes" : "No"}</Table.Td>
+          <Table.Td>{row.rollbacks}</Table.Td>
+          <Table.Td>{row.activeDevices}</Table.Td>
+          <Table.Td>{row.rollout}%</Table.Td>
+          <Table.Td>{new Date(row.releasedAt).toLocaleDateString()}</Table.Td>
+        </Table.Tr>
+      ))}
+    </>
+  );
+};
+
+export function ReleaseListForDeploymentTable() {
+  const { data, isLoading, refetch, isFetching, isError } =
+    useGetReleaseListForDeployment("");
+  const [searchParams] = useSearchParams();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    console.log("helloooo");
+    refetch();
+  }, [searchParams.get("deployment")]);
 
   return (
     <ScrollArea
@@ -76,7 +98,13 @@ export function ReleaseListForDeploymentTable() {
             <Table.Th>Released At</Table.Th>
           </Table.Tr>
         </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
+        <Table.Tbody>
+          <Rows
+            isLoading={isLoading || isFetching}
+            isError={isError}
+            data={data}
+          />
+        </Table.Tbody>
       </Table>
     </ScrollArea>
   );

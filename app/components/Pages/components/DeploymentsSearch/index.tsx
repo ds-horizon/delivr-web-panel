@@ -1,59 +1,63 @@
-import { useState } from "react";
-
 import { useGetDeploymentsForApp } from "./hooks/getDeploymentsForApp";
-import { spotlight, Spotlight } from "@mantine/spotlight";
-import { IconRocket, IconSearch } from "@tabler/icons-react";
-import { Box, Button, Group, ScrollArea, Text } from "@mantine/core";
+import {
+  createSpotlight,
+  Spotlight,
+  SpotlightActionData,
+} from "@mantine/spotlight";
+import { IconDashboard, IconSearch } from "@tabler/icons-react";
+import { Button, rem } from "@mantine/core";
 import { useSearchParams } from "@remix-run/react";
 
+const [deploymentSearch, deploymentSearchActions] = createSpotlight();
+
 export const DeploymentsSearch = () => {
-  const [query, setQuery] = useState("");
   const [_, setSearchParams] = useSearchParams();
   const { data } = useGetDeploymentsForApp();
 
-  const items =
-    data
-      ?.filter((item) =>
-        item.name.toLowerCase().includes(query.toLowerCase().trim())
-      )
-      .map((item) => (
-        <Group wrap="nowrap" w="100%" key={item.id}>
-          <Spotlight.Action
-            key={item.id}
-            onClick={() => {
-              setSearchParams((prev) => {
-                prev.set("deployment", item.name);
-                return prev;
-              });
-            }}
-          >
-            <Box p={15} display={"flex"}>
-              <IconRocket stroke={1.5} />
-              <Text>{item.name}</Text>
-            </Box>
-          </Spotlight.Action>
-        </Group>
-      )) ?? [];
+  const items: SpotlightActionData[] =
+    data?.map((item) => {
+      return {
+        id: item.id,
+        label: item.name,
+        description: item.deploymentKey,
+        onClick: () => {
+          setSearchParams((prev) => {
+            prev.set("deployment", item.name);
+            return prev;
+          });
+        },
+        leftSection: (
+          <IconDashboard
+            style={{ width: rem(24), height: rem(24) }}
+            stroke={1.5}
+          />
+        ),
+      };
+    }) ?? [];
 
   return (
     <>
-      <Button onClick={spotlight.open}>Search For Deployments</Button>
-
-      <Spotlight.Root query={query} onQueryChange={setQuery} scrollable>
-        <Spotlight.Search
-          placeholder="Search..."
-          leftSection={<IconSearch stroke={1.5} />}
-        />
-        <Spotlight.ActionsList>
-          <ScrollArea.Autosize mah={350}>
-            {items.length > 0 ? (
-              items
-            ) : (
-              <Spotlight.Empty>Nothing found...</Spotlight.Empty>
-            )}
-          </ScrollArea.Autosize>
-        </Spotlight.ActionsList>
-      </Spotlight.Root>
+      <Button onClick={deploymentSearchActions.open}>
+        Search For Deployments
+      </Button>
+      <Spotlight
+        store={deploymentSearch}
+        actions={items}
+        nothingFound="Nothing found..."
+        highlightQuery
+        scrollable
+        shortcut={["mod + K"]}
+        maxHeight={350}
+        searchProps={{
+          leftSection: (
+            <IconSearch
+              style={{ width: rem(20), height: rem(20) }}
+              stroke={1.5}
+            />
+          ),
+          placeholder: "Search...",
+        }}
+      />
     </>
   );
 };
