@@ -1,6 +1,7 @@
 "use client";
 import {
   ActionIcon,
+  Box,
   Card,
   CopyButton,
   Flex,
@@ -14,6 +15,7 @@ import { DeploymentsSearch } from "../components/DeploymentsSearch";
 import { useGetDeploymentsForApp } from "../components/DeploymentsSearch/hooks/getDeploymentsForApp";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
 import { ReleaseListForDeploymentTable } from "../components/ReleaseListForDeploymentTable";
+import { ReleaseDeatilCardModal } from "../components/ReleaseDeatilCardModal";
 
 export const DeploymentList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -25,7 +27,7 @@ export const DeploymentList = () => {
 
   if (!searchParams.get("deployment")) {
     setSearchParams((p) => {
-      p.set("deployment", "Production");
+      p.set("deployment", data?.[0].name ?? "Production");
       return p;
     });
   }
@@ -79,6 +81,19 @@ export const DeploymentList = () => {
         <DeploymentsSearch />
       </Flex>
       <ReleaseListForDeploymentTable />
+      <Box h={"50vh"} w={"40vw"}>
+        <ReleaseDeatilCardModal
+          id={searchParams.get("releaseId")}
+          opened={!!searchParams.get("releaseId")}
+          close={() => {
+            setSearchParams((p) => {
+              p.delete("releaseId");
+              return p;
+            });
+          }}
+          deploymentName={details?.name}
+        />
+      </Box>
     </>
   );
 };

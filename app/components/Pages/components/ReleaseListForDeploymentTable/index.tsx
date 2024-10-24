@@ -8,10 +8,11 @@ import { ReleaseListResponse } from "./data/getReleaseListForDeployment";
 type RowsProps = {
   isLoading: boolean;
   isError: boolean;
+  onClick: (id: string) => void;
   data?: ReleaseListResponse[];
 };
 
-export const Rows = ({ isLoading, isError, data }: RowsProps) => {
+export const Rows = ({ isLoading, isError, data, onClick }: RowsProps) => {
   if (isLoading) {
     return (
       <Table.Tr>
@@ -45,7 +46,7 @@ export const Rows = ({ isLoading, isError, data }: RowsProps) => {
   return (
     <>
       {data.map((row) => (
-        <Table.Tr key={row.label}>
+        <Table.Tr key={row.label} onClick={() => onClick(row.id)}>
           <Table.Td>{row.label}</Table.Td>
           <Table.Td>{row.targetVersions}</Table.Td>
           <Table.Td>{row.status ? "Active" : "Inactive"}</Table.Td>
@@ -63,11 +64,10 @@ export const Rows = ({ isLoading, isError, data }: RowsProps) => {
 export function ReleaseListForDeploymentTable() {
   const { data, isLoading, refetch, isFetching, isError } =
     useGetReleaseListForDeployment("");
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    console.log("helloooo");
     refetch();
   }, [searchParams.get("deployment")]);
 
@@ -103,6 +103,12 @@ export function ReleaseListForDeploymentTable() {
             isLoading={isLoading || isFetching}
             isError={isError}
             data={data}
+            onClick={(id: string) => {
+              setSearchParams((p) => {
+                p.set("releaseId", id);
+                return p;
+              });
+            }}
           />
         </Table.Tbody>
       </Table>
