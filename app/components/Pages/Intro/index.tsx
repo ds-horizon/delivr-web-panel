@@ -12,8 +12,10 @@ import {
 import { IconCheck } from "@tabler/icons-react";
 import image from "./image.svg";
 import classes from "./index.module.css";
+import { useNavigate } from "@remix-run/react";
 
 export function Intro() {
+  const navigate = useNavigate();
   return (
     <Container size="md">
       <div className={classes.inner}>
@@ -57,7 +59,14 @@ export function Intro() {
           </List>
 
           <Group mt={30}>
-            <Button radius="xl" size="md" className={classes.control}>
+            <Button
+              radius="xl"
+              size="md"
+              className={classes.control}
+              onClick={() => {
+                navigate("/dashboard/create/app");
+              }}
+            >
               Create App
             </Button>
             <Button
@@ -65,6 +74,9 @@ export function Intro() {
               radius="xl"
               size="md"
               className={classes.control}
+              onClick={() => {
+                navigate("/dashboard/create/org");
+              }}
             >
               Create Organization
             </Button>
