@@ -21,6 +21,7 @@ import classes from "./index.module.css";
 import { ReleaseListResponse } from "../ReleaseListForDeploymentTable/data/getReleaseListForDeployment";
 import { useGetReleaseDataForDeployment } from "./hooks/useGetReleaseDataForDeployment";
 import { formatDate } from "~/utils/formatDate";
+import { ReleaseEditFormModal } from "../ReleaseEditForm";
 
 type StatsObject = {
   icon: Icon;
@@ -36,9 +37,10 @@ const stats: StatsObject[] = [
 
 export type ReleaseDataCardProps = {
   id: string;
+  onEditClick: () => void;
 };
 
-export function ReleaseDetailCard({ id }: ReleaseDataCardProps) {
+export function ReleaseDetailCard({ id, onEditClick }: ReleaseDataCardProps) {
   const { data, isError, isLoading, isFetching } =
     useGetReleaseDataForDeployment(id);
 
@@ -123,9 +125,12 @@ export function ReleaseDetailCard({ id }: ReleaseDataCardProps) {
             </Tooltip>
           </Flex>
 
-          <Button radius="xl">Edit</Button>
+          <Button radius="xl" onClick={onEditClick}>
+            Edit
+          </Button>
         </Flex>
       </Card.Section>
+      <ReleaseEditFormModal data={data} />
     </Card>
   );
 }

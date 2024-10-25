@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@mantine/core': ^7.13.2
+  '@mantine/form': ^7.13.4
   '@mantine/hooks': ^7.13.2
   '@mantine/spotlight': ^7.13.3
   '@remix-run/dev': ^2.13.1
@@ -38,6 +39,7 @@ specifiers:
 
 dependencies:
   '@mantine/core': 7.13.2_400cd7bbc8a9faf5dbb4a7d3c841494b
+  '@mantine/form': 7.13.4_react@18.3.1
   '@mantine/hooks': 7.13.2_react@18.3.1
   '@mantine/spotlight': 7.13.3_e7d2f291e7419deacb786536bb273289
   '@remix-run/node': 2.13.1_typescript@5.6.3
@@ -936,6 +938,16 @@ packages:
       type-fest: 4.26.1
     transitivePeerDependencies:
       - '@types/react'
+    dev: false
+
+  /@mantine/form/7.13.4_react@18.3.1:
+    resolution: {integrity: sha512-JzgUzzCpTmXeRxYs6iXM8fq7vOESrPC0Jk9nEgxu/5DO84Ah7ExthinTt4QiXityznXOOLl5U0BgG0j3aXEuew==}
+    peerDependencies:
+      react: ^18.2.0
+    dependencies:
+      fast-deep-equal: 3.1.3
+      klona: 2.0.6
+      react: 18.3.1
     dev: false
 
   /@mantine/hooks/7.13.2_react@18.3.1:
@@ -3165,7 +3177,6 @@ packages:
 
   /fast-deep-equal/3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
-    dev: true
 
   /fast-glob/3.3.2:
     resolution: {integrity: sha512-oX2ruAFQwf/Orj8m737Y5adxDQO0LAB7/S5MnxCdTNDd4p6BsyIVsv9JQsATbTSq8KHRpLwIHbVlUNatxd+1Ow==}
@@ -4008,6 +4019,11 @@ packages:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
     engines: {node: '>=6'}
     dev: true
+
+  /klona/2.0.6:
+    resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
+    engines: {node: '>= 8'}
+    dev: false
 
   /language-subtag-registry/0.3.23:
     resolution: {integrity: sha512-0K65Lea881pHotoGEa5gDlMxt3pctLi2RplBb7Ezh4rRdLEOtgi7n4EwK9lamnUCkKBqaeKRVebTq6BAxSkpXQ==}

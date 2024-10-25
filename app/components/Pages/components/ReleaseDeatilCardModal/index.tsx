@@ -1,5 +1,6 @@
 import { Modal } from "@mantine/core";
 import { ReleaseDetailCard } from "../ReleaseDetailCard";
+import { useSearchParams } from "@remix-run/react";
 
 export type ReleaseDeatilCardModalProps = {
   opened: boolean;
@@ -14,6 +15,7 @@ export const ReleaseDeatilCardModal = ({
   close,
   deploymentName,
 }: ReleaseDeatilCardModalProps) => {
+  const [_, setSearchParams] = useSearchParams();
   return id ? (
     <Modal
       opened={opened}
@@ -22,7 +24,15 @@ export const ReleaseDeatilCardModal = ({
       centered
       size={"xl"}
     >
-      <ReleaseDetailCard id={id} />
+      <ReleaseDetailCard
+        id={id}
+        onEditClick={() =>
+          setSearchParams((p) => {
+            p.set("edit", "true");
+            return p;
+          })
+        }
+      />
     </Modal>
   ) : (
     <></>
