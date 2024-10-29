@@ -4,6 +4,12 @@ import { NavbarNested } from "~/components/NavbarNested";
 import { useDisclosure } from "@mantine/hooks";
 import { Logo } from "~/components/Logo";
 import { Outlet } from "@remix-run/react";
+import { LoaderFunctionArgs } from "@remix-run/node";
+import { AuthenticatorService } from "~/.server/services/Auth/Auth";
+
+export const loader = ({ request }: LoaderFunctionArgs) => {
+  return AuthenticatorService.isAuthenticated(request);
+};
 
 export default function Hello() {
   const [opened, { toggle }] = useDisclosure();

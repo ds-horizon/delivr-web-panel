@@ -46,7 +46,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <QueryClientProvider client={queryClient}>
-          <MantineProvider theme={theme}>{children}</MantineProvider>
+          <MantineProvider theme={theme} defaultColorScheme="auto">{children}</MantineProvider>
         </QueryClientProvider>
         <ScrollRestoration />
         <Scripts />

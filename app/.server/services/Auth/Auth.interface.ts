@@ -5,7 +5,7 @@ type User = {
 import type { Session, SessionData } from "@remix-run/node";
 
 export enum AuthenticatorRoutes {
-  LOGIN = "/auth/login",
+  LOGIN = "/login",
   LOGOUT = "/logout",
 }
 
