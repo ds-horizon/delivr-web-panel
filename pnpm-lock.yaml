@@ -31,7 +31,7 @@ specifiers:
   react-dom: ^18.2.0
   react-query: ^3.39.3
   remix-auth: ^3.7.0
-  remix-auth-socials: ^2.1.0
+  remix-auth-google: ^2.0.0
   tailwindcss: ^3.4.4
   typescript: ^5.1.6
   vite: ^5.1.0
@@ -53,7 +53,7 @@ dependencies:
   react-dom: 18.3.1_react@18.3.1
   react-query: 3.39.3_react-dom@18.3.1+react@18.3.1
   remix-auth: 3.7.0_@remix-run+react@2.13.1
-  remix-auth-socials: 2.1.0_7ab3ceabb28f9bef50aa7ffd86cf9d7e
+  remix-auth-google: 2.0.0_remix-auth@3.7.0
 
 devDependencies:
   '@remix-run/dev': 2.13.1_8756dfd1614f4c0efea842a21a8e33ff
@@ -1071,31 +1071,6 @@ packages:
     dependencies:
       which: 3.0.1
     dev: true
-
-  /@oslojs/asn1/0.2.3:
-    resolution: {integrity: sha512-cZOLRzKfv3JTxIzNTAoiN0+utB0is9cQOOp5Xq++SE8MtIXXDLFblZGFrHCdTXLGXvUZmopeB/dFZrkh5MpKqQ==}
-    dependencies:
-      '@oslojs/binary': 0.4.0
-    dev: false
-
-  /@oslojs/binary/0.4.0:
-    resolution: {integrity: sha512-xi1MOhP7t9TFV1nOmzG0qIdCXdFXbeMYskhfI5eakBlU8re/xO+qjdyiBO+hl+nK4z4lZWCDjlgH8BXUWQDWFw==}
-    dev: false
-
-  /@oslojs/crypto/0.6.2:
-    resolution: {integrity: sha512-2y39MOLkkCvaBdi2TrBDtk7106fayDHRLz11K1/UvtW28VgL5/TbV/tPRTmSA5dhvQQqLYDJj3zsBkjeP+aD2w==}
-    dependencies:
-      '@oslojs/asn1': 0.2.3
-      '@oslojs/binary': 0.4.0
-    dev: false
-
-  /@oslojs/encoding/1.1.0:
-    resolution: {integrity: sha512-70wQhgYmndg4GCPxPPxPGevRKqTIJ2Nh4OkiMWmDAVYsTQ+Ta7Sq+rPevXyXGdzr30/qZBnyOalCszoMxlyldQ==}
-    dev: false
-
-  /@oslojs/oauth2/0.5.0:
-    resolution: {integrity: sha512-t70+e4EgnzTbU4MrUWXzqWN2A6RJrlSSvwwuBv6E0Ap6/nsIXrjsdRWeTcSvvXTcC6fi0YdWaqEWLipcEm2Cgw==}
-    dev: false
 
   /@pkgjs/parseargs/0.11.0:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -2330,10 +2305,6 @@ packages:
       shebang-command: 2.0.0
       which: 2.0.2
     dev: true
-
-  /crypto-js/4.2.0:
-    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
-    dev: false
 
   /css-what/6.1.0:
     resolution: {integrity: sha512-HTUrgRJ7r4dsZKU6GjmpfRK1O76h97Z8MfS1G0FozR+oF2kG6Vfe8JE6zwrkbxigziPHinCJ+gCPjA9EaBDtRw==}
@@ -5623,53 +5594,6 @@ packages:
       unified: 10.1.2
     dev: true
 
-  /remix-auth-discord/1.4.1_@remix-run+react@2.13.1:
-    resolution: {integrity: sha512-H46DiPMYodLwr0TBoLmHy5D2fgfBJH3JjJM1drK5frJoN9XoL/OCvq3TYu/enDbuI2NPLjHLk7k/die4fnv/lQ==}
-    peerDependencies:
-      '@remix-run/server-runtime': ^2.1.0
-    dependencies:
-      remix-auth: 3.7.0_@remix-run+react@2.13.1
-      remix-auth-oauth2: 1.11.2_remix-auth@3.7.0
-    transitivePeerDependencies:
-      - '@remix-run/react'
-      - supports-color
-    dev: false
-
-  /remix-auth-facebook/1.0.1_remix-auth@3.7.0:
-    resolution: {integrity: sha512-i8uTyNGV97fRKzZ1+HTaEDjvH6rg3oyVPRbvHVU2FxWzjUtTCbpqudsQZbCSL40oO5ct+V7NIt+lT+DRCl3dlA==}
-    peerDependencies:
-      '@remix-run/server-runtime': ^1.5.1
-      remix-auth: ^3.2.2
-    dependencies:
-      remix-auth: 3.7.0_@remix-run+react@2.13.1
-      remix-auth-oauth2: 1.11.2_remix-auth@3.7.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /remix-auth-github/1.8.0_0a9a9f2c1d95b93fe18b31b19eb4cc52:
-    resolution: {integrity: sha512-gC2yrGtac04373/Ib59EN32NMSINfqvkXUPlwaHsYKT3AYAxvZV2H2Y3DDRvNB0fRVrjZHgHVCXCPiqtVr8Y6g==}
-    engines: {node: ^18.0.0 || ^20.0.0 || >=20.0.0}
-    peerDependencies:
-      '@remix-run/cloudflare': ^1.0.0 || ^2.0.0
-      '@remix-run/deno': ^1.0.0 || ^2.0.0
-      '@remix-run/node': ^1.0.0 || ^2.0.0
-      remix-auth: ^3.6.0
-    peerDependenciesMeta:
-      '@remix-run/cloudflare':
-        optional: true
-      '@remix-run/deno':
-        optional: true
-      '@remix-run/node':
-        optional: true
-    dependencies:
-      '@remix-run/node': 2.13.1_typescript@5.6.3
-      remix-auth: 3.7.0_@remix-run+react@2.13.1
-      remix-auth-oauth2: 2.4.0_0a9a9f2c1d95b93fe18b31b19eb4cc52
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
   /remix-auth-google/2.0.0_remix-auth@3.7.0:
     resolution: {integrity: sha512-qP38N1ZJADz+HlH2lrEn/rSL6m5Dwcnz8xUFDhbHecDMl9FU/UpkUx3w8jj5XhNSnkSue/GWT+p7OEkatgbXNA==}
     peerDependencies:
@@ -5679,30 +5603,6 @@ packages:
       remix-auth: 3.7.0_@remix-run+react@2.13.1
       remix-auth-oauth2: 1.11.2_remix-auth@3.7.0
     transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /remix-auth-linkedin/2.0.1_remix-auth@3.7.0:
-    resolution: {integrity: sha512-EBbyhBZEDP2MaRluLiFOqk8NX8YYu7aXYXC9Aky0PTAU6H1zYw0WI85/j66xiL94aL/i6TgGiT+c//SWpW/pHA==}
-    peerDependencies:
-      '@remix-run/server-runtime': ^1.0.0 || ^2.0.0
-      remix-auth: ^3.6.0
-    dependencies:
-      remix-auth: 3.7.0_@remix-run+react@2.13.1
-      remix-auth-oauth2: 1.11.2_remix-auth@3.7.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /remix-auth-microsoft/2.0.1_@remix-run+react@2.13.1:
-    resolution: {integrity: sha512-7utTr9/5ax9f8VKrl4x2khguD0xRtBIaJSRaHJ2qOkan0WlcwHpcC18i3bktr6UfcXqjsgZVzBDnh0eOkEbruA==}
-    peerDependencies:
-      '@remix-run/server-runtime': ^1.0.0 || ^2.0.0
-    dependencies:
-      remix-auth: 3.7.0_@remix-run+react@2.13.1
-      remix-auth-oauth2: 1.11.2_remix-auth@3.7.0
-    transitivePeerDependencies:
-      - '@remix-run/react'
       - supports-color
     dev: false
 
@@ -5716,66 +5616,6 @@ packages:
       remix-auth: 3.7.0_@remix-run+react@2.13.1
       uuid: 9.0.1
     transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /remix-auth-oauth2/2.4.0_0a9a9f2c1d95b93fe18b31b19eb4cc52:
-    resolution: {integrity: sha512-lsUBvYispJ/MgVR45IYZjqJgYupefLTxEcSiDoP6X3NPn9PUDCDp8okB5aiXZHBCi0/qL6XYCEHRwNvBJaaENw==}
-    engines: {node: ^18.0.0 || ^20.0.0 || >=20.0.0}
-    peerDependencies:
-      '@remix-run/cloudflare': ^1.0.0 || ^2.0.0
-      '@remix-run/deno': ^1.0.0 || ^2.0.0
-      '@remix-run/node': ^1.0.0 || ^2.0.0
-      remix-auth: ^3.6.0
-    peerDependenciesMeta:
-      '@remix-run/cloudflare':
-        optional: true
-      '@remix-run/deno':
-        optional: true
-      '@remix-run/node':
-        optional: true
-    dependencies:
-      '@oslojs/crypto': 0.6.2
-      '@oslojs/encoding': 1.1.0
-      '@oslojs/oauth2': 0.5.0
-      '@remix-run/node': 2.13.1_typescript@5.6.3
-      debug: 4.3.7
-      remix-auth: 3.7.0_@remix-run+react@2.13.1
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /remix-auth-socials/2.1.0_7ab3ceabb28f9bef50aa7ffd86cf9d7e:
-    resolution: {integrity: sha512-a6XeFGixHXL7o5CMRL8A7RkFlSdwqAweNHM1zDVqL2nGCNBpUKbEa8LzmGcVG36FfaRbhhZhp1OfCahKJmeThQ==}
-    dependencies:
-      remix-auth: 3.7.0_@remix-run+react@2.13.1
-      remix-auth-discord: 1.4.1_@remix-run+react@2.13.1
-      remix-auth-facebook: 1.0.1_remix-auth@3.7.0
-      remix-auth-github: 1.8.0_0a9a9f2c1d95b93fe18b31b19eb4cc52
-      remix-auth-google: 2.0.0_remix-auth@3.7.0
-      remix-auth-linkedin: 2.0.1_remix-auth@3.7.0
-      remix-auth-microsoft: 2.0.1_@remix-run+react@2.13.1
-      remix-auth-twitter: 2.1.0_@remix-run+react@2.13.1
-    transitivePeerDependencies:
-      - '@remix-run/cloudflare'
-      - '@remix-run/deno'
-      - '@remix-run/node'
-      - '@remix-run/react'
-      - '@remix-run/server-runtime'
-      - supports-color
-    dev: false
-
-  /remix-auth-twitter/2.1.0_@remix-run+react@2.13.1:
-    resolution: {integrity: sha512-uoayITEtVJRYjBy9N9c14ahZrBnCr+LYzGTOqtD/yqM0qKRvylruqfUFA00DMJNSg3Zsy0qu41ko/DPzw64/hA==}
-    peerDependencies:
-      '@remix-run/server-runtime': ^1.19
-    dependencies:
-      crypto-js: 4.2.0
-      debug: 4.3.7
-      remix-auth: 3.7.0_@remix-run+react@2.13.1
-      uuid: 8.3.2
-    transitivePeerDependencies:
-      - '@remix-run/react'
       - supports-color
     dev: false
 

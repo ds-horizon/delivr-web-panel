@@ -1,12 +1,20 @@
 import { Authenticator } from "remix-auth";
-import { GoogleStrategy, SocialsProvider } from "remix-auth-socials";
+import { GoogleStrategy } from "remix-auth-google";
 
 import { SessionStorageService } from "../SessionStorage";
 
 import { getAuthenticatorCallbackUrl } from "./Auth.utils";
 import { AuthenticatorRoutes, UserReturnType } from "./Auth.interface";
-import { DataFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { env } from "../config";
+
+export enum SocialsProvider {
+  GOOGLE = "google",
+}
+
+type AuthRequest =
+  | LoaderFunctionArgs["request"]
+  | ActionFunctionArgs["request"];
 
 export class Auth {
   static authenticator = new Authenticator(
@@ -26,14 +34,14 @@ export class Auth {
           prompt: "consent",
         },
         async (args) => {
-          // return await userDTO.findOrCreate(args.profile);
+          console.log(args);
           return args;
         }
       )
     );
   }
 
-  async getUser(request: DataFunctionArgs["request"]): Promise<UserReturnType> {
+  async getUser(request: AuthRequest): Promise<UserReturnType> {
     const session = await SessionStorageService.sessionStorage.getSession(
       request.headers.get("Cookie")
     );
@@ -60,27 +68,24 @@ export class Auth {
     return { user: session.get("_session") ?? null, session };
   }
 
-  callback(provider: SocialsProvider, request: DataFunctionArgs["request"]) {
+  callback(provider: SocialsProvider, request: AuthRequest) {
     return Auth.authenticator.authenticate(provider, request, {
       failureRedirect: AuthenticatorRoutes.LOGIN,
-      successRedirect: "/console/releases",
+      successRedirect: "/dashboard",
     });
   }
 
-  async authenticate(
-    provider: SocialsProvider,
-    request: DataFunctionArgs["request"]
-  ) {
+  async authenticate(provider: SocialsProvider, request: AuthRequest) {
     return Auth.authenticator.authenticate(provider, request);
   }
 
-  async isAuthenticated(request: DataFunctionArgs["request"]) {
+  async isAuthenticated(request: AuthRequest) {
     return await Auth.authenticator.isAuthenticated(request, {
       failureRedirect: AuthenticatorRoutes.LOGIN,
     });
   }
 
-  async logout(request: DataFunctionArgs["request"]) {
+  async logout(request: AuthRequest) {
     return await Auth.authenticator.logout(request, {
       redirectTo: AuthenticatorRoutes.LOGIN,
     });
