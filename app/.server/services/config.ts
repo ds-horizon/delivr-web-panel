@@ -10,6 +10,7 @@ enum EnvArgs {
   AWS_S3_BUCKET = "AWS_S3_BUCKET",
   aws_secret_access_key = "aws_secret_access_key",
   aws_access_key_id = "aws_access_key_id",
+  CODEPUSH_SERVER_URL = "CODEPUSH_SERVER_URL",
 }
 
 type TEnv = Record<EnvArgs, string>;
@@ -26,6 +27,7 @@ const initialValue: TEnv = {
   [EnvArgs.AWS_S3_BUCKET]: "",
   [EnvArgs.aws_secret_access_key]: "",
   [EnvArgs.aws_access_key_id]: "",
+  [EnvArgs.CODEPUSH_SERVER_URL]: "",
 };
 
 const makeConfig = (): TEnv => {

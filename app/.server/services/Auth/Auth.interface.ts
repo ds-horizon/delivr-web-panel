@@ -1,5 +1,13 @@
-type User = {
-  id: string;
+export type User = {
+  authenticated: boolean;
+  user: {
+    createdTime: number;
+    name: string;
+    email: string;
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+  };
 };
 
 import type { Session, SessionData } from "@remix-run/node";

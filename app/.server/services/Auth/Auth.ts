@@ -7,6 +7,7 @@ import { getAuthenticatorCallbackUrl } from "./Auth.utils";
 import { AuthenticatorRoutes, UserReturnType } from "./Auth.interface";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { env } from "../config";
+import { CodepushService } from "../Codepush";
 
 export enum SocialsProvider {
   GOOGLE = "google",
@@ -34,8 +35,7 @@ export class Auth {
           prompt: "consent",
         },
         async (args) => {
-          console.log(args);
-          return args;
+          return CodepushService.getUser(args.extraParams.id_token);
         }
       )
     );
@@ -82,6 +82,12 @@ export class Auth {
   async isAuthenticated(request: AuthRequest) {
     return await Auth.authenticator.isAuthenticated(request, {
       failureRedirect: AuthenticatorRoutes.LOGIN,
+    });
+  }
+
+  async isLoggedIn(request: AuthRequest) {
+    return await Auth.authenticator.isAuthenticated(request, {
+      successRedirect: "/dashboard",
     });
   }
 
