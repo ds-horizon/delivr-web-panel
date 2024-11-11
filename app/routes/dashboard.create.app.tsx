@@ -1,5 +1,19 @@
-import { Text } from "@mantine/core";
+import { Modal } from "@mantine/core";
+import { useNavigate } from "@remix-run/react";
+import { CreateAppForm } from "~/components/Pages/components/CreateApp";
 
 export default function IntroPage() {
-  return <Text>Create app flow</Text>;
+  const navigation = useNavigate();
+  return (
+    <Modal
+      opened={true}
+      onClose={() => {
+        navigation("/dashboard");
+      }}
+      title="Create App Flow"
+      centered
+    >
+      <CreateAppForm />
+    </Modal>
+  );
 }

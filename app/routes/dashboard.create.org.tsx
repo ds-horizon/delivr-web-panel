@@ -1,5 +1,19 @@
+import { Modal } from "@mantine/core";
+import { useNavigate } from "@remix-run/react";
 import { CreateOrgForm } from "~/components/CreateOrgForm";
 
 export default function CreateOrgPage() {
-  return <CreateOrgForm />;
+  const navigation = useNavigate();
+  return (
+    <Modal
+      opened={true}
+      onClose={() => {
+        navigation("/dashboard");
+      }}
+      title="Create App Flow"
+      centered
+    >
+      <CreateOrgForm />
+    </Modal>
+  );
 }

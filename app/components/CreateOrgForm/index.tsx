@@ -14,9 +14,9 @@ export function CreateOrgForm() {
     },
   });
   return (
-    <Center w={"100%"} h={"70vh"}>
+    <Center>
       <Box w={"300px"}>
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
+        <Card shadow="sm" padding="xl" radius="md">
           <Card.Section component="a">
             <Center>
               <IconSitemap height={160} size={"xl"} />
