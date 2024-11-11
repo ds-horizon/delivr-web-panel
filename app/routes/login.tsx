@@ -1,4 +1,4 @@
-import { Text, Paper, Group, PaperProps } from "@mantine/core";
+import { Text, Paper, Group, PaperProps, Stack, Center } from "@mantine/core";
 import { GoogleButton } from "~/components/GoogleButton";
 import { useSubmit } from "@remix-run/react";
 import { LoaderFunctionArgs } from "@remix-run/node";
@@ -19,15 +19,29 @@ export default function AuthenticationForm(props: PaperProps) {
   };
 
   return (
-    <Paper radius="md" p="xl" withBorder {...props}>
-      <Text size="lg" fw={500}>
-        Welcome to Codepush, Login with
-      </Text>
-      <Group grow mb="md" mt="md">
-        <GoogleButton radius="xl" onClick={login}>
-          Google
-        </GoogleButton>
-      </Group>
-    </Paper>
+    <Center style={{ minHeight: "100vh", backgroundColor: "#f9fafb" }}>
+      <Paper
+        radius="md"
+        p="xl"
+        withBorder
+        shadow="md"
+        style={{ width: "100%", maxWidth: 400 }}
+        {...props}
+      >
+        <Stack spacing="lg" align="center">
+          <Text size="xl" fw={700} align="center">
+            Welcome to Codepush
+          </Text>
+          <Text size="sm" color="dimmed" align="center">
+            Instantly manage your app updates with ease.
+          </Text>
+          <Group grow mb="md" mt="md">
+            <GoogleButton radius="xl" fullWidth onClick={login}>
+              Continue with Google
+            </GoogleButton>
+          </Group>
+        </Stack>
+      </Paper>
+    </Center>
   );
 }
