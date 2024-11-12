@@ -5,7 +5,7 @@ import {
   SpotlightActionData,
 } from "@mantine/spotlight";
 import { IconDashboard, IconSearch } from "@tabler/icons-react";
-import { Button, rem } from "@mantine/core";
+import { Button, Kbd, rem } from "@mantine/core";
 import { useSearchParams } from "@remix-run/react";
 
 const [deploymentSearch, deploymentSearchActions] = createSpotlight();
@@ -38,7 +38,10 @@ export const DeploymentsSearch = () => {
   return (
     <>
       <Button onClick={deploymentSearchActions.open}>
-        Search For Deployments
+        Deployments{" "}
+        <Kbd size="xs" ml={"sm"}>
+          ⌘ k
+        </Kbd>
       </Button>
       <Spotlight
         store={deploymentSearch}
