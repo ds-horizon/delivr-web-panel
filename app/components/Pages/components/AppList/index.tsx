@@ -3,6 +3,7 @@ import { Text, Skeleton, Grid, Center } from "@mantine/core";
 import { useGetAppListForOrg } from "./hooks/useGetAppListForOrg";
 import { useParams } from "@remix-run/react";
 import { AppCard } from "~/components/AppCard";
+import { route } from "routes-gen";
 
 export function AppListForOrg() {
   const params = useParams();
@@ -11,7 +12,10 @@ export function AppListForOrg() {
   const _modData =
     data?.map((item) => ({
       ...item,
-      link: `/dashboard/${params.org}/${item.id}`,
+      link: route("/dashboard/:org/:app", {
+        org: params.org ?? "",
+        app: item.id,
+      }),
     })) ?? [];
 
   if (isLoading) {

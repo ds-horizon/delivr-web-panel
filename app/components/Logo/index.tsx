@@ -1,4 +1,5 @@
 import { useNavigate } from "@remix-run/react";
+import { route } from "routes-gen";
 
 export function Logo(props: React.ComponentPropsWithoutRef<"svg">) {
   const navigate = useNavigate();
@@ -7,7 +8,7 @@ export function Logo(props: React.ComponentPropsWithoutRef<"svg">) {
       {...props}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 623 163"
-      onClick={() => navigate("/dashboard")}
+      onClick={() => navigate(route("/dashboard"))}
     >
       <g fill="none" fillRule="evenodd">
         <path

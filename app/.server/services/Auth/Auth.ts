@@ -4,7 +4,7 @@ import { GoogleStrategy } from "remix-auth-google";
 import { SessionStorageService } from "../SessionStorage";
 
 import { getAuthenticatorCallbackUrl } from "./Auth.utils";
-import { AuthenticatorRoutes, UserReturnType } from "./Auth.interface";
+import { AuthenticatorRoutes, User, UserReturnType } from "./Auth.interface";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { env } from "../config";
 import { CodepushService } from "../Codepush";
@@ -18,7 +18,7 @@ type AuthRequest =
   | ActionFunctionArgs["request"];
 
 export class Auth {
-  static authenticator = new Authenticator(
+  static authenticator = new Authenticator<User>(
     SessionStorageService.sessionStorage,
     {
       sessionKey: SessionStorageService.sessionKey,

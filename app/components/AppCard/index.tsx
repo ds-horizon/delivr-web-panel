@@ -1,22 +1,9 @@
 import { Card, Avatar, Text, Group, Button } from "@mantine/core";
 import classes from "./index.module.css";
 import { useNavigate } from "@remix-run/react";
-enum PLATFORM {
-  "ANDROID" = "ANDROID",
-  "IOS" = "IOS",
-}
+import { AppCardResponse } from "../Pages/components/AppList/data/getAppListForOrg";
 
-type AppCardProps = {
-  id: string;
-  name: string;
-  link: string;
-  description: string;
-  platform: PLATFORM;
-  metrics: {
-    numberOfDeployments: number;
-    numberOfReleases: number;
-  };
-};
+type AppCardProps = AppCardResponse & { link: string };
 
 type StatsObject = {
   label: string;

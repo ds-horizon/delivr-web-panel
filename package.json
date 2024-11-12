@@ -8,7 +8,8 @@
     "dev": "remix vite:dev",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/server/index.js",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "gen:routes": "yarn routes-gen -d @routes-gen/remix"
   },
   "dependencies": {
     "@mantine/core": "^7.13.2",
@@ -18,6 +19,7 @@
     "@remix-run/node": "^2.13.1",
     "@remix-run/react": "^2.13.1",
     "@remix-run/serve": "^2.13.1",
+    "@routes-gen/remix": "^0.3.7",
     "@tabler/icons-react": "^3.19.0",
     "add": "^2.0.6",
     "axios": "^1.7.7",
@@ -27,7 +29,8 @@
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
     "remix-auth": "^3.7.0",
-    "remix-auth-google": "^2.0.0"
+    "remix-auth-google": "^2.0.0",
+    "routes-gen": "^0.6.1"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.13.1",

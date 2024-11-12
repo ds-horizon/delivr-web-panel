@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { env } from "../config";
 import { User } from "../Auth/Auth.interface";
+import { TenantsRequest, TenantsResponse } from "./types";
 
 class Codepush {
   private __client = axios.create({
@@ -16,7 +17,7 @@ class Codepush {
           createdTime: Date.now(),
           name: "Dummy User",
           email: "dummy_user@dream11.com",
-          id: "dummy_user",
+          id: "id_1",
           createdAt: "2024-10-30T08:41:07.000Z",
           updatedAt: "2024-10-30T08:41:07.000Z",
         },
@@ -33,6 +34,16 @@ class Codepush {
     });
 
     return data;
+  }
+
+  async getTenants(userId: string) {
+    const headers: TenantsRequest = {
+      userId,
+    };
+
+    return this.__client.get<null, AxiosResponse<TenantsResponse>>("/tenants", {
+      headers,
+    });
   }
 }
 

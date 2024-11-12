@@ -1,4 +1,5 @@
-import { mockApiData } from "~/utils/mockApiData";
+import axios, { AxiosResponse } from "axios";
+import { TenantsResponse } from "~/.server/services/Codepush/types";
 
 type Organization = {
   id: string;
@@ -6,27 +7,34 @@ type Organization = {
   isAdmin: boolean;
 };
 
-const data: Organization[] = [
-  {
-    id: "1",
-    orgName: "TechCorp",
-    isAdmin: true,
-  },
-  {
-    id: "2",
-    orgName: "InnovateX",
-    isAdmin: false,
-  },
-  {
-    id: "3",
-    orgName: "CodeMaster",
-    isAdmin: true,
-  },
-  {
-    id: "4",
-    orgName: "DevSolutions",
-    isAdmin: false,
-  },
-];
+// const data: Organization[] = [
+//   {
+//     id: "1",
+//     orgName: "TechCorp",
+//     isAdmin: true,
+//   },
+//   {
+//     id: "2",
+//     orgName: "InnovateX",
+//     isAdmin: false,
+//   },
+//   {
+//     id: "3",
+//     orgName: "CodeMaster",
+//     isAdmin: true,
+//   },
+//   {
+//     id: "4",
+//     orgName: "DevSolutions",
+//     isAdmin: false,
+//   },
+// ];
 
-export const getOrgList = mockApiData(data);
+export const getOrgList = async (): Promise<Organization[]> => {
+  const { data } = await axios.get<null, AxiosResponse<TenantsResponse>>(
+    "/api/v1/get-tenants"
+  );
+  return data.organisations.map((item) => {
+    return { id: item.id, orgName: item.displayName, isAdmin: false };
+  });
+};

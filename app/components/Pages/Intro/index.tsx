@@ -13,6 +13,7 @@ import { IconCheck } from "@tabler/icons-react";
 import image from "./image.svg";
 import classes from "./index.module.css";
 import { useNavigate } from "@remix-run/react";
+import { route } from "routes-gen";
 
 export function Intro() {
   const navigate = useNavigate();
@@ -64,7 +65,7 @@ export function Intro() {
               size="md"
               className={classes.control}
               onClick={() => {
-                navigate("/dashboard/create/app");
+                navigate(route("/dashboard/create/app"));
               }}
             >
               Create App
@@ -75,7 +76,7 @@ export function Intro() {
               size="md"
               className={classes.control}
               onClick={() => {
-                navigate("/dashboard/create/org");
+                navigate(route("/dashboard/create/org"));
               }}
             >
               Create Organization

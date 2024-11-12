@@ -40,7 +40,7 @@ export const DeploymentsSearch = () => {
       <Button onClick={deploymentSearchActions.open}>
         Deployments{" "}
         <Kbd size="xs" ml={"sm"}>
-          ⌘ k
+          ⌘ K
         </Kbd>
       </Button>
       <Spotlight
