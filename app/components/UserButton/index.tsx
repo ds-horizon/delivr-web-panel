@@ -2,23 +2,26 @@ import { UnstyledButton, Group, Avatar, Text, rem, Menu } from "@mantine/core";
 import { IconChevronRight, IconLogout } from "@tabler/icons-react";
 import classes from "./index.module.css";
 import { Form } from "@remix-run/react"; // Use Remix's Form for logout action
+import { User } from "~/.server/services/Auth/Auth.interface";
 
-export function UserButton() {
+export type UserButtonProps = {
+  user: User;
+};
+
+export function UserButton({ user }: UserButtonProps) {
+  console.log(user);
   return (
     <Menu shadow="md" width={200}>
       <Menu.Target>
         <UnstyledButton className={classes.user}>
           <Group>
-            <Avatar
-              src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-8.png"
-              radius="xl"
-            />
+            <Avatar name={user.user.name} radius="xl" />
             <div style={{ flex: 1 }}>
               <Text size="sm" fw={500}>
-                Harriette Spoonlicker
+                {user.user.name}
               </Text>
               <Text c="dimmed" size="xs">
-                hspoonlicker@outlook.com
+                {user.user.email}
               </Text>
             </div>
             <IconChevronRight
@@ -31,9 +34,21 @@ export function UserButton() {
 
       <Menu.Dropdown>
         <Menu.Item color="red">
-          <Form method="post" action="/logout" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Form
+            method="post"
+            action="/logout"
+            style={{ display: "flex", alignItems: "center", gap: "8px" }}
+          >
             <IconLogout size={14} /> {/* Render the icon directly here */}
-            <button type="submit" style={{ all: 'unset', cursor: 'pointer', flex: 1, textAlign: 'left' }}>
+            <button
+              type="submit"
+              style={{
+                all: "unset",
+                cursor: "pointer",
+                flex: 1,
+                textAlign: "left",
+              }}
+            >
               Logout
             </button>
           </Form>

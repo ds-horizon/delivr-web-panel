@@ -3,12 +3,14 @@ import { AppShell, Burger, Code, Group, rem } from "@mantine/core";
 import { NavbarNested } from "~/components/NavbarNested";
 import { useDisclosure } from "@mantine/hooks";
 import { Logo } from "~/components/Logo";
-import { Outlet } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import { authenticateLoaderRequest } from "~/utils/authenticate";
+import { User } from "~/.server/services/Auth/Auth.interface";
 
 export const loader = authenticateLoaderRequest();
 
 export default function Hello() {
+  const data = useLoaderData<User>();
   const [opened, { toggle }] = useDisclosure();
   return (
     <AppShell
@@ -28,7 +30,7 @@ export default function Hello() {
         </Group>
       </AppShell.Header>
       <AppShell.Navbar style={{ overflow: "hidden" }}>
-        <NavbarNested />
+        <NavbarNested user={data} />
       </AppShell.Navbar>
       <AppShell.Main>
         <Outlet />
