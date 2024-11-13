@@ -1,7 +1,6 @@
 "use client";
 import {
   ActionIcon,
-  Box,
   Card,
   CopyButton,
   Flex,
@@ -86,19 +85,17 @@ export const DeploymentList = () => {
         <DeploymentsSearch />
       </Flex>
       <ReleaseListForDeploymentTable />
-      <Box h={"50vh"} w={"40vw"}>
-        <ReleaseDeatilCardModal
-          id={searchParams.get("releaseId")}
-          opened={!!searchParams.get("releaseId")}
-          close={() => {
-            setSearchParams((p) => {
-              p.delete("releaseId");
-              return p;
-            });
-          }}
-          deploymentName={details?.name}
-        />
-      </Box>
+      <ReleaseDeatilCardModal
+        id={searchParams.get("releaseId")}
+        opened={!!searchParams.get("releaseId")}
+        close={() => {
+          setSearchParams((p) => {
+            p.delete("releaseId");
+            return p;
+          });
+        }}
+        deploymentName={details?.name}
+      />
     </>
   );
 };
