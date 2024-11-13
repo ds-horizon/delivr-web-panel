@@ -1,7 +1,12 @@
 import axios, { AxiosResponse } from "axios";
 import { env } from "../config";
 import { User } from "../Auth/Auth.interface";
-import { TenantsRequest, TenantsResponse } from "./types";
+import {
+  AppsRequest,
+  AppsResponse,
+  TenantsRequest,
+  TenantsResponse,
+} from "./types";
 
 class Codepush {
   private __client = axios.create({
@@ -42,6 +47,14 @@ class Codepush {
     };
 
     return this.__client.get<null, AxiosResponse<TenantsResponse>>("/tenants", {
+      headers,
+    });
+  }
+
+  async getAppsForTenants(data: AppsRequest) {
+    const headers: AppsRequest = data;
+
+    return this.__client.get<null, AxiosResponse<AppsResponse>>("/apps", {
       headers,
     });
   }

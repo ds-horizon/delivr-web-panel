@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { route } from "routes-gen";
 import { TenantsResponse } from "~/.server/services/Codepush/types";
 
 type Organization = {
@@ -32,7 +33,7 @@ type Organization = {
 
 export const getOrgList = async (): Promise<Organization[]> => {
   const { data } = await axios.get<null, AxiosResponse<TenantsResponse>>(
-    "/api/v1/get-tenants"
+    route("/api/v1/get-tenants")
   );
   return data.organisations.map((item) => {
     return { id: item.id, orgName: item.displayName, isAdmin: false };
