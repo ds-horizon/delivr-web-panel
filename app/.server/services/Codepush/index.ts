@@ -4,6 +4,8 @@ import { User } from "../Auth/Auth.interface";
 import {
   AppsRequest,
   AppsResponse,
+  DeploymentsRequest,
+  DeploymentsResponse,
   TenantsRequest,
   TenantsResponse,
 } from "./types";
@@ -57,6 +59,17 @@ class Codepush {
     return this.__client.get<null, AxiosResponse<AppsResponse>>("/apps", {
       headers,
     });
+  }
+
+  async getDeployentsForApp(data: DeploymentsRequest) {
+    const headers: DeploymentsRequest = data;
+
+    return this.__client.get<null, AxiosResponse<DeploymentsResponse>>(
+      `/apps/${encodeURIComponent(data.appId)}/deployments`,
+      {
+        headers,
+      }
+    );
   }
 }
 

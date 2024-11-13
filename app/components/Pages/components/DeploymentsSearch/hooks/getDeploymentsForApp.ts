@@ -5,8 +5,7 @@ import { getDeploymentsForApp } from "../data/getDeploymentsForApp";
 export const useGetDeploymentsForApp = () => {
   const params = useParams();
 
-  return useQuery(
-    `${params.org}-${params.app}-deployment-list`,
-    getDeploymentsForApp
+  return useQuery(`${params.org}-${params.app}-deployment-list`, () =>
+    getDeploymentsForApp(params.app ?? "")
   );
 };

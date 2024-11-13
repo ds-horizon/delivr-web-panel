@@ -15,6 +15,17 @@ type Apps = {
   deployments: string[];
 };
 
+type Deployment = {
+  id: string;
+  name: string;
+  key: string;
+  packageId: null | string;
+  appId: string;
+  createdTime: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 type BaseHeader = {
   userId: string;
 };
@@ -31,4 +42,12 @@ export type AppsRequest = BaseHeader & {
 
 export type AppsResponse = {
   apps: Apps[];
+};
+
+export type DeploymentsRequest = BaseHeader & {
+  appId: string;
+};
+
+export type DeploymentsResponse = {
+  deployments: Deployment[];
 };

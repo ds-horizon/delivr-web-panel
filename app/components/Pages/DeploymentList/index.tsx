@@ -16,6 +16,7 @@ import { useGetDeploymentsForApp } from "../components/DeploymentsSearch/hooks/g
 import { IconCheck, IconCopy } from "@tabler/icons-react";
 import { ReleaseListForDeploymentTable } from "../components/ReleaseListForDeploymentTable";
 import { ReleaseDeatilCardModal } from "../components/ReleaseDeatilCardModal";
+import { useEffect } from "react";
 
 export const DeploymentList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -25,12 +26,16 @@ export const DeploymentList = () => {
     (item) => item.name === searchParams.get("deployment")
   );
 
-  if (!searchParams.get("deployment")) {
-    setSearchParams((p) => {
-      p.set("deployment", data?.[0].name ?? "Production");
-      return p;
-    });
-  }
+  useEffect(() => {
+    if (!searchParams.get("deployment")) {
+      if (data) {
+        setSearchParams((p) => {
+          p.set("deployment", data?.[0].name ?? "Production");
+          return p;
+        });
+      }
+    }
+  }, [data, searchParams, setSearchParams]);
 
   return (
     <>

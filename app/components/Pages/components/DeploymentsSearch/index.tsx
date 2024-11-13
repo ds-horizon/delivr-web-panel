@@ -48,7 +48,7 @@ export const DeploymentsSearch = () => {
         actions={items}
         nothingFound="Nothing found..."
         highlightQuery
-        scrollable
+        scrollable={(data?.length ?? 0) > 5}
         shortcut={["mod + K"]}
         maxHeight={350}
         searchProps={{
