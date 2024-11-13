@@ -1,15 +1,21 @@
 import { UnstyledButton, Group, Avatar, Text, rem, Menu } from "@mantine/core";
-import { IconChevronRight, IconLogout } from "@tabler/icons-react";
+import {
+  IconChevronRight,
+  IconLogout,
+  IconSettings,
+  IconTrash,
+} from "@tabler/icons-react";
 import classes from "./index.module.css";
-import { Form } from "@remix-run/react"; // Use Remix's Form for logout action
+import { Form, useNavigate } from "@remix-run/react"; // Use Remix's Form for logout action
 import { User } from "~/.server/services/Auth/Auth.interface";
+import { route } from "routes-gen";
 
 export type UserButtonProps = {
   user: User;
 };
 
 export function UserButton({ user }: UserButtonProps) {
-  console.log(user);
+  const navigate = useNavigate();
   return (
     <Menu shadow="md" width={200}>
       <Menu.Target>
@@ -33,6 +39,18 @@ export function UserButton({ user }: UserButtonProps) {
       </Menu.Target>
 
       <Menu.Dropdown>
+        <Menu.Item
+          color="red"
+          leftSection={
+            <IconTrash style={{ width: rem(14), height: rem(14) }} />
+          }
+          onClick={() => {
+            navigate(route("/dashboard/delete"));
+          }}
+        >
+          Delete Account
+        </Menu.Item>
+        <Menu.Divider />
         <Menu.Item color="red">
           <Form
             method="post"
@@ -52,6 +70,17 @@ export function UserButton({ user }: UserButtonProps) {
               Logout
             </button>
           </Form>
+        </Menu.Item>
+        <Menu.Divider />
+        <Menu.Item
+          leftSection={
+            <IconSettings style={{ width: rem(14), height: rem(14) }} />
+          }
+          onClick={() => {
+            navigate(route("/dashboard/tokens"));
+          }}
+        >
+          Token List
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>
