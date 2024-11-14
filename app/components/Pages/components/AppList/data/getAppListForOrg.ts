@@ -112,7 +112,7 @@ export const getAppListForOrg = async (
   orgId: string
 ): Promise<AppCardResponse[]> => {
   const { data } = await axios.get<null, AxiosResponse<AppsResponse>>(
-    route("/api/v1/:org/get-apps", {
+    route("/api/v1/:org/apps", {
       org: orgId,
     })
   );

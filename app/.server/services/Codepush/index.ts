@@ -9,6 +9,8 @@ import {
   BaseHeader,
   CreateAccessKeyRequest,
   CreateAccessKeyResponse,
+  CreateAppRequest,
+  CreateAppResponse,
   CreateDeploymentsRequest,
   CreateDeploymentsResponse,
   DeploymentsReleaseRequest,
@@ -68,6 +70,23 @@ class Codepush {
     return this.__client.get<null, AxiosResponse<AppsResponse>>("/apps", {
       headers,
     });
+  }
+
+  async createAppForTenant(data: CreateAppRequest) {
+    const headers: CreateAppRequest = data;
+
+    return this.__client.post<null, AxiosResponse<CreateAppResponse>>(
+      "/apps",
+      {
+        name: data.name,
+        organisation: {
+          orgId: data.orgId,
+        },
+      },
+      {
+        headers,
+      }
+    );
   }
 
   async getDeployentsForApp(data: DeploymentsRequest) {

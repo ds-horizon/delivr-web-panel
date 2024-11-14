@@ -70,6 +70,15 @@ export type AppsResponse = {
   apps: Apps[];
 };
 
+export type CreateAppRequest = BaseHeader & {
+  name: string;
+  orgId: string;
+};
+
+export type CreateAppResponse = {
+  app: Apps;
+};
+
 export type DeploymentsRequest = BaseHeader & {
   appId: string;
 };

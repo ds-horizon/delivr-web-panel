@@ -1,11 +1,4 @@
-import {
-  useForm,
-  isNotEmpty,
-  isEmail,
-  isInRange,
-  hasLength,
-  matches,
-} from "@mantine/form";
+import { useForm } from "@mantine/form";
 import {
   Button,
   Group,
@@ -14,51 +7,57 @@ import {
   TagsInput,
 } from "@mantine/core";
 import { useGetOrgList } from "../OrgListNavbar/hooks/useGetOrgList";
+import { useCreateApp } from "./hooks/useCreateApp";
+import { useState } from "react";
 
 export function CreateAppForm() {
-  const { data } = useGetOrgList();
-  const form = useForm({
+  const { mutate, isLoading } = useCreateApp();
+  const [org, setOrg] = useState({ value: "Select Org", error: "" });
+  const orgs = useGetOrgList();
+
+  const form = useForm<{ appName: string }>({
     mode: "uncontrolled",
+    validateInputOnChange: true,
     initialValues: {
-      appName: "",
-      job: data?.map((item) => item.orgName) ?? [],
-      email: "",
-      favoriteColor: "",
-      age: 18,
+      appName: "App Name",
     },
 
     validate: {
-      appName: hasLength(
-        { min: 3, max: 20 },
-        "Name must be 3-20 characters long"
-      ),
-      job: isNotEmpty("Enter your current job"),
-      email: isEmail("Invalid email"),
-      favoriteColor: matches(
-        /^#([0-9a-f]{3}){1,2}$/,
-        "Enter a valid hex color"
-      ),
-      age: isInRange(
-        { min: 18, max: 99 },
-        "You must be 18-99 years old to register"
-      ),
+      appName: (value) => {
+        return value.length ? null : "App Name  Can't be Empty";
+      },
     },
   });
 
+  const onOrgChange = (value: string) => {
+    if (!value?.length) {
+      setOrg({ value: "", error: "Owner Can't be Empty" });
+      return;
+    }
+
+    setOrg({ value, error: "" });
+  };
+
   return (
-    <form onSubmit={form.onSubmit(() => {})}>
+    <>
       <TextInput
         label="App Name"
         placeholder="App Name"
         withAsterisk
         key={form.key("appName")}
+        disabled={isLoading}
         {...form.getInputProps("appName")}
       />
       <Autocomplete
         mt="md"
         label="Select an Owner"
+        withAsterisk
         placeholder="Pick an owner"
-        data={data?.map((item) => item.orgName) ?? []}
+        onChange={onOrgChange}
+        disabled={isLoading}
+        value={org.value}
+        error={org.error}
+        data={orgs.data?.map((item) => item.orgName) ?? []}
       />
       <TagsInput
         mt="md"
@@ -66,10 +65,31 @@ export function CreateAppForm() {
         placeholder="Enter tag"
         data={["Production", "Stage", "Dev", "Load"]}
         clearable
+        disabled={isLoading}
       />
       <Group justify="flex-end" mt="md">
-        <Button type="submit">Submit</Button>
+        <Button
+          onClick={() => {
+            let owner = org.value;
+            const _org = orgs.data?.filter(
+              (item) => item.orgName === org.value
+            );
+            if (_org?.length) {
+              owner = _org[0].id;
+            }
+            return mutate({
+              name: form.getValues().appName,
+              orgId: owner,
+            });
+          }}
+          disabled={
+            !!Object.keys(form.errors).length || isLoading || !!org.error.length
+          }
+          loading={isLoading}
+        >
+          Create
+        </Button>
       </Group>
-    </form>
+    </>
   );
 }
