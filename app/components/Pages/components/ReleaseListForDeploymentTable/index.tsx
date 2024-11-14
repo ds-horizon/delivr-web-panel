@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Table, ScrollArea, Text } from "@mantine/core";
 import classes from "./index.module.css";
 import { useGetReleaseListForDeployment } from "./hooks/useGetReleaseListForDeployment";
-import { useSearchParams } from "@remix-run/react";
+import { useParams, useSearchParams } from "@remix-run/react";
 import { ReleaseListResponse } from "./data/getReleaseListForDeployment";
 type RowsProps = {
   isLoading: boolean;
@@ -62,9 +62,14 @@ export const Rows = ({ isLoading, isError, data, onClick }: RowsProps) => {
 };
 
 export function ReleaseListForDeploymentTable() {
-  const { data, isLoading, refetch, isFetching, isError } =
-    useGetReleaseListForDeployment("");
+  const params = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { data, isLoading, refetch, isFetching, isError } =
+    useGetReleaseListForDeployment({
+      deploymentName: searchParams.get("deployment") ?? "",
+      appId: params.app ?? "",
+    });
+
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {

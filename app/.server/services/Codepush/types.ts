@@ -26,6 +26,23 @@ type Deployment = {
   updatedAt: string;
 };
 
+type Package = {
+  appVersion: string;
+  blobUrl: string;
+  description: string;
+  isDisabled: boolean;
+  isMandatory: boolean;
+  label: string;
+  originalDeployment: string | null;
+  originalLabel: string | null;
+  packageHash: string;
+  releasedBy: string;
+  releaseMethod: string;
+  rollout: number;
+  size: number;
+  uploadTime: number;
+};
+
 type AccessKey = {
   createdTime: number;
   expires: number;
@@ -59,6 +76,20 @@ export type DeploymentsRequest = BaseHeader & {
 
 export type DeploymentsResponse = {
   deployments: Deployment[];
+};
+
+export type DeploymentsReleaseRequest = BaseHeader & {
+  appId: string;
+  deploymentName: string;
+};
+
+export type DeploymentsReleaseResponse = {
+  deployment: {
+    name: string;
+    key: string;
+    package: Package;
+    packageHistory: Package[];
+  };
 };
 
 export type AccessKeyRequest = BaseHeader;

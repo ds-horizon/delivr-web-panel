@@ -1,11 +1,18 @@
 import {
   ActionFunction,
   ActionFunctionArgs,
+  json,
   LoaderFunction,
   LoaderFunctionArgs,
 } from "@remix-run/node";
 import { AuthenticatorService } from "~/.server/services/Auth/Auth";
 import { User } from "~/.server/services/Auth/Auth.interface";
+
+export enum ActionMethods {
+  POST = "POST",
+  PUT = "PUT",
+  DELETE = "DELETE",
+}
 
 type AuthenticatedRequestArgs<T> = T & { user: User };
 
@@ -20,13 +27,28 @@ export const authenticateLoaderRequest = (cb?: AuthenticatedLoaderFunction) => {
   };
 };
 
-type AuthenticatedActionFunction = (
+export type AuthenticatedActionFunction = (
   args: AuthenticatedRequestArgs<ActionFunctionArgs>
 ) => ReturnType<ActionFunction>;
 
-export const authenticateActionRequest = (cb: AuthenticatedActionFunction) => {
-  return async (args: LoaderFunctionArgs) => {
+type AuthenticatedActionFunctionArgs = Partial<
+  Record<ActionMethods, AuthenticatedActionFunction>
+>;
+
+export const authenticateActionRequest = (
+  cb: AuthenticatedActionFunctionArgs
+) => {
+  return async (args: ActionFunctionArgs) => {
+    const method = args.request.method as ActionMethods;
+
+    if (!cb[method]) {
+      return json(
+        { message: `${args.request.method} not allowed` },
+        { status: 405 }
+      );
+    }
+
     const user = await AuthenticatorService.isAuthenticated(args.request);
-    return cb({ ...args, user });
+    return cb[method]({ ...args, user });
   };
 };

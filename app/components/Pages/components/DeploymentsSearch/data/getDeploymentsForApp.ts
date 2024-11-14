@@ -137,7 +137,7 @@ export const getDeploymentsForApp = async (
   id: string
 ): Promise<DeploymentData[]> => {
   const { data } = await axios.get<null, AxiosResponse<DeploymentsResponse>>(
-    route("/api/v1/:app/get-deployments", {
+    route("/api/v1/:app/deployments", {
       app: id,
     })
   );
