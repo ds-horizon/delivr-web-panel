@@ -44,17 +44,11 @@ export const DeploymentsSearch = () => {
         variant="light"
         rightSection={
           <Box>
-            <ActionIcon mr={"sm"} ml={"lg"}>
-              <IconPlus
-                style={{ width: rem(12), height: rem(12) }}
-                onClick={() => setOpen(true)}
-              />
+            <ActionIcon mr={"sm"} ml={"lg"} onClick={() => setOpen(true)}>
+              <IconPlus style={{ width: rem(12), height: rem(12) }} />
             </ActionIcon>
-            <ActionIcon>
-              <IconSearch
-                style={{ width: rem(12), height: rem(12) }}
-                onClick={deploymentSearchActions.open}
-              />
+            <ActionIcon onClick={deploymentSearchActions.open}>
+              <IconSearch style={{ width: rem(12), height: rem(12) }} />
             </ActionIcon>
           </Box>
         }
