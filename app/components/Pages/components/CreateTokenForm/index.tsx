@@ -31,7 +31,14 @@ export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
     },
   });
   return (
-    <Modal opened={open} onClose={onClose} title={"Create Token Flow"}>
+    <Modal
+      opened={open}
+      onClose={() => {
+        form.reset();
+        onClose();
+      }}
+      title={"Create Token Flow"}
+    >
       <Center>
         <Box w={"300px"}>
           <TextInput

@@ -9,9 +9,12 @@ import {
 import { useGetOrgList } from "../OrgListNavbar/hooks/useGetOrgList";
 import { useCreateApp } from "./hooks/useCreateApp";
 import { useState } from "react";
+import { useNavigate } from "@remix-run/react";
+import { route } from "routes-gen";
 
 export function CreateAppForm() {
   const { mutate, isLoading } = useCreateApp();
+  const navigation = useNavigate();
   const [org, setOrg] = useState({ value: "Select Org", error: "" });
   const orgs = useGetOrgList();
 
@@ -77,10 +80,22 @@ export function CreateAppForm() {
             if (_org?.length) {
               owner = _org[0].id;
             }
-            return mutate({
-              name: form.getValues().appName,
-              orgId: owner,
-            });
+            return mutate(
+              {
+                name: form.getValues().appName,
+                orgId: owner,
+              },
+              {
+                onSuccess: () => {
+                  form.reset();
+                  navigation(
+                    route("/dashboard/:org/apps", {
+                      org: org.value,
+                    })
+                  );
+                },
+              }
+            );
           }}
           disabled={
             !!Object.keys(form.errors).length || isLoading || !!org.error.length

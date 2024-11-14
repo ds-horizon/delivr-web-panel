@@ -84,7 +84,15 @@ export function CreateDeploymentForm({ open, onClose }: CreateTokenFormProps) {
             disabled={!!Object.keys(form.errors).length && !isLoading}
             loading={isLoading}
             onClick={() => {
-              mutate({ ...form.getValues(), appId: params.app ?? "" });
+              mutate(
+                { ...form.getValues(), appId: params.app ?? "" },
+                {
+                  onSuccess: () => {
+                    onClose();
+                    form.reset();
+                  },
+                }
+              );
             }}
           >
             Create Deployment
