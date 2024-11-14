@@ -4,14 +4,17 @@ import {
   Spotlight,
   SpotlightActionData,
 } from "@mantine/spotlight";
-import { IconDashboard, IconSearch } from "@tabler/icons-react";
-import { Button, Kbd, rem } from "@mantine/core";
+import { IconDashboard, IconPlus, IconSearch } from "@tabler/icons-react";
+import { ActionIcon, Box, Button, Kbd, rem, Text } from "@mantine/core";
 import { useSearchParams } from "@remix-run/react";
+import { CreateDeploymentForm } from "../CreateDeploymentForm";
+import { useState } from "react";
 
 const [deploymentSearch, deploymentSearchActions] = createSpotlight();
 
 export const DeploymentsSearch = () => {
   const [_, setSearchParams] = useSearchParams();
+  const [open, setOpen] = useState(false);
   const { data } = useGetDeploymentsForApp();
 
   const items: SpotlightActionData[] =
@@ -36,12 +39,27 @@ export const DeploymentsSearch = () => {
     }) ?? [];
 
   return (
-    <>
-      <Button onClick={deploymentSearchActions.open}>
-        Deployments{" "}
-        <Kbd size="xs" ml={"sm"}>
-          ⌘ K
-        </Kbd>
+    <Box>
+      <Button
+        variant="light"
+        rightSection={
+          <Box>
+            <ActionIcon mr={"sm"} ml={"lg"}>
+              <IconPlus
+                style={{ width: rem(12), height: rem(12) }}
+                onClick={() => setOpen(true)}
+              />
+            </ActionIcon>
+            <ActionIcon>
+              <IconSearch
+                style={{ width: rem(12), height: rem(12) }}
+                onClick={deploymentSearchActions.open}
+              />
+            </ActionIcon>
+          </Box>
+        }
+      >
+        Deployments
       </Button>
       <Spotlight
         store={deploymentSearch}
@@ -61,6 +79,7 @@ export const DeploymentsSearch = () => {
           placeholder: "Search...",
         }}
       />
-    </>
+      <CreateDeploymentForm open={open} onClose={() => setOpen(false)} />
+    </Box>
   );
 };

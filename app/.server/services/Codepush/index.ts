@@ -6,8 +6,11 @@ import {
   AccessKeyResponse,
   AppsRequest,
   AppsResponse,
+  BaseHeader,
   CreateAccessKeyRequest,
   CreateAccessKeyResponse,
+  CreateDeploymentsRequest,
+  CreateDeploymentsResponse,
   DeploymentsReleaseRequest,
   DeploymentsReleaseResponse,
   DeploymentsRequest,
@@ -72,6 +75,20 @@ class Codepush {
 
     return this.__client.get<null, AxiosResponse<DeploymentsResponse>>(
       `/apps/${encodeURIComponent(data.appId)}/deployments`,
+      {
+        headers,
+      }
+    );
+  }
+
+  async createDeployentsForApp(data: CreateDeploymentsRequest) {
+    const headers: BaseHeader = data;
+
+    return this.__client.post<null, AxiosResponse<CreateDeploymentsResponse>>(
+      `/apps/${encodeURIComponent(data.appId)}/deployments`,
+      {
+        name: data.name,
+      },
       {
         headers,
       }

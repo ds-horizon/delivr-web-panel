@@ -1,6 +1,28 @@
 import { json } from "@remix-run/react";
 import { CodepushService } from "~/.server/services/Codepush";
-import { authenticateLoaderRequest } from "~/utils/authenticate";
+import {
+  authenticateActionRequest,
+  AuthenticatedActionFunction,
+  authenticateLoaderRequest,
+} from "~/utils/authenticate";
+
+const createDeployment: AuthenticatedActionFunction = async ({
+  user,
+  params,
+  request,
+}) => {
+  try {
+    const body = await request.json();
+    const { data, status } = await CodepushService.createDeployentsForApp({
+      userId: user.user.id,
+      appId: params.app ?? "",
+      name: body.name ?? "",
+    });
+    return json(data, { status });
+  } catch (e) {
+    return json({ message: "Something Went Wrong" }, { status: 500 });
+  }
+};
 
 export const loader = authenticateLoaderRequest(async ({ user, params }) => {
   try {
@@ -13,3 +35,5 @@ export const loader = authenticateLoaderRequest(async ({ user, params }) => {
     return json({ message: "Something Went Wrong" }, { status: 500 });
   }
 });
+
+export const action = authenticateActionRequest({ POST: createDeployment });

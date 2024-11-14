@@ -52,7 +52,7 @@ type AccessKey = {
   id: string;
 };
 
-type BaseHeader = {
+export type BaseHeader = {
   userId: string;
 };
 
@@ -76,6 +76,15 @@ export type DeploymentsRequest = BaseHeader & {
 
 export type DeploymentsResponse = {
   deployments: Deployment[];
+};
+
+export type CreateDeploymentsRequest = BaseHeader & {
+  appId: string;
+  name: string;
+};
+
+export type CreateDeploymentsResponse = {
+  deployments: Deployment;
 };
 
 export type DeploymentsReleaseRequest = BaseHeader & {
