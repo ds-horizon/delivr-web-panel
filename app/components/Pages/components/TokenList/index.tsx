@@ -13,7 +13,7 @@ import {
 } from "@mantine/core";
 import classes from "./index.module.css";
 import { useGetAccessTokenList } from "./hooks/useGetAccessTokenList";
-import { CreateTokenForm } from "~/components/CreateTokenForm";
+import { CreateTokenForm } from "~/components/Pages/components/CreateTokenForm";
 
 type TokenActionProps = {
   selected: number;

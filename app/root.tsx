@@ -1,5 +1,6 @@
 import "@mantine/core/styles.css";
 import "@mantine/spotlight/styles.css";
+import "@mantine/notifications/styles.css";
 
 import { QueryClient, QueryClientProvider } from "react-query";
 
@@ -16,6 +17,7 @@ import type { LinksFunction } from "@remix-run/node";
 
 import "./tailwind.css";
 import { ColorSchemeScript, createTheme, MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -47,6 +49,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <QueryClientProvider client={queryClient}>
           <MantineProvider theme={theme} defaultColorScheme="auto">
+            <Notifications />
             {children}
           </MantineProvider>
         </QueryClientProvider>

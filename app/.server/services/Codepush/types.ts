@@ -66,3 +66,18 @@ export type AccessKeyRequest = BaseHeader;
 export type AccessKeyResponse = {
   accessKeys: AccessKey[];
 };
+
+export type CreateAccessKeyRequest = BaseHeader & {
+  name: string;
+};
+
+export type CreateAccessKeyResponse = {
+  accessKey: {
+    friendlyName: string;
+    description: string;
+    name: string;
+    createdBy: string;
+    createdTime: number;
+    expires: number;
+  };
+};

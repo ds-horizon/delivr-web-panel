@@ -33,7 +33,7 @@ export type AccessToken = {
 
 export const getAccessTokenList = async (): Promise<AccessToken[]> => {
   const { data } = await axios.get<null, AxiosResponse<AccessKeyResponse>>(
-    route("/api/v1/get-access-keys")
+    route("/api/v1/access-keys")
   );
 
   return data.accessKeys.map((item) => {

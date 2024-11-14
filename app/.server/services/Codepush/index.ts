@@ -6,6 +6,8 @@ import {
   AccessKeyResponse,
   AppsRequest,
   AppsResponse,
+  CreateAccessKeyRequest,
+  CreateAccessKeyResponse,
   DeploymentsRequest,
   DeploymentsResponse,
   TenantsRequest,
@@ -79,6 +81,20 @@ class Codepush {
 
     return this.__client.get<null, AxiosResponse<AccessKeyResponse>>(
       `/accessKeys`,
+      {
+        headers,
+      }
+    );
+  }
+
+  async createAccessKey(data: CreateAccessKeyRequest) {
+    const headers: AccessKeyRequest = data;
+
+    return this.__client.post<null, AxiosResponse<CreateAccessKeyResponse>>(
+      `/accessKeys`,
+      {
+        friendlyName: data.name,
+      },
       {
         headers,
       }
