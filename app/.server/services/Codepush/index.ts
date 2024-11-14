@@ -2,6 +2,8 @@ import axios, { AxiosResponse } from "axios";
 import { env } from "../config";
 import { User } from "../Auth/Auth.interface";
 import {
+  AccessKeyRequest,
+  AccessKeyResponse,
   AppsRequest,
   AppsResponse,
   DeploymentsRequest,
@@ -66,6 +68,17 @@ class Codepush {
 
     return this.__client.get<null, AxiosResponse<DeploymentsResponse>>(
       `/apps/${encodeURIComponent(data.appId)}/deployments`,
+      {
+        headers,
+      }
+    );
+  }
+
+  async getAccessKeys(data: AccessKeyRequest) {
+    const headers: AccessKeyRequest = data;
+
+    return this.__client.get<null, AxiosResponse<AccessKeyResponse>>(
+      `/accessKeys`,
       {
         headers,
       }

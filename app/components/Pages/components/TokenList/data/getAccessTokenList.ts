@@ -1,4 +1,6 @@
-import { mockApiData } from "~/utils/mockApiData";
+import axios, { AxiosResponse } from "axios";
+import { route } from "routes-gen";
+import { AccessKeyResponse } from "~/.server/services/Codepush/types";
 
 export type AccessToken = {
   id: string;
@@ -6,27 +8,35 @@ export type AccessToken = {
   role: "READ" | "WRITE";
 };
 
-const data: AccessToken[] = [
-  {
-    id: "1a2b3c4d",
-    name: "User One",
-    role: "READ",
-  },
-  {
-    id: "2b3c4d5e",
-    name: "User Two",
-    role: "WRITE",
-  },
-  {
-    id: "3c4d5e6f",
-    name: "User Three",
-    role: "READ",
-  },
-  {
-    id: "4d5e6f7g",
-    name: "User Four",
-    role: "WRITE",
-  },
-];
+// const data: AccessToken[] = [
+//   {
+//     id: "1a2b3c4d",
+//     name: "User One",
+//     role: "READ",
+//   },
+//   {
+//     id: "2b3c4d5e",
+//     name: "User Two",
+//     role: "WRITE",
+//   },
+//   {
+//     id: "3c4d5e6f",
+//     name: "User Three",
+//     role: "READ",
+//   },
+//   {
+//     id: "4d5e6f7g",
+//     name: "User Four",
+//     role: "WRITE",
+//   },
+// ];
 
-export const getAccessTokenList = mockApiData(data);
+export const getAccessTokenList = async (): Promise<AccessToken[]> => {
+  const { data } = await axios.get<null, AxiosResponse<AccessKeyResponse>>(
+    route("/api/v1/get-access-keys")
+  );
+
+  return data.accessKeys.map((item) => {
+    return { id: item.id, name: item.friendlyName, role: "WRITE" };
+  });
+};
