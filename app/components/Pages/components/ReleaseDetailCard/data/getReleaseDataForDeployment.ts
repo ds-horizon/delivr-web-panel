@@ -1,11 +1,16 @@
 import {
   getReleaseListForDeployment,
+  GetReleaseParamArgs,
   ReleaseListResponse,
 } from "../../ReleaseListForDeploymentTable/data/getReleaseListForDeployment";
 
+export type GetReleaseDataForDeploymentArgs = {
+  label: string;
+} & GetReleaseParamArgs;
+
 export const getReleaseDataForDeployment = async (
-  id: string
+  request: GetReleaseDataForDeploymentArgs
 ): Promise<ReleaseListResponse | undefined> => {
-  const data = await getReleaseListForDeployment();
-  return data.filter((item) => item.id === id)[0];
+  const data = await getReleaseListForDeployment(request);
+  return data.filter((item) => item.id === request.label)[0];
 };

@@ -22,6 +22,7 @@ import { ReleaseListResponse } from "../ReleaseListForDeploymentTable/data/getRe
 import { useGetReleaseDataForDeployment } from "./hooks/useGetReleaseDataForDeployment";
 import { formatDate } from "~/utils/formatDate";
 import { ReleaseEditFormModal } from "../ReleaseEditForm";
+import { useParams, useSearchParams } from "@remix-run/react";
 
 type StatsObject = {
   icon: Icon;
@@ -41,8 +42,14 @@ export type ReleaseDataCardProps = {
 };
 
 export function ReleaseDetailCard({ id, onEditClick }: ReleaseDataCardProps) {
+  const params = useParams();
+  const [searchParams] = useSearchParams();
   const { data, isError, isLoading, isFetching } =
-    useGetReleaseDataForDeployment(id);
+    useGetReleaseDataForDeployment({
+      label: id,
+      deploymentName: searchParams.get("deployment") ?? "",
+      appId: params.app ?? "",
+    });
 
   if (isLoading || isFetching) {
     return <Skeleton h={"100%"} w={"100%"} mih={400} />;
