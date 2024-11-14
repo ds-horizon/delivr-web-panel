@@ -1,4 +1,11 @@
-import { Button, Center, TextInput, Box, Modal, Select } from "@mantine/core";
+import {
+  Button,
+  Center,
+  TextInput,
+  Box,
+  Modal,
+  NativeSelect,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 
 export type CreateTokenFormProps = {
@@ -7,9 +14,9 @@ export type CreateTokenFormProps = {
 };
 
 export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
-  const form = useForm<{ name: string }>({
+  const form = useForm<{ name: string; access: "READ" | "WRITE" }>({
     mode: "uncontrolled",
-    initialValues: { name: "Enter Name" },
+    initialValues: { name: "Enter Name", access: "READ" },
     validateInputOnChange: true,
     validate: {
       name: (value) => {
@@ -29,11 +36,12 @@ export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
             mt={"md"}
           />
 
-          <Select
+          <NativeSelect
             label="Access Type"
-            placeholder="Pick value"
             data={["Read", "Write"]}
             mt={"md"}
+            key={form.key("access")}
+            {...form.getInputProps("access")}
           />
 
           <Button
