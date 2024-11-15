@@ -8,6 +8,7 @@ import {
   UnstyledButton,
   rem,
   NavLink,
+  Kbd,
 } from "@mantine/core";
 import { Icon, IconChevronRight } from "@tabler/icons-react";
 import classes from "./index.module.css";
@@ -48,10 +49,22 @@ export function LinksGroup({
     >
       <NavLink
         key={link.link}
-        label={link.label}
+        label={
+          link.label === "Apps" ? (
+            <Text>
+              {link.label}
+              <Kbd h={"fit-content"} ml={"sm"}>
+                ⌘ K
+              </Kbd>
+            </Text>
+          ) : (
+            link.label
+          )
+        }
         variant="subtle"
         active={location.pathname === link.link}
       />
+      {/* {link.label === "Apps" && <Kbd h={"fit-content"}>⌘ K</Kbd>} */}
     </Text>
   ));
 
