@@ -73,17 +73,17 @@ export function CreateAppForm() {
       <Group justify="flex-end" mt="md">
         <Button
           onClick={() => {
-            let owner = org.value;
+            let owner = { orgId: "", orgName: org.value };
             const _org = orgs.data?.filter(
               (item) => item.orgName === org.value
             );
             if (_org?.length) {
-              owner = _org[0].id;
+              owner = { orgId: _org[0].id, orgName: _org[0].orgName };
             }
             return mutate(
               {
                 name: form.getValues().appName,
-                orgId: owner,
+                ...owner,
               },
               {
                 onSuccess: () => {

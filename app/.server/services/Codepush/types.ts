@@ -70,10 +70,17 @@ export type AppsResponse = {
   apps: Apps[];
 };
 
-export type CreateAppRequest = BaseHeader & {
-  name: string;
-  orgId: string;
-};
+export type CreateAppRequest =
+  | (BaseHeader & {
+      name: string;
+      orgId: string;
+      orgName?: never;
+    })
+  | (BaseHeader & {
+      name: string;
+      orgName: string;
+      orgId?: never;
+    });
 
 export type CreateAppResponse = {
   app: Apps;

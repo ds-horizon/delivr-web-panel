@@ -75,13 +75,19 @@ class Codepush {
   async createAppForTenant(data: CreateAppRequest) {
     const headers: CreateAppRequest = data;
 
+    const payload = data.orgId?.length
+      ? {
+          orgId: data.orgId,
+        }
+      : {
+          orgName: data.orgName,
+        };
+
     return this.__client.post<null, AxiosResponse<CreateAppResponse>>(
       "/apps",
       {
         name: data.name,
-        organisation: {
-          orgId: data.orgId,
-        },
+        organisation: payload,
       },
       {
         headers,

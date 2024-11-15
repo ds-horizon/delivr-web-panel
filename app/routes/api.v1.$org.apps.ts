@@ -1,5 +1,6 @@
 import { json } from "@remix-run/react";
 import { CodepushService } from "~/.server/services/Codepush";
+import { CreateAppRequest } from "~/.server/services/Codepush/types";
 import {
   authenticateActionRequest,
   AuthenticatedActionFunction,
@@ -8,15 +9,23 @@ import {
 
 const createDeployment: AuthenticatedActionFunction = async ({
   user,
-  params,
   request,
 }) => {
   const body = await request.json();
-  const { data, status } = await CodepushService.createAppForTenant({
-    userId: user.user.id,
-    orgId: params.org ?? "",
-    name: body.name ?? "",
-  });
+
+  const payload: CreateAppRequest = body.orgId?.length
+    ? {
+        userId: user.user.id,
+        orgId: (body.orgId as string) ?? "",
+        name: (body.name as string) ?? "",
+      }
+    : {
+        userId: user.user.id,
+        orgName: (body.orgName as string) ?? "",
+        name: (body.name as string) ?? "",
+      };
+
+  const { data, status } = await CodepushService.createAppForTenant(payload);
   return json(data, { status });
 };
 

@@ -7,13 +7,15 @@ import {
 
 export type CreateAppArgs = Omit<CreateAppRequest, "userId">;
 
-export const createApp = async ({ name, orgId }: CreateAppArgs) => {
+export const createApp = async ({ name, orgId, orgName }: CreateAppArgs) => {
   const { data } = await axios.post<null, AxiosResponse<CreateAppResponse>>(
     route("/api/v1/:org/apps", {
-      org: orgId,
+      org: orgId?.length ? orgId : "new",
     }),
     {
       name,
+      orgId,
+      orgName,
     }
   );
 

@@ -5,6 +5,7 @@ import {
   LoaderFunction,
   LoaderFunctionArgs,
 } from "@remix-run/node";
+import { AxiosError } from "axios";
 import { AuthenticatorService } from "~/.server/services/Auth/Auth";
 import { User } from "~/.server/services/Auth/Auth.interface";
 
@@ -23,7 +24,16 @@ type AuthenticatedLoaderFunction = (
 export const authenticateLoaderRequest = (cb?: AuthenticatedLoaderFunction) => {
   return async (args: LoaderFunctionArgs) => {
     const user = await AuthenticatorService.isAuthenticated(args.request);
-    return cb?.({ ...args, user }) ?? user;
+    try {
+      return (await cb?.({ ...args, user })) ?? user;
+    } catch (e) {
+      return json(
+        {
+          message: (e as AxiosError)?.response?.data ?? "Something Went Wrong",
+        },
+        { status: 500 }
+      );
+    }
   };
 };
 
@@ -40,15 +50,22 @@ export const authenticateActionRequest = (
 ) => {
   return async (args: ActionFunctionArgs) => {
     const method = args.request.method as ActionMethods;
-
     if (!cb[method]) {
       return json(
         { message: `${args.request.method} not allowed` },
         { status: 405 }
       );
     }
-
     const user = await AuthenticatorService.isAuthenticated(args.request);
-    return cb[method]({ ...args, user });
+    try {
+      return await cb[method]({ ...args, user });
+    } catch (e) {
+      return json(
+        {
+          message: (e as AxiosError)?.response?.data ?? "Something Went Wrong",
+        },
+        { status: 500 }
+      );
+    }
   };
 };
