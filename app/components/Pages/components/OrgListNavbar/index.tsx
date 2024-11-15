@@ -25,10 +25,6 @@ export function OrgListWithActions() {
             link: `/dashboard/${org.id}/apps`,
           },
           {
-            label: "People",
-            link: `/dashboard/${org.id}/people`,
-          },
-          {
             label: "Manage",
             link: `/dashboard/${org.id}/manage`,
           },

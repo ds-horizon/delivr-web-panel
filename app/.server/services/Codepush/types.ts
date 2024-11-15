@@ -1,4 +1,4 @@
-type Organization = {
+export type Organization = {
   id: string;
   displayName: string;
   role: "Owner" | "Collabarator";
@@ -136,4 +136,23 @@ export type CreateAccessKeyResponse = {
     createdTime: number;
     expires: number;
   };
+};
+
+export type CollabaratorsRequest = BaseHeader & {
+  tenant: string;
+  appId: string;
+};
+
+export type CollabaratorsResponse = {
+  collaborators: Record<string, Collaborator>;
+};
+
+export type AddCollabaratorsRequest = BaseHeader & {
+  tenant: string;
+  appId: string;
+  email: string;
+};
+
+export type AddCollabaratorsResponse = {
+  collaborators: Record<string, Collaborator>;
 };

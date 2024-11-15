@@ -4,9 +4,13 @@ import { User } from "../Auth/Auth.interface";
 import {
   AccessKeyRequest,
   AccessKeyResponse,
+  AddCollabaratorsRequest,
+  AddCollabaratorsResponse,
   AppsRequest,
   AppsResponse,
   BaseHeader,
+  CollabaratorsRequest,
+  CollabaratorsResponse,
   CreateAccessKeyRequest,
   CreateAccessKeyResponse,
   CreateAppRequest,
@@ -100,6 +104,31 @@ class Codepush {
 
     return this.__client.get<null, AxiosResponse<DeploymentsResponse>>(
       `/apps/${encodeURIComponent(data.appId)}/deployments`,
+      {
+        headers,
+      }
+    );
+  }
+
+  async getCollaboratorForApp(data: CollabaratorsRequest) {
+    const headers: CollabaratorsRequest = data;
+
+    return this.__client.get<null, AxiosResponse<CollabaratorsResponse>>(
+      `/apps/${encodeURIComponent(data.appId)}/collaborators`,
+      {
+        headers,
+      }
+    );
+  }
+
+  async addCollaboratorForApp(data: AddCollabaratorsRequest) {
+    const headers: AddCollabaratorsRequest = data;
+
+    return this.__client.post<null, AxiosResponse<AddCollabaratorsResponse>>(
+      `/apps/${encodeURIComponent(
+        data.appId
+      )}/collaborators/${encodeURIComponent(data.email)}`,
+      {},
       {
         headers,
       }
