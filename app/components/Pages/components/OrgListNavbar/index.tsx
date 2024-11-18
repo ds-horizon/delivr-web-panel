@@ -4,6 +4,7 @@ import { useGetOrgList } from "./hooks/useGetOrgList";
 import { LinksGroup, LinksGroupProps } from "~/components/NavbarLinksGroup";
 import { useMemo } from "react";
 import { IconGauge } from "@tabler/icons-react";
+import { route } from "routes-gen";
 
 export function OrgListWithActions() {
   const { data, isLoading, isError } = useGetOrgList();
@@ -22,11 +23,18 @@ export function OrgListWithActions() {
         links: [
           {
             label: "Apps",
-            link: `/dashboard/${org.id}/apps`,
+            link: route("/dashboard/:org/apps", { org: org.id }),
           },
           {
             label: "Manage",
-            link: `/dashboard/${org.id}/manage`,
+            link: route("/dashboard/:org/manage", {
+              org: org.id,
+            }),
+          },
+          {
+            label: "Delete",
+            link:
+              route("/dashboard/delete") + `?type=Organization?id=${org.id}`,
           },
         ].filter((_item) => (org.isAdmin ? true : _item.label !== "Manage")),
       };

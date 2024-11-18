@@ -13,14 +13,15 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { ReleaseListResponse } from "../ReleaseListForDeploymentTable/data/getReleaseListForDeployment";
-import { useSearchParams } from "@remix-run/react";
+import { useNavigate, useSearchParams } from "@remix-run/react";
 import { useState } from "react";
 import { IconHelpOctagon } from "@tabler/icons-react";
 
 type ReleaseEditProps = { data: ReleaseListResponse };
 
 export function ReleaseEditFormModal({ data }: ReleaseEditProps) {
-  const [serachParams, setSearchParams] = useSearchParams();
+  const [serachParams] = useSearchParams();
+  const navigate = useNavigate();
   const [rollout, setRollout] = useState(data.rollout);
   const form = useForm<ReleaseEditProps["data"]>({
     mode: "uncontrolled",
@@ -41,10 +42,7 @@ export function ReleaseEditFormModal({ data }: ReleaseEditProps) {
         serachParams.get("edit") === "true"
       }
       onClose={() => {
-        setSearchParams((p) => {
-          p.delete("edit");
-          return p;
-        });
+        navigate(-1);
       }}
       title="Edit Form"
       centered

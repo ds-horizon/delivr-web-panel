@@ -10,10 +10,12 @@ import {
   rem,
   Flex,
   Button,
+  NativeSelect,
 } from "@mantine/core";
 import classes from "./index.module.css";
 import { useGetAppCollaboratorList } from "./hooks/useGetAppCollaboratorList";
 import { AddCollboratorForm } from "../AddCollboratorForm";
+import { Collaborator } from "./data/getAppCollaborator";
 
 type CollabaratorActionProps = {
   selected: number;
@@ -34,7 +36,7 @@ const CollabaratorAction = ({ selected }: CollabaratorActionProps) => {
             }
           }}
         >
-          {selected ? `Delete ${selected} Collabarator` : "Add Collabarator"}
+          {selected ? `Delete ${selected} Collaborator` : "Add Collaborator"}
         </Button>
       </Flex>
     </>
@@ -44,6 +46,11 @@ const CollabaratorAction = ({ selected }: CollabaratorActionProps) => {
 export function CollabaratorList() {
   const { data, isLoading, isFetching } = useGetAppCollaboratorList();
   const [selection, setSelection] = useState<string[]>([]);
+
+  const accessTypes: Array<Collaborator["permission"]> = [
+    "Owner",
+    "Collabarator",
+  ];
 
   const getRows = () => {
     if (isLoading || isFetching) {
@@ -83,7 +90,9 @@ export function CollabaratorList() {
               </Text>
             </Group>
           </Table.Td>
-          <Table.Td>{item.permission}</Table.Td>
+          <Table.Td>
+            <NativeSelect value={item.permission} data={accessTypes} />
+          </Table.Td>
         </Table.Tr>
       );
     });

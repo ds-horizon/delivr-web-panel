@@ -1,7 +1,9 @@
-import { Card, Avatar, Text, Group, Button } from "@mantine/core";
+import { Card, Avatar, Text, Group, Button, Flex } from "@mantine/core";
 import classes from "./index.module.css";
 import { useNavigate } from "@remix-run/react";
 import { AppCardResponse } from "../Pages/components/AppList/data/getAppListForOrg";
+import { IconTrash } from "@tabler/icons-react";
+import { route } from "routes-gen";
 
 type AppCardProps = AppCardResponse & { link: string };
 
@@ -14,7 +16,13 @@ const stats: StatsObject[] = [
   { label: "Releases", key: "numberOfReleases" },
 ];
 
-export function AppCard({ name, metrics, description, link }: AppCardProps) {
+export function AppCard({
+  name,
+  metrics,
+  description,
+  link,
+  id,
+}: AppCardProps) {
   const navigate = useNavigate();
   const items = stats.map((stat) => (
     <div key={stat.label}>
@@ -49,18 +57,34 @@ export function AppCard({ name, metrics, description, link }: AppCardProps) {
       <Group mt="md" justify="center" gap={30}>
         {items}
       </Group>
-      <Button
-        fullWidth
-        radius="md"
-        mt="xl"
-        size="md"
-        variant="default"
-        onClick={() => {
-          navigate(link);
-        }}
-      >
-        Go To App
-      </Button>
+      <Flex justify={"space-between"} align={"center"}>
+        <Button
+          fullWidth
+          radius="md"
+          mt="xl"
+          size="md"
+          onClick={() => {
+            navigate(link);
+          }}
+        >
+          Go To App
+        </Button>
+        <Button
+          radius="md"
+          mt="xl"
+          mx={"sm"}
+          size="md"
+          onClick={() => {
+            navigate(
+              route("/dashboard/delete") + `?type=App (${name})&id=${id}`
+            );
+          }}
+          color="red"
+          variant="light"
+        >
+          <IconTrash />
+        </Button>
+      </Flex>
     </Card>
   );
 }

@@ -1,17 +1,33 @@
 "use client";
-import { AppShell, Burger, Code, Group, rem } from "@mantine/core";
+import {
+  AppShell,
+  Burger,
+  Button,
+  Code,
+  Flex,
+  Group,
+  Kbd,
+  rem,
+} from "@mantine/core";
 import { NavbarNested } from "~/components/NavbarNested";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { Logo } from "~/components/Logo";
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { authenticateLoaderRequest } from "~/utils/authenticate";
 import { User } from "~/.server/services/Auth/Auth.interface";
+import { route } from "routes-gen";
 
 export const loader = authenticateLoaderRequest();
 
 export default function Hello() {
   const data = useLoaderData<User>();
+  const navigate = useNavigate();
   const [opened, { toggle }] = useDisclosure();
+  const openCreateApp = () => {
+    navigate(route("/dashboard/create/app"));
+  };
+  useHotkeys([["C", openCreateApp]]);
+
   return (
     <AppShell
       header={{ height: 60 }}
@@ -19,15 +35,32 @@ export default function Hello() {
       padding="md"
     >
       <AppShell.Header>
-        <Group h="100%" px="md">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <div>
+        <Flex align={"center"} mt="sm">
+          <Group h="100%" px="md" w={"100%"}>
+            <Burger
+              opened={opened}
+              onClick={toggle}
+              hiddenFrom="sm"
+              size="sm"
+            />
             <Group justify="space-between">
               <Logo style={{ width: rem(120) }} />
               <Code fw={700}>v1.0.0</Code>
             </Group>
-          </div>
-        </Group>
+          </Group>
+          <Group mr="sm">
+            <Button
+              onClick={openCreateApp}
+              rightSection={
+                <Kbd size="sm" style={{ transform: "scale(0.8)" }}>
+                  C
+                </Kbd>
+              }
+            >
+              App
+            </Button>
+          </Group>
+        </Flex>
       </AppShell.Header>
       <AppShell.Navbar style={{ overflow: "hidden" }}>
         <NavbarNested user={data} />

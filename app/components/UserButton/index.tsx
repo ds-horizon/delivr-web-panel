@@ -45,7 +45,7 @@ export function UserButton({ user }: UserButtonProps) {
             <IconTrash style={{ width: rem(14), height: rem(14) }} />
           }
           onClick={() => {
-            navigate(route("/dashboard/delete"));
+            navigate(route("/dashboard/delete") + "?type=Profile");
           }}
         >
           Delete Account

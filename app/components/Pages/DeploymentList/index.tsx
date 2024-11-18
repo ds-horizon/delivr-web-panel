@@ -9,7 +9,7 @@ import {
   Text,
   Tooltip,
 } from "@mantine/core";
-import { useSearchParams } from "@remix-run/react";
+import { useNavigate, useSearchParams } from "@remix-run/react";
 import { DeploymentsSearch } from "../components/DeploymentsSearch";
 import { useGetDeploymentsForApp } from "../components/DeploymentsSearch/hooks/getDeploymentsForApp";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
@@ -19,6 +19,7 @@ import { useEffect } from "react";
 
 export const DeploymentList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const { data, isLoading } = useGetDeploymentsForApp();
 
   const details = data?.find(
@@ -34,7 +35,7 @@ export const DeploymentList = () => {
         });
       }
     }
-  }, [data, searchParams, setSearchParams]);
+  }, [data]);
 
   return (
     <>
@@ -79,8 +80,10 @@ export const DeploymentList = () => {
               </CopyButton>
             </Flex>
           </Card>
-        ) : (
+        ) : isLoading ? (
           <Skeleton h={50} w={170} />
+        ) : (
+          <Text>Please Select a Deployment</Text>
         )}
         <DeploymentsSearch />
       </Flex>
@@ -89,10 +92,7 @@ export const DeploymentList = () => {
         id={searchParams.get("releaseId")}
         opened={!!searchParams.get("releaseId")}
         close={() => {
-          setSearchParams((p) => {
-            p.delete("releaseId");
-            return p;
-          });
+          navigate(-1);
         }}
         deploymentName={details?.name}
       />
