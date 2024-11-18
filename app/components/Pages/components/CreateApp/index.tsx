@@ -5,18 +5,22 @@ import {
   TextInput,
   Autocomplete,
   TagsInput,
+  Skeleton,
 } from "@mantine/core";
 import { useGetOrgList } from "../OrgListNavbar/hooks/useGetOrgList";
 import { useCreateApp } from "./hooks/useCreateApp";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "@remix-run/react";
 import { route } from "routes-gen";
 
 export function CreateAppForm() {
   const { mutate, isLoading } = useCreateApp();
   const navigation = useNavigate();
-  const [org, setOrg] = useState({ value: "Select Org", error: "" });
   const orgs = useGetOrgList();
+  const [org, setOrg] = useState({
+    value: "",
+    error: "",
+  });
 
   const form = useForm<{ appName: string }>({
     mode: "uncontrolled",
@@ -41,35 +45,51 @@ export function CreateAppForm() {
     setOrg({ value, error: "" });
   };
 
+  const shouldShowLoader = orgs.isLoading || orgs.isFetching;
+
+  useEffect(() => {
+    setOrg({
+      value: orgs.data?.[0].orgName ?? "Select Org",
+      error: "",
+    });
+  }, [orgs.data]);
+
   return (
     <>
-      <TextInput
-        label="App Name"
-        placeholder="App Name"
-        withAsterisk
-        key={form.key("appName")}
-        disabled={isLoading}
-        {...form.getInputProps("appName")}
-      />
-      <Autocomplete
-        mt="md"
-        label="Select an Owner"
-        withAsterisk
-        placeholder="Pick an owner"
-        onChange={onOrgChange}
-        disabled={isLoading}
-        value={org.value}
-        error={org.error}
-        data={orgs.data?.map((item) => item.orgName) ?? []}
-      />
-      <TagsInput
-        mt="md"
-        label="Press Enter to submit a tag"
-        placeholder="Enter tag"
-        data={["Production", "Stage", "Dev", "Load"]}
-        clearable
-        disabled={isLoading}
-      />
+      <Skeleton visible={shouldShowLoader}>
+        <TextInput
+          label="App Name"
+          placeholder="App Name"
+          withAsterisk
+          key={form.key("appName")}
+          disabled={isLoading}
+          {...form.getInputProps("appName")}
+        />
+      </Skeleton>
+      <Skeleton visible={shouldShowLoader} mt={"md"}>
+        <Autocomplete
+          mt="md"
+          label="Select an Owner"
+          withAsterisk
+          placeholder="Pick an owner"
+          onChange={onOrgChange}
+          disabled={isLoading}
+          value={org.value}
+          error={org.error}
+          data={orgs.data?.map((item) => item.orgName) ?? []}
+        />
+      </Skeleton>
+
+      <Skeleton visible={shouldShowLoader} mt={"md"}>
+        <TagsInput
+          mt="md"
+          label="Press Enter to submit a tag"
+          placeholder="Enter tag"
+          data={["Production", "Stage", "Dev", "Load"]}
+          clearable
+          disabled={isLoading}
+        />
+      </Skeleton>
       <Group justify="flex-end" mt="md">
         <Button
           onClick={() => {
