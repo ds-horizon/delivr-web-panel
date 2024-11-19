@@ -13,6 +13,7 @@ export enum ActionMethods {
   POST = "POST",
   PUT = "PUT",
   DELETE = "DELETE",
+  PATCH = "PATCH",
 }
 
 type AuthenticatedRequestArgs<T> = T & { user: User };
@@ -31,7 +32,7 @@ export const authenticateLoaderRequest = (cb?: AuthenticatedLoaderFunction) => {
         {
           message: (e as AxiosError)?.response?.data ?? "Something Went Wrong",
         },
-        { status: 500 }
+        { status: (e as AxiosError)?.response?.status ?? 500 }
       );
     }
   };
@@ -64,7 +65,7 @@ export const authenticateActionRequest = (
         {
           message: (e as AxiosError)?.response?.data ?? "Something Went Wrong",
         },
-        { status: 500 }
+        { status: (e as AxiosError)?.response?.status ?? 500 }
       );
     }
   };

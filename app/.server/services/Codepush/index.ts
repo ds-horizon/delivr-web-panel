@@ -27,6 +27,8 @@ import {
   TenantsResponse,
   UpdateCollabaratorsRequest,
   UpdateCollabaratorsResponse,
+  UpdateDeploymentsReleaseRequest,
+  UpdatePackageRequest,
 } from "./types";
 
 class Codepush {
@@ -195,6 +197,23 @@ class Codepush {
       `/apps/${encodeURIComponent(data.appId)}/deployments/${encodeURIComponent(
         data.deploymentName
       )}`,
+      {
+        headers,
+      }
+    );
+  }
+
+  async updateReleaseForDeployentForApp(data: UpdateDeploymentsReleaseRequest) {
+    const headers: BaseHeader = data;
+    const body: UpdatePackageRequest = { ...data };
+
+    return this.__client.patch<null, AxiosResponse<DeploymentsReleaseResponse>>(
+      `/apps/${encodeURIComponent(data.appId)}/deployments/${encodeURIComponent(
+        data.deploymentName
+      )}/release`,
+      {
+        packageInfo: body,
+      },
       {
         headers,
       }

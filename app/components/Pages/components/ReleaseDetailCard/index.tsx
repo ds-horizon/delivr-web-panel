@@ -44,7 +44,7 @@ export type ReleaseDataCardProps = {
 export function ReleaseDetailCard({ id, onEditClick }: ReleaseDataCardProps) {
   const params = useParams();
   const [searchParams] = useSearchParams();
-  const { data, isError, isLoading, isFetching } =
+  const { data, isError, isLoading, isFetching, refetch } =
     useGetReleaseDataForDeployment({
       label: id,
       deploymentName: searchParams.get("deployment") ?? "",
@@ -137,7 +137,7 @@ export function ReleaseDetailCard({ id, onEditClick }: ReleaseDataCardProps) {
           </Button>
         </Flex>
       </Card.Section>
-      <ReleaseEditFormModal data={data} />
+      <ReleaseEditFormModal data={data} refetch={refetch} />
     </Card>
   );
 }

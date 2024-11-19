@@ -43,6 +43,14 @@ type Package = {
   uploadTime: number;
 };
 
+export type UpdatePackageRequest = {
+  appVersion: string;
+  description: string;
+  isDisabled: boolean;
+  isMandatory: boolean;
+  rollout: number;
+};
+
 type AccessKey = {
   createdTime: number;
   expires: number;
@@ -109,6 +117,20 @@ export type DeploymentsReleaseRequest = BaseHeader & {
 };
 
 export type DeploymentsReleaseResponse = {
+  deployment: {
+    name: string;
+    key: string;
+    package: Package;
+    packageHistory: Package[];
+  };
+};
+
+export type UpdateDeploymentsReleaseRequest = BaseHeader & {
+  appId: string;
+  deploymentName: string;
+} & UpdatePackageRequest;
+
+export type UpdateDeploymentsReleaseResponse = {
   deployment: {
     name: string;
     key: string;
