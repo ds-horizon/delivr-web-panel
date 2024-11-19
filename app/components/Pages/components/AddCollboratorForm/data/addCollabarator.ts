@@ -5,13 +5,13 @@ import {
   AddCollabaratorsResponse,
 } from "~/.server/services/Codepush/types";
 
-export type CreateDeploymentArgs = Omit<AddCollabaratorsRequest, "userId">;
+export type AddCollabaratorsArgs = Omit<AddCollabaratorsRequest, "userId">;
 
 export const addCollabarator = async ({
   email,
   tenant,
   appId,
-}: CreateDeploymentArgs) => {
+}: AddCollabaratorsArgs) => {
   const { data } = await axios.post<
     null,
     AxiosResponse<AddCollabaratorsResponse>

@@ -36,6 +36,10 @@ export const getOrgList = async (): Promise<Organization[]> => {
     route("/api/v1/get-tenants")
   );
   return data.organisations.map((item) => {
-    return { id: item.id, orgName: item.displayName, isAdmin: false };
+    return {
+      id: item.id,
+      orgName: item.displayName,
+      isAdmin: item.role === "Owner",
+    };
   });
 };

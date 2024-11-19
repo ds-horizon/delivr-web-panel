@@ -1,56 +1,15 @@
-import cx from "clsx";
 import { useState } from "react";
-import {
-  Table,
-  Checkbox,
-  ScrollArea,
-  Group,
-  Avatar,
-  Text,
-  rem,
-  Flex,
-  Button,
-  NativeSelect,
-} from "@mantine/core";
-import classes from "./index.module.css";
+import { Table, Checkbox, ScrollArea, rem, Overlay } from "@mantine/core";
+
 import { useGetAppCollaboratorList } from "./hooks/useGetAppCollaboratorList";
-import { AddCollboratorForm } from "../AddCollboratorForm";
-import { Collaborator } from "./data/getAppCollaborator";
 
-type CollabaratorActionProps = {
-  selected: number;
-};
-
-const CollabaratorAction = ({ selected }: CollabaratorActionProps) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <AddCollboratorForm open={open} onClose={() => setOpen(false)} />
-      <Flex align={"center"} justify={"space-between"}>
-        <Text>{selected ? `${selected} rows selected` : "Collabarator"}</Text>
-        <Button
-          color={selected ? "red" : "blue"}
-          onClick={() => {
-            if (!selected) {
-              setOpen(true);
-            }
-          }}
-        >
-          {selected ? `Delete ${selected} Collaborator` : "Add Collaborator"}
-        </Button>
-      </Flex>
-    </>
-  );
-};
+import { CollboratorRow } from "./components/CollboratorRow";
+import { CollabaratorAction } from "./components/CollboratorAction";
 
 export function CollabaratorList() {
-  const { data, isLoading, isFetching } = useGetAppCollaboratorList();
+  const { data, isLoading, isFetching, refetch } = useGetAppCollaboratorList();
   const [selection, setSelection] = useState<string[]>([]);
-
-  const accessTypes: Array<Collaborator["permission"]> = [
-    "Owner",
-    "Collabarator",
-  ];
+  const [disable, setDisable] = useState(false);
 
   const getRows = () => {
     if (isLoading || isFetching) {
@@ -70,30 +29,14 @@ export function CollabaratorList() {
     }
 
     return data?.map((item) => {
-      const selected = selection.includes(item.name);
       return (
-        <Table.Tr
+        <CollboratorRow
           key={item.name}
-          className={cx({ [classes.rowSelected]: selected })}
-        >
-          <Table.Td>
-            <Checkbox
-              checked={selection.includes(item.name)}
-              onChange={() => toggleRow(item.name)}
-            />
-          </Table.Td>
-          <Table.Td>
-            <Group gap="sm">
-              <Avatar size={26} radius={26} name={item.name} />
-              <Text size="sm" fw={500}>
-                {item.name}
-              </Text>
-            </Group>
-          </Table.Td>
-          <Table.Td>
-            <NativeSelect value={item.permission} data={accessTypes} />
-          </Table.Td>
-        </Table.Tr>
+          data={item}
+          selected={selection.includes(item.name)}
+          toggleSelection={() => toggleRow(item.name)}
+          refetch={refetch}
+        />
       );
     });
   };
@@ -116,8 +59,16 @@ export function CollabaratorList() {
 
   return (
     <>
-      <CollabaratorAction selected={selection.length} />
-      <ScrollArea>
+      <CollabaratorAction
+        selected={selection}
+        refetch={refetch}
+        setDisable={setDisable}
+        disable={disable}
+      />
+      <ScrollArea mt={"sm"}>
+        {disable && (
+          <Overlay color="gray" backgroundOpacity={0.3} radius={"md"} />
+        )}
         <Table w={"100%"} verticalSpacing="sm">
           <Table.Thead>
             <Table.Tr>

@@ -21,6 +21,37 @@ const addCollabarator: AuthenticatedActionFunction = async ({
   return json(data, { status });
 };
 
+const removeCollabarator: AuthenticatedActionFunction = async ({
+  user,
+  params,
+  request,
+}) => {
+  const { data, status } = await CodepushService.removeCollaboratorForApp({
+    userId: user.user.id,
+    appId: params.app ?? "",
+    email: request.headers.get("email") ?? "",
+    tenant: request.headers.get("tenant") ?? "",
+  });
+  return json(data, { status });
+};
+
+const updateCollabarator: AuthenticatedActionFunction = async ({
+  user,
+  params,
+  request,
+}) => {
+  const body = await request.json();
+  const { data, status } =
+    await CodepushService.updateCollaboratorPermissionForApp({
+      userId: user.user.id,
+      appId: params.app ?? "",
+      email: body.email ?? "",
+      tenant: body.tenant ?? "",
+      role: body.role ?? "Collaborator",
+    });
+  return json(data, { status });
+};
+
 export const loader = authenticateLoaderRequest(
   async ({ user, params, request }) => {
     const { data, status } = await CodepushService.getCollaboratorForApp({
@@ -32,4 +63,8 @@ export const loader = authenticateLoaderRequest(
   }
 );
 
-export const action = authenticateActionRequest({ POST: addCollabarator });
+export const action = authenticateActionRequest({
+  POST: addCollabarator,
+  PATCH: updateCollabarator,
+  DELETE: removeCollabarator,
+});

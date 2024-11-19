@@ -21,8 +21,12 @@ import {
   DeploymentsReleaseResponse,
   DeploymentsRequest,
   DeploymentsResponse,
+  RemoveCollabaratorsRequest,
+  RemoveCollabaratorsResponse,
   TenantsRequest,
   TenantsResponse,
+  UpdateCollabaratorsRequest,
+  UpdateCollabaratorsResponse,
 } from "./types";
 
 class Codepush {
@@ -129,6 +133,41 @@ class Codepush {
         data.appId
       )}/collaborators/${encodeURIComponent(data.email)}`,
       {},
+      {
+        headers,
+      }
+    );
+  }
+
+  async removeCollaboratorForApp(data: RemoveCollabaratorsRequest) {
+    const headers: RemoveCollabaratorsRequest = data;
+
+    return this.__client.delete<
+      null,
+      AxiosResponse<RemoveCollabaratorsResponse>
+    >(
+      `/apps/${encodeURIComponent(
+        data.appId
+      )}/collaborators/${encodeURIComponent(data.email)}`,
+      {
+        headers,
+      }
+    );
+  }
+
+  async updateCollaboratorPermissionForApp(data: UpdateCollabaratorsRequest) {
+    const headers: UpdateCollabaratorsRequest = data;
+
+    return this.__client.patch<
+      null,
+      AxiosResponse<UpdateCollabaratorsResponse>
+    >(
+      `/apps/${encodeURIComponent(
+        data.appId
+      )}/collaborators/${encodeURIComponent(data.email)}`,
+      {
+        role: data.role,
+      },
       {
         headers,
       }

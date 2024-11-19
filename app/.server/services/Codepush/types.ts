@@ -1,7 +1,7 @@
 export type Organization = {
   id: string;
   displayName: string;
-  role: "Owner" | "Collabarator";
+  role: "Owner" | "Collaborator";
 };
 
 type Collaborator = {
@@ -154,5 +154,26 @@ export type AddCollabaratorsRequest = BaseHeader & {
 };
 
 export type AddCollabaratorsResponse = {
+  collaborators: Record<string, Collaborator>;
+};
+
+export type RemoveCollabaratorsRequest = BaseHeader & {
+  tenant: string;
+  appId: string;
+  email: string;
+};
+
+export type RemoveCollabaratorsResponse = {
+  collaborators: Record<string, Collaborator>;
+};
+
+export type UpdateCollabaratorsRequest = BaseHeader & {
+  tenant: string;
+  appId: string;
+  email: string;
+  role: Organization["role"];
+};
+
+export type UpdateCollabaratorsResponse = {
   collaborators: Record<string, Collaborator>;
 };
