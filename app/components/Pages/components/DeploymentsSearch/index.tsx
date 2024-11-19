@@ -1,21 +1,28 @@
-import { useGetDeploymentsForApp } from "./hooks/getDeploymentsForApp";
 import {
   createSpotlight,
   Spotlight,
   SpotlightActionData,
 } from "@mantine/spotlight";
 import { IconDashboard, IconPlus, IconSearch } from "@tabler/icons-react";
-import { ActionIcon, Box, Button, Kbd, rem, Text } from "@mantine/core";
+import { ActionIcon, Box, Button, rem } from "@mantine/core";
 import { useSearchParams } from "@remix-run/react";
 import { CreateDeploymentForm } from "../CreateDeploymentForm";
 import { useState } from "react";
+import { DeploymentData } from "../../DeploymentList/data/getDeploymentsForApp";
 
 const [deploymentSearch, deploymentSearchActions] = createSpotlight();
 
-export const DeploymentsSearch = () => {
+export type DeploymentsSearchProps = {
+  data: DeploymentData[];
+  refetch: () => void;
+};
+
+export const DeploymentsSearch = ({
+  data,
+  refetch,
+}: DeploymentsSearchProps) => {
   const [_, setSearchParams] = useSearchParams();
   const [open, setOpen] = useState(false);
-  const { data } = useGetDeploymentsForApp();
 
   const items: SpotlightActionData[] =
     data?.map((item) => {
@@ -73,7 +80,13 @@ export const DeploymentsSearch = () => {
           placeholder: "Search...",
         }}
       />
-      <CreateDeploymentForm open={open} onClose={() => setOpen(false)} />
+      <CreateDeploymentForm
+        open={open}
+        onClose={() => {
+          refetch();
+          setOpen(false);
+        }}
+      />
     </Box>
   );
 };

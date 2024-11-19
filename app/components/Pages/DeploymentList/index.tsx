@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { useNavigate, useSearchParams } from "@remix-run/react";
 import { DeploymentsSearch } from "../components/DeploymentsSearch";
-import { useGetDeploymentsForApp } from "../components/DeploymentsSearch/hooks/getDeploymentsForApp";
+import { useGetDeploymentsForApp } from "./hooks/getDeploymentsForApp";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
 import { ReleaseListForDeploymentTable } from "../components/ReleaseListForDeploymentTable";
 import { ReleaseDeatilCardModal } from "../components/ReleaseDeatilCardModal";
@@ -20,7 +20,7 @@ import { useEffect } from "react";
 export const DeploymentList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { data, isLoading } = useGetDeploymentsForApp();
+  const { data, isLoading, refetch } = useGetDeploymentsForApp();
 
   const details = data?.find(
     (item) => item.name === searchParams.get("deployment")
@@ -85,7 +85,7 @@ export const DeploymentList = () => {
         ) : (
           <Text>Please Select a Deployment</Text>
         )}
-        <DeploymentsSearch />
+        <DeploymentsSearch data={data ?? []} refetch={refetch} />
       </Flex>
       <ReleaseListForDeploymentTable />
       <ReleaseDeatilCardModal

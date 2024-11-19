@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from "axios";
 import { route } from "routes-gen";
 import { DeploymentsResponse } from "~/.server/services/Codepush/types";
 
-type DeploymentData = {
+export type DeploymentData = {
   id: string;
   name: string;
   createdBy: string;
