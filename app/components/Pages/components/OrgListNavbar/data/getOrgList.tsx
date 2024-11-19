@@ -33,7 +33,7 @@ type Organization = {
 
 export const getOrgList = async (): Promise<Organization[]> => {
   const { data } = await axios.get<null, AxiosResponse<TenantsResponse>>(
-    route("/api/v1/get-tenants")
+    route("/api/v1/tenants")
   );
   return data.organisations.map((item) => {
     return {
