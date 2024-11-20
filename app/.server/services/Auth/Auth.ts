@@ -80,6 +80,13 @@ export class Auth {
   }
 
   async isAuthenticated(request: AuthRequest) {
+    const apiKey = request.headers.get("api-key") ?? "";
+
+    if (apiKey.length) {
+      const { data } = await CodepushService.getUserByAccessKey(apiKey);
+      return data;
+    }
+
     return await Auth.authenticator.isAuthenticated(request, {
       failureRedirect: AuthenticatorRoutes.LOGIN,
     });

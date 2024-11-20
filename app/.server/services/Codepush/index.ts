@@ -67,6 +67,17 @@ class Codepush {
     return data;
   }
 
+  getUserByAccessKey(key: string) {
+    return this.__client.get<null, AxiosResponse<User>>(
+      "/accountByaccessKeyName",
+      {
+        headers: {
+          accessKeyName: key,
+        },
+      }
+    );
+  }
+
   async getTenants(userId: string) {
     const headers: TenantsRequest = {
       userId,
