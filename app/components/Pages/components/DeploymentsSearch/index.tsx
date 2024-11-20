@@ -4,7 +4,7 @@ import {
   SpotlightActionData,
 } from "@mantine/spotlight";
 import { IconDashboard, IconPlus, IconSearch } from "@tabler/icons-react";
-import { ActionIcon, Box, Button, rem } from "@mantine/core";
+import { Box, Button, Menu, rem } from "@mantine/core";
 import { useSearchParams } from "@remix-run/react";
 import { CreateDeploymentForm } from "../CreateDeploymentForm";
 import { useState } from "react";
@@ -47,21 +47,29 @@ export const DeploymentsSearch = ({
 
   return (
     <Box>
-      <Button
-        variant="light"
-        rightSection={
-          <Box>
-            <ActionIcon mr={"sm"} ml={"lg"} onClick={() => setOpen(true)}>
-              <IconPlus style={{ width: rem(12), height: rem(12) }} />
-            </ActionIcon>
-            <ActionIcon onClick={deploymentSearchActions.open}>
-              <IconSearch style={{ width: rem(12), height: rem(12) }} />
-            </ActionIcon>
-          </Box>
-        }
-      >
-        Deployments
-      </Button>
+      <Menu>
+        <Menu.Target>
+          <Button>Deployments</Button>
+        </Menu.Target>
+        <Menu.Dropdown>
+          <Menu.Item
+            onClick={() => setOpen(true)}
+            leftSection={
+              <IconPlus style={{ width: rem(14), height: rem(14) }} />
+            }
+          >
+            Create
+          </Menu.Item>
+          <Menu.Item
+            onClick={deploymentSearchActions.open}
+            leftSection={
+              <IconSearch style={{ width: rem(14), height: rem(14) }} />
+            }
+          >
+            Search
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
       <Spotlight
         store={deploymentSearch}
         actions={items}
