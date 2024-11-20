@@ -34,7 +34,8 @@ export function OrgListWithActions() {
           {
             label: "Delete",
             link:
-              route("/dashboard/delete") + `?type=Organization?id=${org.id}`,
+              route("/dashboard/delete") +
+              `?type=org&id=${org.id}&name=${org.orgName}`,
           },
         ].filter((_item) => (org.isAdmin ? true : _item.label !== "Delete")),
       };

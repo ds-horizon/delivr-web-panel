@@ -17,6 +17,9 @@ import {
   CreateAppResponse,
   CreateDeploymentsRequest,
   CreateDeploymentsResponse,
+  DeleteAppRequest,
+  DeleteAppResponse,
+  DeleteTenantResponse,
   DeploymentsReleaseRequest,
   DeploymentsReleaseResponse,
   DeploymentsRequest,
@@ -105,6 +108,17 @@ class Codepush {
     );
   }
 
+  async deleteTenant(data: AppsRequest) {
+    const headers: Omit<AppsRequest, "userId"> = data;
+
+    return this.__client.delete<null, AxiosResponse<DeleteTenantResponse>>(
+      `/tenants/${encodeURIComponent(data.tenant)}`,
+      {
+        headers,
+      }
+    );
+  }
+
   async getDeployentsForApp(data: DeploymentsRequest) {
     const headers: DeploymentsRequest = data;
 
@@ -121,6 +135,17 @@ class Codepush {
 
     return this.__client.get<null, AxiosResponse<CollabaratorsResponse>>(
       `/apps/${encodeURIComponent(data.appId)}/collaborators`,
+      {
+        headers,
+      }
+    );
+  }
+
+  async deleteAppForTenant(data: DeleteAppRequest) {
+    const headers: Omit<DeleteAppRequest, "appId"> = data;
+
+    return this.__client.get<null, AxiosResponse<DeleteAppResponse>>(
+      `/apps/${encodeURIComponent(data.appId)}`,
       {
         headers,
       }

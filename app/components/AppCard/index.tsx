@@ -3,9 +3,11 @@ import classes from "./index.module.css";
 import { useNavigate } from "@remix-run/react";
 import { AppCardResponse } from "../Pages/components/AppList/data/getAppListForOrg";
 import { IconTrash } from "@tabler/icons-react";
-import { route } from "routes-gen";
 
-type AppCardProps = AppCardResponse & { link: string };
+export type AppCardProps = AppCardResponse & {
+  link: string;
+  deleteLink: string;
+};
 
 type StatsObject = {
   label: string;
@@ -21,7 +23,7 @@ export function AppCard({
   metrics,
   description,
   link,
-  id,
+  deleteLink,
 }: AppCardProps) {
   const navigate = useNavigate();
   const items = stats.map((stat) => (
@@ -75,9 +77,7 @@ export function AppCard({
           mx={"sm"}
           size="md"
           onClick={() => {
-            navigate(
-              route("/dashboard/delete") + `?type=App (${name})&id=${id}`
-            );
+            navigate(deleteLink);
           }}
           color="red"
           variant="light"

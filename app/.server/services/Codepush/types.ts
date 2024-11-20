@@ -74,6 +74,10 @@ export type AppsRequest = BaseHeader & {
   tenant: string;
 };
 
+export type DeleteTenantResponse = {
+  status: string;
+};
+
 export type AppsResponse = {
   apps: Apps[];
 };
@@ -167,6 +171,15 @@ export type CollabaratorsRequest = BaseHeader & {
 
 export type CollabaratorsResponse = {
   collaborators: Record<string, Collaborator>;
+};
+
+export type DeleteAppRequest = BaseHeader & {
+  tenant: string;
+  appId: string;
+};
+
+export type DeleteAppResponse = {
+  status: string;
 };
 
 export type AddCollabaratorsRequest = BaseHeader & {

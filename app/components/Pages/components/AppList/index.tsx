@@ -2,7 +2,7 @@
 import { Text, Skeleton, Grid, Center, rem } from "@mantine/core";
 import { useGetAppListForOrg } from "./hooks/useGetAppListForOrg";
 import { useNavigate, useParams } from "@remix-run/react";
-import { AppCard } from "~/components/AppCard";
+import { AppCard, AppCardProps } from "~/components/AppCard";
 import { route } from "routes-gen";
 import { Spotlight, SpotlightActionData } from "@mantine/spotlight";
 import { IconApps, IconSearch } from "@tabler/icons-react";
@@ -12,13 +12,16 @@ export function AppListForOrg() {
   const navigate = useNavigate();
   const { data, isLoading, isError } = useGetAppListForOrg(params.org ?? "");
 
-  const _modData =
+  const _modData: AppCardProps[] =
     data?.map((item) => ({
       ...item,
       link: route("/dashboard/:org/:app", {
         org: params.org ?? "",
         app: item.id,
       }),
+      deleteLink:
+        route("/dashboard/delete") +
+        `?type=app&app=${item.id}&tenant=${params.org}`,
     })) ?? [];
 
   if (isLoading) {
