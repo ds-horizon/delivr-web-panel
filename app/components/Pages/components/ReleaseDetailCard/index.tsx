@@ -23,6 +23,7 @@ import { useGetReleaseDataForDeployment } from "./hooks/useGetReleaseDataForDepl
 import { formatDate } from "~/utils/formatDate";
 import { ReleaseEditFormModal } from "../ReleaseEditForm";
 import { useParams, useSearchParams } from "@remix-run/react";
+import { PromoteReleaseForm } from "../PromoteReleaseForm";
 
 type StatsObject = {
   icon: Icon;
@@ -39,9 +40,14 @@ const stats: StatsObject[] = [
 export type ReleaseDataCardProps = {
   id: string;
   onEditClick: () => void;
+  onPromoteClick: () => void;
 };
 
-export function ReleaseDetailCard({ id, onEditClick }: ReleaseDataCardProps) {
+export function ReleaseDetailCard({
+  id,
+  onEditClick,
+  onPromoteClick,
+}: ReleaseDataCardProps) {
   const params = useParams();
   const [searchParams] = useSearchParams();
   const { data, isError, isLoading, isFetching, refetch } =
@@ -131,13 +137,19 @@ export function ReleaseDetailCard({ id, onEditClick }: ReleaseDataCardProps) {
               </Text>
             </Tooltip>
           </Flex>
+          <Group>
+            <Button radius="xl" onClick={onEditClick}>
+              Edit
+            </Button>
 
-          <Button radius="xl" onClick={onEditClick}>
-            Edit
-          </Button>
+            <Button radius="xl" onClick={onPromoteClick}>
+              Promote
+            </Button>
+          </Group>
         </Flex>
       </Card.Section>
       <ReleaseEditFormModal data={data} refetch={refetch} />
+      <PromoteReleaseForm release={data} refetch={refetch} />
     </Card>
   );
 }

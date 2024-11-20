@@ -14,7 +14,7 @@ import { DeploymentsSearch } from "../components/DeploymentsSearch";
 import { useGetDeploymentsForApp } from "./hooks/getDeploymentsForApp";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
 import { ReleaseListForDeploymentTable } from "../components/ReleaseListForDeploymentTable";
-import { ReleaseDeatilCardModal } from "../components/ReleaseDeatilCardModal";
+import { ReleaseDeatilCardModal } from "../components/ReleaseDetailCardModal";
 import { useEffect } from "react";
 
 export const DeploymentList = () => {

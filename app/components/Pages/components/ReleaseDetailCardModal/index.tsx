@@ -32,6 +32,12 @@ export const ReleaseDeatilCardModal = ({
             return p;
           })
         }
+        onPromoteClick={() =>
+          setSearchParams((p) => {
+            p.set("promote", "true");
+            return p;
+          })
+        }
       />
     </Modal>
   ) : (

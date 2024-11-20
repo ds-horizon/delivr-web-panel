@@ -212,3 +212,18 @@ export type UpdateCollabaratorsRequest = BaseHeader & {
 export type UpdateCollabaratorsResponse = {
   collaborators: Record<string, Collaborator>;
 };
+
+export type PromoteReleaseToDeploymentRequest = BaseHeader & {
+  sourceDeployment: string;
+  targetDeployment: string;
+  appVersion: string;
+  label: string;
+  appId: string;
+  description: string;
+  isDisabled: boolean;
+  isMandatory: boolean;
+};
+
+export type PromoteReleaseToDeploymentResponse = {
+  package: Package;
+};

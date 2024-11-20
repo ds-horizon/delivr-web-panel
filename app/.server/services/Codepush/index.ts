@@ -24,6 +24,8 @@ import {
   DeploymentsReleaseResponse,
   DeploymentsRequest,
   DeploymentsResponse,
+  PromoteReleaseToDeploymentRequest,
+  PromoteReleaseToDeploymentResponse,
   RemoveCollabaratorsRequest,
   RemoveCollabaratorsResponse,
   TenantsRequest,
@@ -274,6 +276,32 @@ class Codepush {
       `/accessKeys`,
       {
         friendlyName: data.name,
+      },
+      {
+        headers,
+      }
+    );
+  }
+
+  async promoteReleaseFromDeployment(data: PromoteReleaseToDeploymentRequest) {
+    const headers: BaseHeader = data;
+
+    return this.__client.post<
+      null,
+      AxiosResponse<PromoteReleaseToDeploymentResponse>
+    >(
+      `apps/${encodeURIComponent(data.appId)}/deployments/${encodeURIComponent(
+        data.sourceDeployment
+      )}/promote/${encodeURIComponent(data.targetDeployment)}`,
+      {
+        packageInfo: {
+          appVersion: data.appVersion,
+          label: data.label,
+          rollout: 1,
+          description: data.description,
+          isDisabled: data.isDisabled,
+          isMandatory: data.isMandatory,
+        },
       },
       {
         headers,
