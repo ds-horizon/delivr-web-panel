@@ -6,7 +6,6 @@ import {
   Code,
   Flex,
   Group,
-  Kbd,
   rem,
 } from "@mantine/core";
 import { NavbarNested } from "~/components/NavbarNested";
@@ -16,6 +15,8 @@ import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { authenticateLoaderRequest } from "~/utils/authenticate";
 import { User } from "~/.server/services/Auth/Auth.interface";
 import { route } from "routes-gen";
+
+import config from "../../package.json";
 
 export const loader = authenticateLoaderRequest();
 
@@ -45,17 +46,13 @@ export default function Hello() {
             />
             <Group justify="space-between">
               <Logo style={{ width: rem(120) }} />
-              <Code fw={700}>v1.0.0</Code>
+              <Code fw={700}>v{config.version}</Code>
             </Group>
           </Group>
           <Group mr="sm">
             <Button
               onClick={openCreateApp}
-              rightSection={
-                <Kbd size="sm" style={{ transform: "scale(0.8)" }}>
-                  C
-                </Kbd>
-              }
+              rightSection={<Code fw={700}>C</Code>}
             >
               App
             </Button>
