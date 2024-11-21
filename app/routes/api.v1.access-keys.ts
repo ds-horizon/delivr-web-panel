@@ -11,6 +11,7 @@ const createToken: AuthenticatedActionFunction = async ({ user, request }) => {
   const { data, status } = await CodepushService.createAccessKey({
     userId: user.user.id,
     name: body.name ?? "",
+    access: body.access ?? "",
   });
   return json(data, { status });
 };

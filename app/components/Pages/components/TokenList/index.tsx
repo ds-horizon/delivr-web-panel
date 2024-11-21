@@ -17,13 +17,20 @@ import { CreateTokenForm } from "~/components/Pages/components/CreateTokenForm";
 
 type TokenActionProps = {
   selected: number;
+  refetch: () => void;
 };
 
-const TokenAction = ({ selected }: TokenActionProps) => {
+const TokenAction = ({ selected, refetch }: TokenActionProps) => {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <CreateTokenForm open={open} onClose={() => setOpen(false)} />
+      <CreateTokenForm
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          refetch();
+        }}
+      />
       <Flex align={"center"} justify={"space-between"}>
         <Text>{selected ? `${selected} rows selected` : "Tokens"}</Text>
         <Button
@@ -42,7 +49,7 @@ const TokenAction = ({ selected }: TokenActionProps) => {
 };
 
 export function AccessTokenList() {
-  const { data, isLoading, isFetching } = useGetAccessTokenList();
+  const { data, isLoading, isFetching, refetch } = useGetAccessTokenList();
   const [selection, setSelection] = useState<string[]>([]);
 
   const getRows = () => {
@@ -107,7 +114,7 @@ export function AccessTokenList() {
 
   return (
     <>
-      <TokenAction selected={selection.length} />
+      <TokenAction selected={selection.length} refetch={refetch} />
       <ScrollArea>
         <Table w={"100%"} verticalSpacing="sm">
           <Table.Thead>

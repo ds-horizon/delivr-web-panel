@@ -1,17 +1,19 @@
 import axios, { AxiosResponse } from "axios";
 import { route } from "routes-gen";
-import { CreateAccessKeyResponse } from "~/.server/services/Codepush/types";
+import {
+  CreateAccessKeyRequest,
+  CreateAccessKeyResponse,
+} from "~/.server/services/Codepush/types";
 
-type CreateTokenArgs = {
-  name: string;
-};
+export type CreateTokenArgs = Omit<CreateAccessKeyRequest, "userId">;
 
-export const createToken = async ({ name }: CreateTokenArgs) => {
+export const createToken = async ({ name, access }: CreateTokenArgs) => {
   const { data } = await axios.post<
     null,
     AxiosResponse<CreateAccessKeyResponse>
   >(route("/api/v1/access-keys"), {
     name,
+    access,
   });
 
   return data.accessKey;

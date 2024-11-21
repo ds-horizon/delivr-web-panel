@@ -4,7 +4,7 @@ import { AddCollboratorForm } from "../../AddCollboratorForm";
 import { useRemoveCollabarator } from "../hooks/useRemoveCollabarator";
 import { useParams } from "@remix-run/react";
 import { notifications } from "@mantine/notifications";
-import { AxiosError } from "axios";
+import { handleApiError } from "~/utils/handleApiError";
 
 type CollabaratorActionProps = {
   selected: string[];
@@ -40,9 +40,10 @@ export const CollabaratorAction = ({
                 notifications.show({
                   color: "red",
                   title: `Collaborator Deletion ${item}`,
-                  message:
-                    (e as AxiosError<{ message: string }>)?.response?.data
-                      ?.message ?? "Error While Removing Collaborator",
+                  message: handleApiError(
+                    e,
+                    "Error While Removing Collaborator"
+                  ),
                 });
               },
             }

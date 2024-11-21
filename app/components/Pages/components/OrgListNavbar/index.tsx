@@ -2,12 +2,17 @@
 import { Text, Skeleton } from "@mantine/core";
 import { useGetOrgList } from "./hooks/useGetOrgList";
 import { LinksGroup, LinksGroupProps } from "~/components/NavbarLinksGroup";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { IconGauge } from "@tabler/icons-react";
 import { route } from "routes-gen";
+import { ACTION_EVENTS, actions } from "~/utils/event-emitter";
 
 export function OrgListWithActions() {
-  const { data, isLoading, isError } = useGetOrgList();
+  const { data, isLoading, isError, refetch } = useGetOrgList();
+
+  useEffect(() => {
+    actions.add(ACTION_EVENTS.REFETCH_ORGS, refetch);
+  }, []);
 
   const parsedData: (LinksGroupProps & { id: string })[] = useMemo(() => {
     if (!data) {

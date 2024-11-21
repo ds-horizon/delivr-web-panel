@@ -12,6 +12,7 @@ import {
 import { useForm } from "@mantine/form";
 import { useCreateToken } from "./hooks/useCreateToken";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
+import { CreateTokenArgs } from "./data/createToken";
 
 export type CreateTokenFormProps = {
   open: boolean;
@@ -20,9 +21,9 @@ export type CreateTokenFormProps = {
 
 export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
   const { mutate, data, isLoading, show, clear } = useCreateToken();
-  const form = useForm<{ name: string; access: "READ" | "WRITE" }>({
+  const form = useForm<{ name: string; access: CreateTokenArgs["access"] }>({
     mode: "uncontrolled",
-    initialValues: { name: "Enter Name", access: "READ" },
+    initialValues: { name: "Enter Name", access: "Read" },
     validateInputOnChange: true,
     validate: {
       name: (value) => {
@@ -53,7 +54,7 @@ export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
 
           <NativeSelect
             label="Access Type"
-            data={["Read", "Write"]}
+            data={["All", "Write", "Read"]}
             mt={"md"}
             key={form.key("access")}
             {...form.getInputProps("access")}

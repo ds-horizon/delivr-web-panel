@@ -276,6 +276,7 @@ class Codepush {
       `/accessKeys`,
       {
         friendlyName: data.name,
+        scope: data.access,
       },
       {
         headers,

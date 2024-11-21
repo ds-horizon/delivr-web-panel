@@ -151,6 +151,7 @@ export type AccessKeyResponse = {
 
 export type CreateAccessKeyRequest = BaseHeader & {
   name: string;
+  access: "All" | "Write" | "Read";
 };
 
 export type CreateAccessKeyResponse = {

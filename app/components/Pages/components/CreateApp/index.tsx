@@ -12,6 +12,7 @@ import { useCreateApp } from "./hooks/useCreateApp";
 import { useEffect, useState } from "react";
 import { useNavigate } from "@remix-run/react";
 import { route } from "routes-gen";
+import { ACTION_EVENTS, actions } from "~/utils/event-emitter";
 
 export function CreateAppForm() {
   const { mutate, isLoading } = useCreateApp();
@@ -107,6 +108,7 @@ export function CreateAppForm() {
               },
               {
                 onSuccess: () => {
+                  actions.trigger(ACTION_EVENTS.REFETCH_ORGS);
                   form.reset();
                   navigation(route("/dashboard"));
                 },
