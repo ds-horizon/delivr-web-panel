@@ -14,8 +14,8 @@ export const DeleteApp = ({ onSuccess }: DeleteAppProps) => {
   const onDeleteClick = () => {
     mutate(
       {
-        tenant: searchParams.get("app") ?? "",
-        appId: searchParams.get("tenant") ?? "",
+        tenant: searchParams.get("tenant") ?? "",
+        appId: searchParams.get("app") ?? "",
       },
       {
         onSuccess: onSuccess,

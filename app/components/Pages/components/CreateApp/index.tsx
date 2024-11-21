@@ -108,11 +108,7 @@ export function CreateAppForm() {
               {
                 onSuccess: () => {
                   form.reset();
-                  navigation(
-                    route("/dashboard/:org/apps", {
-                      org: org.value,
-                    })
-                  );
+                  navigation(route("/dashboard"));
                 },
               }
             );
