@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { route } from "routes-gen";
 import { AppsResponse } from "~/.server/services/Codepush/types";
+import { Collaborator } from "../../CollaboratorList/data/getAppCollaborator";
 
 export type AppCardResponse = {
   id: string;
@@ -10,6 +11,8 @@ export type AppCardResponse = {
     numberOfDeployments: string;
     numberOfReleases: string;
   };
+  isAdmin: boolean;
+  role: Collaborator["permission"];
 };
 
 // const data: AppCardResponse[] = [
@@ -108,9 +111,15 @@ export type AppCardResponse = {
 //   },
 // ];
 
-export const getAppListForOrg = async (
-  orgId: string
-): Promise<AppCardResponse[]> => {
+export type GetAppListForOrgArgs = {
+  orgId: string;
+  userEmail: string;
+};
+
+export const getAppListForOrg = async ({
+  orgId,
+  userEmail,
+}: GetAppListForOrgArgs): Promise<AppCardResponse[]> => {
   const { data } = await axios.get<null, AxiosResponse<AppsResponse>>(
     route("/api/v1/:org/apps", {
       org: orgId,
@@ -118,6 +127,8 @@ export const getAppListForOrg = async (
   );
 
   return data.apps.map((item) => {
+    const role = item?.collaborators?.[userEmail]?.permission ?? "Collaborator";
+
     return {
       id: item.name,
       name: item.name,
@@ -126,6 +137,8 @@ export const getAppListForOrg = async (
         numberOfDeployments: "NA",
         numberOfReleases: "NA",
       },
+      isAdmin: role === "Owner",
+      role,
     };
   });
 };

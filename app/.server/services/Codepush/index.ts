@@ -70,7 +70,7 @@ class Codepush {
   }
 
   getUserByAccessKey(key: string) {
-    return this.__client.get<null, AxiosResponse<User>>(
+    return this.__client.get<null, AxiosResponse<Omit<User, "authenticated">>>(
       "/accountByaccessKeyName",
       {
         headers: {

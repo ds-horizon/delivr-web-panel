@@ -3,7 +3,13 @@ import {
   Spotlight,
   SpotlightActionData,
 } from "@mantine/spotlight";
-import { IconDashboard, IconPlus, IconSearch } from "@tabler/icons-react";
+import {
+  IconDashboard,
+  IconDotsVertical,
+  IconPlus,
+  IconSearch,
+  IconTrash,
+} from "@tabler/icons-react";
 import { Box, Button, Menu, rem } from "@mantine/core";
 import { useSearchParams } from "@remix-run/react";
 import { CreateDeploymentForm } from "../CreateDeploymentForm";
@@ -49,7 +55,13 @@ export const DeploymentsSearch = ({
     <Box>
       <Menu>
         <Menu.Target>
-          <Button>Deployments</Button>
+          <Button
+            rightSection={
+              <IconDotsVertical style={{ width: rem(14), height: rem(14) }} />
+            }
+          >
+            Deployment
+          </Button>
         </Menu.Target>
         <Menu.Dropdown>
           <Menu.Item
@@ -67,6 +79,15 @@ export const DeploymentsSearch = ({
             }
           >
             Search
+          </Menu.Item>
+          <Menu.Item
+            onClick={deploymentSearchActions.open}
+            color="red"
+            leftSection={
+              <IconTrash style={{ width: rem(14), height: rem(14) }} />
+            }
+          >
+            Delete
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>

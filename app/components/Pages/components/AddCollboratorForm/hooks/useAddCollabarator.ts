@@ -1,8 +1,8 @@
 import { useMutation } from "react-query";
 
 import { notifications } from "@mantine/notifications";
-import { AxiosError } from "axios";
 import { addCollabarator } from "../data/addCollabarator";
+import { handleApiError } from "~/utils/handleApiError";
 
 export const useAddCollabarator = () => {
   return useMutation(addCollabarator, {
@@ -10,9 +10,7 @@ export const useAddCollabarator = () => {
       notifications.show({
         color: "red",
         title: "Collaborator Addition",
-        message:
-          (e as AxiosError<{ message: string }>)?.response?.data?.message ??
-          "Error While Adding Collaborator",
+        message: handleApiError(e, "Error While Adding Collaborator"),
       });
     },
   });

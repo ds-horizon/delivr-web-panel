@@ -1,6 +1,9 @@
 import { useQuery } from "react-query";
-import { getAppListForOrg } from "../data/getAppListForOrg";
+import {
+  getAppListForOrg,
+  GetAppListForOrgArgs,
+} from "../data/getAppListForOrg";
 
-export const useGetAppListForOrg = (id: string) => {
-  return useQuery(`appList-for-${id}`, () => getAppListForOrg(id));
+export const useGetAppListForOrg = (data: GetAppListForOrgArgs) => {
+  return useQuery(`appList-for-${data.orgId}`, () => getAppListForOrg(data));
 };

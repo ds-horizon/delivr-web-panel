@@ -24,6 +24,7 @@ export function AppCard({
   description,
   link,
   deleteLink,
+  isAdmin,
 }: AppCardProps) {
   const navigate = useNavigate();
   const items = stats.map((stat) => (
@@ -71,19 +72,21 @@ export function AppCard({
         >
           Go To App
         </Button>
-        <Button
-          radius="md"
-          mt="xl"
-          mx={"sm"}
-          size="md"
-          onClick={() => {
-            navigate(deleteLink);
-          }}
-          color="red"
-          variant="light"
-        >
-          <IconTrash />
-        </Button>
+        {isAdmin && (
+          <Button
+            radius="md"
+            mt="xl"
+            mx={"sm"}
+            size="md"
+            onClick={() => {
+              navigate(deleteLink);
+            }}
+            color="red"
+            variant="light"
+          >
+            <IconTrash />
+          </Button>
+        )}
       </Flex>
     </Card>
   );

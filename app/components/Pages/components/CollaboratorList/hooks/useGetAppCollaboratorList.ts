@@ -10,6 +10,9 @@ export const useGetAppCollaboratorList = () => {
       getAppCollaboratorList({
         appId: params.app ?? "",
         tenant: params.org ?? "",
-      }) // Call the function with the deploymentId
+      }),
+    {
+      retry: 1,
+    }
   );
 };

@@ -1,7 +1,7 @@
 import { useMutation } from "react-query";
 import { deleteAppForOrg } from "../data/deleteAppForOrg";
 import { notifications } from "@mantine/notifications";
-import { AxiosError } from "axios";
+import { handleApiError } from "~/utils/handleApiError";
 
 export const useDeleteAppForOrg = () => {
   return useMutation(deleteAppForOrg, {
@@ -9,9 +9,7 @@ export const useDeleteAppForOrg = () => {
       notifications.show({
         color: "red",
         title: "App Deletion",
-        message:
-          (e as AxiosError<{ message: string }>)?.response?.data?.message ??
-          "Error While Deleting App",
+        message: handleApiError(e, "Error While Deleting App"),
       });
     },
   });

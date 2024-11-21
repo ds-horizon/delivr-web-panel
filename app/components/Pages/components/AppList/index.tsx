@@ -6,11 +6,19 @@ import { AppCard, AppCardProps } from "~/components/AppCard";
 import { route } from "routes-gen";
 import { Spotlight, SpotlightActionData } from "@mantine/spotlight";
 import { IconApps, IconSearch } from "@tabler/icons-react";
+import { User } from "~/.server/services/Auth/Auth.interface";
 
-export function AppListForOrg() {
+type AppListForOrgProps = {
+  user: User;
+};
+
+export function AppListForOrg({ user }: AppListForOrgProps) {
   const params = useParams();
   const navigate = useNavigate();
-  const { data, isLoading, isError } = useGetAppListForOrg(params.org ?? "");
+  const { data, isLoading, isError } = useGetAppListForOrg({
+    orgId: params.org ?? "",
+    userEmail: user.user.email,
+  });
 
   const _modData: AppCardProps[] =
     data?.map((item) => ({

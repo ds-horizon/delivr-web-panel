@@ -1,8 +1,8 @@
 import { useMutation } from "react-query";
 
 import { notifications } from "@mantine/notifications";
-import { AxiosError } from "axios";
 import { removeAppCollabarator } from "../data/removeAppCollaborator";
+import { handleApiError } from "~/utils/handleApiError";
 
 export const useRemoveCollabarator = () => {
   return useMutation(removeAppCollabarator, {
@@ -10,9 +10,7 @@ export const useRemoveCollabarator = () => {
       notifications.show({
         color: "red",
         title: "Collaborator Deletion",
-        message:
-          (e as AxiosError<{ message: string }>)?.response?.data?.message ??
-          "Error While Removing Collaborator",
+        message: handleApiError(e, "Error While Removing Collaborator"),
       });
     },
   });

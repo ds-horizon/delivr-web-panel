@@ -1,7 +1,7 @@
 import { useMutation } from "react-query";
 import { notifications } from "@mantine/notifications";
-import { AxiosError } from "axios";
 import { createApp } from "../data/createApp";
+import { handleApiError } from "~/utils/handleApiError";
 
 export const useCreateApp = () => {
   return useMutation(createApp, {
@@ -9,9 +9,7 @@ export const useCreateApp = () => {
       notifications.show({
         color: "red",
         title: "App Creation",
-        message:
-          (e as AxiosError<{ message: string }>)?.response?.data?.message ??
-          "Error While Creating App",
+        message: handleApiError(e, "Error While Creating App"),
       });
     },
   });

@@ -79,12 +79,12 @@ export class Auth {
     return Auth.authenticator.authenticate(provider, request);
   }
 
-  async isAuthenticated(request: AuthRequest) {
+  async isAuthenticated(request: AuthRequest): Promise<User> {
     const apiKey = request.headers.get("api-key") ?? "";
 
     if (apiKey.length) {
       const { data } = await CodepushService.getUserByAccessKey(apiKey);
-      return data;
+      return { ...data, authenticated: true };
     }
 
     return await Auth.authenticator.isAuthenticated(request, {
