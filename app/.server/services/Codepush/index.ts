@@ -17,6 +17,8 @@ import {
   CreateAppResponse,
   CreateDeploymentsRequest,
   CreateDeploymentsResponse,
+  DeleteAccessKeyRequest,
+  DeleteAccessKeyResponse,
   DeleteAppRequest,
   DeleteAppResponse,
   DeleteTenantResponse,
@@ -278,6 +280,17 @@ class Codepush {
         friendlyName: data.name,
         scope: data.access,
       },
+      {
+        headers,
+      }
+    );
+  }
+
+  async deleteAccessKey(data: DeleteAccessKeyRequest) {
+    const headers: BaseHeader = data;
+
+    return this.__client.delete<null, AxiosResponse<DeleteAccessKeyResponse>>(
+      `/accessKeys/${encodeURIComponent(data.name)}`,
       {
         headers,
       }

@@ -58,6 +58,7 @@ type AccessKey = {
   friendlyName: string;
   name: string;
   id: string;
+  scope: CreateAccessKeyRequest["access"];
 };
 
 export type BaseHeader = {
@@ -152,6 +153,14 @@ export type AccessKeyResponse = {
 export type CreateAccessKeyRequest = BaseHeader & {
   name: string;
   access: "All" | "Write" | "Read";
+};
+
+export type DeleteAccessKeyRequest = BaseHeader & {
+  name: string;
+};
+
+export type DeleteAccessKeyResponse = {
+  name: string;
 };
 
 export type CreateAccessKeyResponse = {

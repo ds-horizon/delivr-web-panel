@@ -1,11 +1,14 @@
 import axios, { AxiosResponse } from "axios";
 import { route } from "routes-gen";
-import { AccessKeyResponse } from "~/.server/services/Codepush/types";
+import {
+  AccessKeyResponse,
+  CreateAccessKeyRequest,
+} from "~/.server/services/Codepush/types";
 
 export type AccessToken = {
   id: string;
   name: string;
-  role: "READ" | "WRITE";
+  role: CreateAccessKeyRequest["access"];
 };
 
 // const data: AccessToken[] = [
@@ -37,6 +40,6 @@ export const getAccessTokenList = async (): Promise<AccessToken[]> => {
   );
 
   return data.accessKeys.map((item) => {
-    return { id: item.id, name: item.friendlyName, role: "WRITE" };
+    return { id: item.id, name: item.friendlyName, role: item.scope ?? "All" };
   });
 };

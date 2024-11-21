@@ -14,14 +14,62 @@ import {
 import classes from "./index.module.css";
 import { useGetAccessTokenList } from "./hooks/useGetAccessTokenList";
 import { CreateTokenForm } from "~/components/Pages/components/CreateTokenForm";
+import { useDeleteAccessToken } from "./hooks/useDeleteAccessToken";
+import { notifications } from "@mantine/notifications";
+import { handleApiError } from "~/utils/handleApiError";
 
 type TokenActionProps = {
-  selected: number;
+  selected: string[];
   refetch: () => void;
 };
 
 const TokenAction = ({ selected, refetch }: TokenActionProps) => {
+  const { mutateAsync } = useDeleteAccessToken();
   const [open, setOpen] = useState(false);
+  const numberOfSelected = selected.length;
+  const [disable, setDisable] = useState(false);
+
+  const onDelete = async () => {
+    try {
+      setDisable(true);
+      const data = await Promise.allSettled(
+        selected.map((item) => {
+          return mutateAsync(
+            {
+              name: item,
+            },
+            {
+              onError: (e) => {
+                notifications.show({
+                  color: "red",
+                  title: `Collaborator Deletion ${item}`,
+                  message: handleApiError(
+                    e,
+                    "Error While Removing Collaborator"
+                  ),
+                });
+              },
+            }
+          );
+        })
+      );
+      setDisable(false);
+
+      const isFailed = data.filter((item) => item.status === "rejected");
+
+      if (!isFailed) {
+        notifications.show({
+          color: "green",
+          title: `Collaborator Deletion`,
+          message: `${selected.join(",")}  collaborators removed successfully!`,
+        });
+      }
+      refetch();
+    } catch (e) {
+      setDisable(false);
+    }
+  };
+
   return (
     <>
       <CreateTokenForm
@@ -32,16 +80,20 @@ const TokenAction = ({ selected, refetch }: TokenActionProps) => {
         }}
       />
       <Flex align={"center"} justify={"space-between"}>
-        <Text>{selected ? `${selected} rows selected` : "Tokens"}</Text>
+        <Text>
+          {numberOfSelected ? `${numberOfSelected} rows selected` : "Tokens"}
+        </Text>
         <Button
-          color={selected ? "red" : "blue"}
+          color={numberOfSelected ? "red" : "blue"}
+          loading={disable}
           onClick={() => {
-            if (!selected) {
-              setOpen(true);
+            if (!numberOfSelected) {
+              return setOpen(true);
             }
+            onDelete();
           }}
         >
-          {selected ? `Delete ${selected} Tokens` : "Add Token"}
+          {numberOfSelected ? `Delete ${numberOfSelected} Tokens` : "Add Token"}
         </Button>
       </Flex>
     </>
@@ -70,7 +122,7 @@ export function AccessTokenList() {
     }
 
     return data?.map((item) => {
-      const selected = selection.includes(item.id);
+      const selected = selection.includes(item.name);
       return (
         <Table.Tr
           key={item.id}
@@ -78,8 +130,8 @@ export function AccessTokenList() {
         >
           <Table.Td>
             <Checkbox
-              checked={selection.includes(item.id)}
-              onChange={() => toggleRow(item.id)}
+              checked={selection.includes(item.name)}
+              onChange={() => toggleRow(item.name)}
             />
           </Table.Td>
           <Table.Td>
@@ -106,7 +158,7 @@ export function AccessTokenList() {
   const toggleAll = () => {
     if (!data) return;
     setSelection((current) =>
-      current.length === data.length ? [] : data.map((item) => item.id)
+      current.length === data.length ? [] : data.map((item) => item.name)
     );
   };
 
@@ -114,7 +166,13 @@ export function AccessTokenList() {
 
   return (
     <>
-      <TokenAction selected={selection.length} refetch={refetch} />
+      <TokenAction
+        selected={selection}
+        refetch={() => {
+          setSelection([]);
+          refetch();
+        }}
+      />
       <ScrollArea>
         <Table w={"100%"} verticalSpacing="sm">
           <Table.Thead>
