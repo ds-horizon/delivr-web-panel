@@ -157,7 +157,7 @@ class Codepush {
   async deleteAppForTenant(data: DeleteAppRequest) {
     const headers: Omit<DeleteAppRequest, "appId"> = data;
 
-    return this.__client.get<null, AxiosResponse<DeleteAppResponse>>(
+    return this.__client.delete<null, AxiosResponse<DeleteAppResponse>>(
       `/apps/${encodeURIComponent(data.appId)}`,
       {
         headers,
