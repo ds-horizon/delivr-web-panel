@@ -46,7 +46,7 @@ export default function Hello() {
             />
             <Group justify="space-between">
               <Logo style={{ width: rem(120) }} />
-              <Code fw={700}>v{config.version}</Code>
+              <Code fw={700}>v1.0.0</Code>
             </Group>
           </Group>
           <Group mr="sm">
