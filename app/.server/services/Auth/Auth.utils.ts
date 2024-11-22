@@ -1,4 +1,4 @@
-import type { SocialsProvider } from "remix-auth-socials";
+import { SocialsProvider } from "./Auth";
 
 export const getAuthenticatorCallbackUrl = (provider: SocialsProvider) => {
   return `/auth/${provider}/callback`;
