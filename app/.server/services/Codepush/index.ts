@@ -21,6 +21,8 @@ import {
   DeleteAccessKeyResponse,
   DeleteAppRequest,
   DeleteAppResponse,
+  DeleteDeploymentsRequest,
+  DeleteDeploymentsResponse,
   DeleteTenantResponse,
   DeploymentsReleaseRequest,
   DeploymentsReleaseResponse,
@@ -139,6 +141,19 @@ class Codepush {
 
     return this.__client.get<null, AxiosResponse<DeploymentsResponse>>(
       `/apps/${encodeURIComponent(data.appId)}/deployments`,
+      {
+        headers,
+      }
+    );
+  }
+
+  async deleteDeployentsForApp(data: DeleteDeploymentsRequest) {
+    const headers: DeleteDeploymentsRequest = data;
+
+    return this.__client.delete<null, AxiosResponse<DeleteDeploymentsResponse>>(
+      `/apps/${encodeURIComponent(data.appId)}/deployments/${encodeURIComponent(
+        data.deploymentName
+      )}`,
       {
         headers,
       }

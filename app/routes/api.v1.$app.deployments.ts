@@ -20,6 +20,20 @@ const createDeployment: AuthenticatedActionFunction = async ({
   return json(data, { status });
 };
 
+const deleteDeployment: AuthenticatedActionFunction = async ({
+  user,
+  params,
+  request,
+}) => {
+  const { data, status } = await CodepushService.deleteDeployentsForApp({
+    userId: user.user.id,
+    appId: params.app ?? "",
+    tenant: request.headers.get("tenant") ?? "",
+    deploymentName: request.headers.get("deploymentName") ?? "",
+  });
+  return json(data, { status });
+};
+
 export const loader = authenticateLoaderRequest(async ({ user, params }) => {
   const { data, status } = await CodepushService.getDeployentsForApp({
     userId: user.user.id,
@@ -28,4 +42,7 @@ export const loader = authenticateLoaderRequest(async ({ user, params }) => {
   return json(data, { status });
 });
 
-export const action = authenticateActionRequest({ POST: createDeployment });
+export const action = authenticateActionRequest({
+  POST: createDeployment,
+  DELETE: deleteDeployment,
+});

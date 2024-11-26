@@ -11,10 +11,11 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import { Box, Button, Menu, rem } from "@mantine/core";
-import { useSearchParams } from "@remix-run/react";
+import { useNavigate, useParams, useSearchParams } from "@remix-run/react";
 import { CreateDeploymentForm } from "../CreateDeploymentForm";
 import { useState } from "react";
 import { DeploymentData } from "../../DeploymentList/data/getDeploymentsForApp";
+import { useDeleteDeployment } from "./hooks/useDeleteDeployment";
 
 const [deploymentSearch, deploymentSearchActions] = createSpotlight();
 
@@ -27,8 +28,11 @@ export const DeploymentsSearch = ({
   data,
   refetch,
 }: DeploymentsSearchProps) => {
-  const [_, setSearchParams] = useSearchParams();
+  const params = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [open, setOpen] = useState(false);
+  const { mutate } = useDeleteDeployment();
+  const navigate = useNavigate();
 
   const items: SpotlightActionData[] =
     data?.map((item) => {
@@ -81,13 +85,27 @@ export const DeploymentsSearch = ({
             Search
           </Menu.Item>
           <Menu.Item
-            onClick={deploymentSearchActions.open}
+            onClick={() => {
+              mutate(
+                {
+                  appId: params.app ?? "",
+                  tenant: params.org ?? "",
+                  deploymentName: searchParams.get("deployment") ?? "",
+                },
+                {
+                  onSuccess: () => {
+                    refetch();
+                    navigate(-1);
+                  },
+                }
+              );
+            }}
             color="red"
             leftSection={
               <IconTrash style={{ width: rem(14), height: rem(14) }} />
             }
           >
-            Delete
+            Delete ({searchParams.get("deployment")})
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>

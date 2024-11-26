@@ -30,7 +30,7 @@ export const DeploymentList = () => {
     if (!searchParams.get("deployment")) {
       if (data) {
         setSearchParams((p) => {
-          p.set("deployment", data?.[0].name ?? "Production");
+          p.set("deployment", data?.[0]?.name ?? "Production");
           return p;
         });
       }
@@ -82,8 +82,10 @@ export const DeploymentList = () => {
           </Card>
         ) : isLoading ? (
           <Skeleton h={50} w={170} />
-        ) : (
+        ) : data?.length ? (
           <Text>Please Select a Deployment</Text>
+        ) : (
+          <Text>No Deployments Found</Text>
         )}
         <DeploymentsSearch data={data ?? []} refetch={refetch} />
       </Flex>

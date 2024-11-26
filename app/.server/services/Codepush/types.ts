@@ -107,6 +107,16 @@ export type DeploymentsResponse = {
   deployments: Deployment[];
 };
 
+export type DeleteDeploymentsRequest = BaseHeader & {
+  appId: string;
+  tenant: string;
+  deploymentName: string;
+};
+
+export type DeleteDeploymentsResponse = {
+  deployment: Deployment;
+};
+
 export type CreateDeploymentsRequest = BaseHeader & {
   appId: string;
   name: string;
