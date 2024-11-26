@@ -1,0 +1,6 @@
+[
+  {
+    "component_name": "cp-web-dashboard",
+    "deployment_type": "container"
+  }
+]
