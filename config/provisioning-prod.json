@@ -1,0 +1,22 @@
+[
+  {
+    "component_name": "codepush-web-dashboard",
+    "deployment_type": "aws_ec2",
+    "params": {
+      "instance_pool": [
+        "t3.medium",
+        "t3a.medium",
+        "c5a.large",
+        "c5.large"
+      ],
+      "lb_type": "alb",
+      "strategy": {
+        "name": "blue-green",
+        "auto_routing": false,
+        "canary": false
+      },
+      "num_instances": 2,
+      "healthcheck_grace_period": 500
+    }
+  }
+]

@@ -1,0 +1,6 @@
+[
+  {
+    "component_name": "codepush-web-dashboard",
+    "deployment_type": "aws_ec2"
+  }
+]
