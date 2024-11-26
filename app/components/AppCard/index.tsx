@@ -4,7 +4,7 @@ import { useNavigate } from "@remix-run/react";
 import { AppCardResponse } from "../Pages/components/AppList/data/getAppListForOrg";
 import { IconTrash } from "@tabler/icons-react";
 
-export type AppCardProps = AppCardResponse & {
+export type AppCardProps = Omit<AppCardResponse, "role"> & {
   link: string;
   deleteLink: string;
 };

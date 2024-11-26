@@ -5,3 +5,6 @@ node_modules
 .env
 
 app/routes.d.ts
+
+
+coverage

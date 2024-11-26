@@ -509,3 +509,250 @@ exports[`<AppCard /> > AppCard mounts properly 1`] = `
   "unmount": [Function],
 }
 `;
+
+exports[`<AppCard /> > AppCard mounts properly and matches snapshot 1`] = `
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <style
+        data-mantine-styles="classes"
+      >
+        @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+      </style>
+      <div
+        class="_card_4811cd m_e615b15f mantine-Card-root m_1b7284a3 mantine-Paper-root"
+        data-with-border="true"
+        style="--paper-radius: var(--mantine-radius-md); --card-padding: var(--mantine-spacing-xl);"
+      >
+        <div
+          class="m_599a2148 mantine-Card-section"
+          data-first-section="true"
+        />
+        <div
+          class="_avatar_4811cd m_f85678b6 mantine-Avatar-root"
+          style="--avatar-size: calc(5rem * var(--mantine-scale)); --avatar-radius: calc(5rem * var(--mantine-scale)); --avatar-bg: var(--mantine-color-teal-light); --avatar-color: var(--mantine-color-teal-light-color); --avatar-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+        >
+          <span
+            class="m_104cd71f mantine-Avatar-placeholder"
+          >
+            SA
+          </span>
+        </div>
+        <p
+          class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          style="margin-top: var(--mantine-spacing-sm); font-size: var(--mantine-font-size-lg); font-weight: 500; text-align: center;"
+        >
+          Sample App
+        </p>
+        <p
+          class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          style="color: var(--mantine-color-dimmed); font-size: var(--mantine-font-size-sm); text-align: center;"
+        >
+          This is a sample app description.
+        </p>
+        <div
+          class="m_4081bf90 mantine-Group-root"
+          style="--group-gap: calc(1.875rem * var(--mantine-scale)); --group-align: center; --group-justify: center; --group-wrap: wrap; margin-top: var(--mantine-spacing-md);"
+        >
+          <div>
+            <p
+              class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+              style="font-size: var(--mantine-font-size-lg); font-weight: 500; text-align: center;"
+            >
+              10
+            </p>
+            <p
+              class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+              style="color: var(--mantine-color-dimmed); font-size: var(--mantine-font-size-sm); text-align: center; line-height: 1;"
+            >
+              Deployments
+            </p>
+          </div>
+          <div>
+            <p
+              class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+              style="font-size: var(--mantine-font-size-lg); font-weight: 500; text-align: center;"
+            >
+              5
+            </p>
+            <p
+              class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+              style="color: var(--mantine-color-dimmed); font-size: var(--mantine-font-size-sm); text-align: center; line-height: 1;"
+            >
+              Releases
+            </p>
+          </div>
+        </div>
+        <div
+          class="m_8bffd616 mantine-Flex-root __m__-ra"
+          style="align-items: center; justify-content: space-between;"
+        >
+          <button
+            class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+            data-block="true"
+            data-size="md"
+            style="--button-height: var(--button-height-md); --button-padding-x: var(--button-padding-x-md); --button-fz: var(--mantine-font-size-md); --button-radius: var(--mantine-radius-md); --button-color: var(--mantine-color-white); margin-top: var(--mantine-spacing-xl);"
+            type="button"
+          >
+            <span
+              class="m_80f1301b mantine-Button-inner"
+            >
+              <span
+                class="m_811560b9 mantine-Button-label"
+              >
+                Go To App
+              </span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <style
+      data-mantine-styles="classes"
+    >
+      @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+    </style>
+    <div
+      class="_card_4811cd m_e615b15f mantine-Card-root m_1b7284a3 mantine-Paper-root"
+      data-with-border="true"
+      style="--paper-radius: var(--mantine-radius-md); --card-padding: var(--mantine-spacing-xl);"
+    >
+      <div
+        class="m_599a2148 mantine-Card-section"
+        data-first-section="true"
+      />
+      <div
+        class="_avatar_4811cd m_f85678b6 mantine-Avatar-root"
+        style="--avatar-size: calc(5rem * var(--mantine-scale)); --avatar-radius: calc(5rem * var(--mantine-scale)); --avatar-bg: var(--mantine-color-teal-light); --avatar-color: var(--mantine-color-teal-light-color); --avatar-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+      >
+        <span
+          class="m_104cd71f mantine-Avatar-placeholder"
+        >
+          SA
+        </span>
+      </div>
+      <p
+        class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+        style="margin-top: var(--mantine-spacing-sm); font-size: var(--mantine-font-size-lg); font-weight: 500; text-align: center;"
+      >
+        Sample App
+      </p>
+      <p
+        class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+        style="color: var(--mantine-color-dimmed); font-size: var(--mantine-font-size-sm); text-align: center;"
+      >
+        This is a sample app description.
+      </p>
+      <div
+        class="m_4081bf90 mantine-Group-root"
+        style="--group-gap: calc(1.875rem * var(--mantine-scale)); --group-align: center; --group-justify: center; --group-wrap: wrap; margin-top: var(--mantine-spacing-md);"
+      >
+        <div>
+          <p
+            class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+            style="font-size: var(--mantine-font-size-lg); font-weight: 500; text-align: center;"
+          >
+            10
+          </p>
+          <p
+            class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+            style="color: var(--mantine-color-dimmed); font-size: var(--mantine-font-size-sm); text-align: center; line-height: 1;"
+          >
+            Deployments
+          </p>
+        </div>
+        <div>
+          <p
+            class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+            style="font-size: var(--mantine-font-size-lg); font-weight: 500; text-align: center;"
+          >
+            5
+          </p>
+          <p
+            class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+            style="color: var(--mantine-color-dimmed); font-size: var(--mantine-font-size-sm); text-align: center; line-height: 1;"
+          >
+            Releases
+          </p>
+        </div>
+      </div>
+      <div
+        class="m_8bffd616 mantine-Flex-root __m__-ra"
+        style="align-items: center; justify-content: space-between;"
+      >
+        <button
+          class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+          data-block="true"
+          data-size="md"
+          style="--button-height: var(--button-height-md); --button-padding-x: var(--button-padding-x-md); --button-fz: var(--mantine-font-size-md); --button-radius: var(--mantine-radius-md); --button-color: var(--mantine-color-white); margin-top: var(--mantine-spacing-xl);"
+          type="button"
+        >
+          <span
+            class="m_80f1301b mantine-Button-inner"
+          >
+            <span
+              class="m_811560b9 mantine-Button-label"
+            >
+              Go To App
+            </span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;
