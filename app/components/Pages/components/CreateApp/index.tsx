@@ -50,7 +50,7 @@ export function CreateAppForm() {
 
   useEffect(() => {
     setOrg({
-      value: orgs.data?.[0].orgName ?? "Select Org",
+      value: orgs.data?.[0]?.orgName ?? "Select Org",
       error: "",
     });
   }, [orgs.data]);
