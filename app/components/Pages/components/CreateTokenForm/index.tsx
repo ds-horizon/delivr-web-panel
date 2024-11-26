@@ -20,7 +20,7 @@ export type CreateTokenFormProps = {
 };
 
 export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
-  const { mutate, data, isLoading, show, clear } = useCreateToken();
+  const { mutate, data, isLoading, reset } = useCreateToken();
   const form = useForm<{ name: string; access: CreateTokenArgs["access"] }>({
     mode: "uncontrolled",
     initialValues: { name: "Enter Name", access: "Read" },
@@ -37,7 +37,7 @@ export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
       onClose={() => {
         form.reset();
         onClose();
-        clear();
+        reset();
       }}
       title={"Create Token Flow"}
     >
@@ -61,7 +61,7 @@ export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
             disabled={isLoading}
           />
 
-          {data && show && (
+          {data && (
             <CopyButton value={data.name}>
               {({ copied, copy }) => (
                 <Button
@@ -93,19 +93,21 @@ export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
             </CopyButton>
           )}
 
-          <Button
-            color="blue"
-            fullWidth
-            mt="md"
-            radius="md"
-            disabled={!!Object.keys(form.errors).length && !isLoading}
-            loading={isLoading}
-            onClick={() => {
-              mutate(form.getValues());
-            }}
-          >
-            Create Token
-          </Button>
+          {!data && (
+            <Button
+              color="blue"
+              fullWidth
+              mt="md"
+              radius="md"
+              disabled={!!Object.keys(form.errors).length && !isLoading}
+              loading={isLoading}
+              onClick={() => {
+                mutate(form.getValues());
+              }}
+            >
+              Create Token
+            </Button>
+          )}
         </Box>
       </Center>
     </Modal>
