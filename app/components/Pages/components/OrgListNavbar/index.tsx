@@ -1,4 +1,3 @@
-"use client";
 import { Text, Skeleton } from "@mantine/core";
 import { useGetOrgList } from "./hooks/useGetOrgList";
 import { LinksGroup, LinksGroupProps } from "~/components/NavbarLinksGroup";

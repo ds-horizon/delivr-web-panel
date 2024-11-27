@@ -1,4 +1,3 @@
-"use client";
 import { Text, Skeleton, Grid, Center, rem } from "@mantine/core";
 import { useGetAppListForOrg } from "./hooks/useGetAppListForOrg";
 import { useNavigate, useParams } from "@remix-run/react";
