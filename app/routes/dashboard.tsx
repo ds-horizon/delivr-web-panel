@@ -15,6 +15,8 @@ import { authenticateLoaderRequest } from "~/utils/authenticate";
 import { User } from "~/.server/services/Auth/Auth.interface";
 import { route } from "routes-gen";
 
+import config from "~/config.json";
+
 export const loader = authenticateLoaderRequest();
 
 export default function Hello() {
@@ -43,7 +45,7 @@ export default function Hello() {
             />
             <Group justify="space-between">
               <Logo style={{ width: rem(120) }} />
-              <Code fw={700}>v1.0.0</Code>
+              <Code fw={700}>v{config.version}</Code>
             </Group>
           </Group>
           <Group mr="sm">

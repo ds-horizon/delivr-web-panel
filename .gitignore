@@ -8,3 +8,5 @@ app/routes.d.ts
 
 
 coverage
+
+app/config.json
