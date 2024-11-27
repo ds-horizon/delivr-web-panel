@@ -16,8 +16,6 @@ import { authenticateLoaderRequest } from "~/utils/authenticate";
 import { User } from "~/.server/services/Auth/Auth.interface";
 import { route } from "routes-gen";
 
-import config from "../../package.json";
-
 export const loader = authenticateLoaderRequest();
 
 export default function Hello() {

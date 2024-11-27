@@ -23,7 +23,7 @@ export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
   const { mutate, data, isLoading, reset } = useCreateToken();
   const form = useForm<{ name: string; access: CreateTokenArgs["access"] }>({
     mode: "uncontrolled",
-    initialValues: { name: "Enter Name", access: "Read" },
+    initialValues: { name: "", access: "Read" },
     validateInputOnChange: true,
     validate: {
       name: (value) => {
@@ -102,6 +102,9 @@ export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
               disabled={!!Object.keys(form.errors).length && !isLoading}
               loading={isLoading}
               onClick={() => {
+                if (form.validate().hasErrors) {
+                  return;
+                }
                 mutate(form.getValues());
               }}
             >

@@ -27,7 +27,7 @@ export function CreateAppForm() {
     mode: "uncontrolled",
     validateInputOnChange: true,
     initialValues: {
-      appName: "App Name",
+      appName: "",
     },
 
     validate: {
@@ -94,6 +94,9 @@ export function CreateAppForm() {
       <Group justify="flex-end" mt="md">
         <Button
           onClick={() => {
+            if (form.validate().hasErrors) {
+              return;
+            }
             let owner = { orgId: "", orgName: org.value };
             const _org = orgs.data?.filter(
               (item) => item.orgName === org.value
