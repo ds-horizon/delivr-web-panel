@@ -259,7 +259,8 @@ class Codepush {
   }
 
   async updateReleaseForDeployentForApp(data: UpdateDeploymentsReleaseRequest) {
-    const headers: BaseHeader = data;
+    const headers: Pick<UpdateDeploymentsReleaseRequest, "tenant" | "userId"> =
+      data;
     const body: UpdatePackageRequest = { ...data };
 
     return this.__client.patch<null, AxiosResponse<DeploymentsReleaseResponse>>(
@@ -313,7 +314,10 @@ class Codepush {
   }
 
   async promoteReleaseFromDeployment(data: PromoteReleaseToDeploymentRequest) {
-    const headers: BaseHeader = data;
+    const headers: Pick<
+      PromoteReleaseToDeploymentRequest,
+      "userId" | "tenant"
+    > = data;
 
     return this.__client.post<
       null,

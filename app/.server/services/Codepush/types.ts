@@ -143,6 +143,7 @@ export type DeploymentsReleaseResponse = {
 export type UpdateDeploymentsReleaseRequest = BaseHeader & {
   appId: string;
   deploymentName: string;
+  tenant: string;
 } & UpdatePackageRequest;
 
 export type UpdateDeploymentsReleaseResponse = {
@@ -242,6 +243,7 @@ export type PromoteReleaseToDeploymentRequest = BaseHeader & {
   description: string;
   isDisabled: boolean;
   isMandatory: boolean;
+  tenant: string;
 };
 
 export type PromoteReleaseToDeploymentResponse = {

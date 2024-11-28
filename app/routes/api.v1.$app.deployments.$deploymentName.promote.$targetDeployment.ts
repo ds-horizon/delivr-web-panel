@@ -21,6 +21,7 @@ const promoteRelease: AuthenticatedActionFunction = async ({
     sourceDeployment: params.deploymentName ?? "",
     targetDeployment: params.targetDeployment ?? "",
     label: body.label ?? "",
+    tenant: body.tenant ?? "",
   });
 
   return json(data, { status });

@@ -20,8 +20,9 @@ const updateRelease: AuthenticatedActionFunction = async ({
       appVersion: body.appVersion ?? "",
       description: body.description ?? "",
       isDisabled: body.isDisabled ?? true,
-      isMandatory: body.isDisabled ?? false,
+      isMandatory: body.isMandatory ?? false,
       rollout: body.rollout ?? 0,
+      tenant: body.tenant ?? "",
     });
 
   return json(data, { status });

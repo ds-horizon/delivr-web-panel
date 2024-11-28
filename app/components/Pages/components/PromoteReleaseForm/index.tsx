@@ -61,6 +61,7 @@ export const PromoteReleaseForm = ({
                 description: release.description,
                 isDisabled: !release.status,
                 isMandatory: release.mandatory,
+                tenant: params.org ?? "",
               },
               {
                 onSuccess: () => {
