@@ -5,9 +5,15 @@ import { SessionStorageService } from "../SessionStorage";
 
 import { getAuthenticatorCallbackUrl } from "./Auth.utils";
 import { AuthenticatorRoutes, User, UserReturnType } from "./Auth.interface";
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  redirect,
+  TypedResponse,
+} from "@remix-run/node";
 import { env } from "../config";
 import { CodepushService } from "../Codepush";
+import { redirectTo } from "../Cookie";
 
 export enum SocialsProvider {
   GOOGLE = "google",
@@ -68,10 +74,11 @@ export class Auth {
     return { user: session.get("_session") ?? null, session };
   }
 
-  callback(provider: SocialsProvider, request: AuthRequest) {
+  async callback(provider: SocialsProvider, request: AuthRequest) {
+    const redirectUri = await redirectTo.parse(request.headers.get("Cookie"));
     return Auth.authenticator.authenticate(provider, request, {
       failureRedirect: AuthenticatorRoutes.LOGIN,
-      successRedirect: "/dashboard",
+      successRedirect: redirectUri ?? "/dashboard",
     });
   }
 
@@ -79,7 +86,9 @@ export class Auth {
     return Auth.authenticator.authenticate(provider, request);
   }
 
-  async isAuthenticated(request: AuthRequest): Promise<User> {
+  async isAuthenticated(
+    request: AuthRequest
+  ): Promise<User | TypedResponse<never>> {
     const apiKey = request.headers.get("api-key") ?? "";
 
     if (apiKey.length) {
@@ -87,9 +96,23 @@ export class Auth {
       return { ...data, authenticated: true };
     }
 
-    return await Auth.authenticator.isAuthenticated(request, {
-      failureRedirect: AuthenticatorRoutes.LOGIN,
-    });
+    try {
+      return await Auth.authenticator.authenticate(
+        SocialsProvider.GOOGLE,
+        request,
+        {
+          throwOnError: true,
+        }
+      );
+    } catch (e) {
+      return redirect(AuthenticatorRoutes.LOGIN, {
+        headers: {
+          "Set-Cookie": await redirectTo.serialize(
+            new URL(request.url).pathname
+          ),
+        },
+      });
+    }
   }
 
   async isLoggedIn(request: AuthRequest) {

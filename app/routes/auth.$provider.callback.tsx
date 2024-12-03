@@ -6,7 +6,7 @@ import {
 } from "~/.server/services/Auth/Auth";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  return AuthenticatorService.callback(
+  return await AuthenticatorService.callback(
     params.provider as SocialsProvider,
     request
   );
