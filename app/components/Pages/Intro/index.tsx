@@ -70,7 +70,7 @@ export function Intro() {
             >
               Create App
             </Button>
-            <Button
+            {/* <Button
               variant="default"
               radius="xl"
               size="md"
@@ -80,7 +80,7 @@ export function Intro() {
               }}
             >
               Create Organization
-            </Button>
+            </Button> */}
           </Group>
         </div>
         <Image src={image} className={classes.image} />

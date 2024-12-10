@@ -53,6 +53,7 @@ export function ReleaseEditFormModal({ data, refetch }: ReleaseEditProps) {
         description: data.description,
         isDisabled: !data.status,
         isMandatory: data.mandatory,
+        label: data.label,
         rollout: data.rollout,
         tenant: params.org ?? "",
       },
