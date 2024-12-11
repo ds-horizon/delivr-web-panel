@@ -21,6 +21,7 @@ const updateRelease: AuthenticatedActionFunction = async ({
       description: body.description ?? "",
       isDisabled: body.isDisabled ?? true,
       isMandatory: body.isMandatory ?? false,
+      label: body.label ?? "",
       rollout: body.rollout ?? 0,
       tenant: body.tenant ?? "",
     });

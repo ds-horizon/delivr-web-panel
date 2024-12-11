@@ -49,6 +49,7 @@ export type UpdatePackageRequest = {
   isDisabled: boolean;
   isMandatory: boolean;
   rollout: number;
+  label: string;
 };
 
 type AccessKey = {
