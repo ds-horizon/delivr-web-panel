@@ -1,5 +1,7 @@
+import { installGlobals } from "@remix-run/node";
 import axios, { AxiosResponse } from "axios";
 import { route } from "routes-gen";
+import { N } from "vitest/dist/chunks/environment.LoooBwUu.js";
 import {
   DeploymentsReleaseRequest,
   DeploymentsReleaseResponse,
@@ -11,8 +13,11 @@ export type ReleaseListResponse = {
   targetVersions: string;
   status: boolean;
   mandatory: boolean;
-  rollbacks: string;
-  activeDevices: string;
+  rollbacks: number;
+  activeDevices: number;
+  downloaded: number;
+  installed: number;
+  totalActive: number;
   rollout: number;
   releasedAt: number;
   description: string;
@@ -434,8 +439,11 @@ export const getReleaseListForDeployment = async (
       targetVersions: item.appVersion,
       status: !item.isDisabled,
       mandatory: item.isMandatory,
-      rollbacks: "NA",
-      activeDevices: "NA",
+      rollbacks: item?.failed || 0,
+      activeDevices: item?.active || 0,
+      downloaded: item?.downloaded || 0,
+      installed: item?.installed || 0,
+      totalActive: item?.totalActive || 0,
       rollout: item.rollout,
       releasedAt: item.uploadTime,
       description: item.description,

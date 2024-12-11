@@ -4,12 +4,14 @@ import {
   Group,
   Badge,
   Center,
+  Stack,
   Button,
   Tooltip,
   Flex,
   Avatar,
   Skeleton,
   Progress,
+  RingProgress,
 } from "@mantine/core";
 import {
   Icon,
@@ -32,8 +34,8 @@ type StatsObject = {
 };
 
 const stats: StatsObject[] = [
-  { icon: IconDeviceTablet, key: "activeDevices", label: "Active Devices" },
-  { icon: IconRotate2, key: "rollbacks", label: "Rollbacks" },
+  { icon: IconDeviceTablet, key: "installed", label: "Installs" },
+  { icon: IconRotate2, key: "downloaded", label: "Downloads" },
   { icon: IconFocus2, key: "targetVersions", label: "Target Versions" },
 ];
 
@@ -69,14 +71,20 @@ export function ReleaseDetailCard({
     return <Text>No Data Found</Text>;
   }
 
+  const adoptionPercentage = data.totalActive > 0 ? Math.floor((data.activeDevices / data.totalActive) * 100)  : 0;
+  const rollbackPercentage = data.installed > 0 ? Math.floor((data.rollbacks / data.installed) * 100)  : 0;
+
   const features = stats.map((feature) => (
     <Center key={feature.key}>
       <feature.icon size="1.05rem" className={classes.icon} stroke={1.5} />
-      <Tooltip label={feature.label} color="blue" withArrow>
-        <Text size="xs" style={{ cursor: "pointer" }}>
-          {data[feature.key]}
+      <Group gap={8}>
+        <Text>
+          {feature.label}
         </Text>
-      </Tooltip>
+        <Text style={{ cursor: "pointer" }} fw={700}>
+            {"  "}{data[feature.key]}
+        </Text>
+      </Group>
     </Center>
   ));
 
@@ -85,7 +93,7 @@ export function ReleaseDetailCard({
       <Group justify="space-between" mt="md">
         <div>
           <Text fw={500}>{data.label}</Text>
-          <Text fz="xs" c="dimmed">
+          <Text fz="xs">
             {data.description}
           </Text>
         </div>
@@ -99,9 +107,9 @@ export function ReleaseDetailCard({
           Statistics
         </Text>
 
-        <Group gap={8} mb={-8}>
+        <Stack align="flex-start" mt={16}>
           {features}
-        </Group>
+        </Stack>
       </Card.Section>
 
       <Card.Section className={classes.section} mt="md">
@@ -114,6 +122,51 @@ export function ReleaseDetailCard({
           </Progress.Root>
         </Tooltip>
       </Card.Section>
+
+      <Card.Section className={classes.section} mt="md">
+        <Group gap={8} mb={-8}>
+          <Stack align="left">
+          <Text fz="sm" c="dimmed" className={classes.label}>
+            Active
+          </Text>
+            <RingProgress
+                  size = {250}
+                  label={
+                    <Stack>
+                      <Text size="m" ta="center">
+                      {adoptionPercentage}%
+                      </Text>
+                      <Text size="s" ta="center">
+                        {data.activeDevices} of {data.totalActive}
+                      </Text>
+                    </Stack>
+                  }
+                  sections={[
+                    { value: adoptionPercentage, color: 'cyan', tooltip: "Adoption" }
+                  ]}
+              />
+          </Stack>
+          <Stack align="right">
+          <Text fz="sm" c="dimmed" className={classes.label}>
+            RollBack
+          </Text>
+            <RingProgress
+                  size = {250}
+                  label={
+                    <Stack>
+                      <Text size="m" ta="center">
+                      {rollbackPercentage}%
+                      </Text>
+                    </Stack>
+                  }
+                  sections={[
+                    { value: rollbackPercentage, color: 'red', tooltip: "Rollback" }
+                  ]}
+              />
+          </Stack>
+        </Group>
+      </Card.Section>
+
 
       <Card.Section className={classes.section}>
         <Flex justify={"space-between"}>
