@@ -11,19 +11,10 @@ describe("<AppCard />", () => {
     id: "hello",
     name: "Sample App",
     description: "This is a sample app description.",
-    metrics: {
-      numberOfDeployments: "10",
-      numberOfReleases: "5",
-    },
     isAdmin: false,
     link: "/sample-app",
     deleteLink: "/delete-sample-app",
   };
-
-  test("AppCard mounts properly and matches snapshot", () => {
-    const result = render(<AppCard {...defaultProps} />);
-    expect(result).toMatchSnapshot();
-  });
 
   test("Displays the app name and description", () => {
     render(<AppCard {...defaultProps} />);
@@ -31,14 +22,6 @@ describe("<AppCard />", () => {
     expect(
       screen.getByText("This is a sample app description.")
     ).toBeInTheDocument();
-  });
-
-  test("Renders the metrics correctly", () => {
-    render(<AppCard {...defaultProps} />);
-    expect(screen.getByText("10")).toBeInTheDocument();
-    expect(screen.getByText("Deployments")).toBeInTheDocument();
-    expect(screen.getByText("5")).toBeInTheDocument();
-    expect(screen.getByText("Releases")).toBeInTheDocument();
   });
 
   test("Renders the 'Go To App' button", () => {

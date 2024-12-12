@@ -17,8 +17,6 @@ import { User } from "~/.server/services/Auth/Auth.interface";
 import { route } from "routes-gen";
 import cpIcon from './../assets/images/second.png';
 
-import config from "~/config.json";
-
 export const loader = authenticateLoaderRequest();
 
 export default function Hello() {
