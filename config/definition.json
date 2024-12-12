@@ -9,7 +9,7 @@
       "version": "1.0.0",
       "config": {
         "artifact_name": "cp-web-dashboard",
-        "artifact_version": "1.0.1",
+        "artifact_version": "1.0.2-SNAPSHOT",
         "build_type": "debian-node",
         "build_version": "18.18.0",
         "discovery": "both",
