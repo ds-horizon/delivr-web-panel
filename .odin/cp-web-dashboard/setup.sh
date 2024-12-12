@@ -22,6 +22,13 @@
 # yarn --version
 # pnpm install
 # pnpm --version
+
+corepack --version
+
+npm install -g corepack
+
+corepack --version
+
 corepack enable
 
 
