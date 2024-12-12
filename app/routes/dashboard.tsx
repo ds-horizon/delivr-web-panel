@@ -5,6 +5,7 @@ import {
   Code,
   Flex,
   Group,
+  Image,
   rem,
 } from "@mantine/core";
 import { NavbarNested } from "~/components/NavbarNested";
@@ -14,6 +15,7 @@ import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
 import { authenticateLoaderRequest } from "~/utils/authenticate";
 import { User } from "~/.server/services/Auth/Auth.interface";
 import { route } from "routes-gen";
+import cpIcon from './../assets/images/second.png';
 
 import config from "~/config.json";
 
@@ -44,8 +46,9 @@ export default function Hello() {
               size="sm"
             />
             <Group justify="space-between">
-              <Logo style={{ width: rem(120) }} />
-              <Code fw={700}>v{config.version}</Code>
+              <Image src={cpIcon} alt="CodePush" fit="contain" height={44}/>
+              <Logo style={{ width: rem(80) }} />
+              {/* <Code fw={700}>v{config.version}</Code> */}
             </Group>
           </Group>
           <Group mr="sm">

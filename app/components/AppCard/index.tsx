@@ -57,9 +57,9 @@ export function AppCard({
       <Text ta="center" fz="sm" c="dimmed">
         {description}
       </Text>
-      <Group mt="md" justify="center" gap={30}>
+      {/* <Group mt="md" justify="center" gap={30}>
         {items}
-      </Group>
+      </Group> */}
       <Flex justify={"space-between"} align={"center"}>
         <Button
           fullWidth
