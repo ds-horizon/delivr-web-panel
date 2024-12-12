@@ -53,7 +53,7 @@ if (vite) {
 app.use(express.static("build/client", { maxAge: "1h" }));
 
 app.get("/healthcheck", (_, res) => {
-  console.log("Health check succeeded", Date.now());
+  console.log("Health check succeeded ", Date.now());
   res.statusCode = 200;
   res.sendStatus(200);
 });
