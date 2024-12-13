@@ -74,7 +74,7 @@ export function ReleaseEditFormModal({ data, refetch }: ReleaseEditProps) {
         serachParams.get("edit") === "true"
       }
       onClose={close}
-      title="Edit Form"
+      title="Edit Release Details"
       centered
       size={"xl"}
     >

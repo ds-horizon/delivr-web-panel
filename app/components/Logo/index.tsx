@@ -12,14 +12,14 @@ export function Logo(props: React.ComponentPropsWithoutRef<"svg">) {
     >
       <g fill="none" fillRule="evenodd">
         <text
-          x="40"
-          y="35"
+          x="10"
+          y="40"
           fontFamily="Arial, sans-serif"
-          fontSize="25"
+          fontSize="50"
           fontWeight="bold"
           fill="#339AF0"
         >
-          CodePush
+          DOTA
         </text>
       </g>
     </svg>

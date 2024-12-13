@@ -10,7 +10,7 @@ export default function IntroPage() {
       onClose={() => {
         navigation(-1);
       }}
-      title="Create App Flow"
+      title="Create Application"
       centered
     >
       <CreateAppForm />

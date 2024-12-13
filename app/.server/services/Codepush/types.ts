@@ -41,6 +41,11 @@ type Package = {
   rollout: number;
   size: number;
   uploadTime: number;
+  active: number | null;
+  downloaded: number | null;
+  failed: number | null;
+  installed: number | null;
+  totalActive: number | null;
 };
 
 export type UpdatePackageRequest = {

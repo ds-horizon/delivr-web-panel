@@ -7,10 +7,6 @@ export type AppCardResponse = {
   id: string;
   name: string;
   description: string;
-  metrics: {
-    numberOfDeployments: string;
-    numberOfReleases: string;
-  };
   isAdmin: boolean;
   role: Collaborator["permission"];
 };

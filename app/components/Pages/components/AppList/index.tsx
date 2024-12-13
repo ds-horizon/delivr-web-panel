@@ -70,7 +70,7 @@ export function AppListForOrg({ user }: AppListForOrgProps) {
   });
 
   return (
-    <Center>
+    <Grid ml={30} mt={30}>
       <Spotlight
         actions={actions}
         nothingFound="Nothing found..."
@@ -85,7 +85,7 @@ export function AppListForOrg({ user }: AppListForOrgProps) {
           placeholder: "Search...",
         }}
       />
-      <Grid justify="center">
+      <Grid gutter={{ base: 5, xs: 'md', md: 'xl', xl: 50 }}>
         {_modData.map((item) => {
           return (
             <Grid.Col key={item.id} span="content">
@@ -94,6 +94,6 @@ export function AppListForOrg({ user }: AppListForOrgProps) {
           );
         })}
       </Grid>
-    </Center>
+    </Grid>
   );
 }

@@ -1,4 +1,4 @@
-import { Card, Avatar, Text, Group, Button, Flex } from "@mantine/core";
+import { Card, Avatar, Text, Button, Flex } from "@mantine/core";
 import classes from "./index.module.css";
 import { useNavigate } from "@remix-run/react";
 import { AppCardResponse } from "../Pages/components/AppList/data/getAppListForOrg";
@@ -9,34 +9,14 @@ export type AppCardProps = Omit<AppCardResponse, "role"> & {
   deleteLink: string;
 };
 
-type StatsObject = {
-  label: string;
-  key: keyof AppCardProps["metrics"];
-};
-const stats: StatsObject[] = [
-  { label: "Deployments", key: "numberOfDeployments" },
-  { label: "Releases", key: "numberOfReleases" },
-];
-
 export function AppCard({
   name,
-  metrics,
   description,
   link,
   deleteLink,
   isAdmin,
 }: AppCardProps) {
   const navigate = useNavigate();
-  const items = stats.map((stat) => (
-    <div key={stat.label}>
-      <Text ta="center" fz="lg" fw={500}>
-        {metrics[stat.key]}
-      </Text>
-      <Text ta="center" fz="sm" c="dimmed" lh={1}>
-        {stat.label}
-      </Text>
-    </div>
-  ));
 
   return (
     <Card withBorder padding="xl" radius="md" className={classes.card}>
@@ -57,9 +37,9 @@ export function AppCard({
       <Text ta="center" fz="sm" c="dimmed">
         {description}
       </Text>
-      <Group mt="md" justify="center" gap={30}>
+      {/* <Group mt="md" justify="center" gap={30}>
         {items}
-      </Group>
+      </Group> */}
       <Flex justify={"space-between"} align={"center"}>
         <Button
           fullWidth

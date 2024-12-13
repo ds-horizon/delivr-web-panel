@@ -81,7 +81,7 @@ export function CreateAppForm() {
         />
       </Skeleton>
 
-      <Skeleton visible={shouldShowLoader} mt={"md"}>
+      {/* <Skeleton visible={shouldShowLoader} mt={"md"}>
         <TagsInput
           mt="md"
           label="Press Enter to submit a tag"
@@ -90,7 +90,7 @@ export function CreateAppForm() {
           clearable
           disabled={isLoading}
         />
-      </Skeleton>
+      </Skeleton> */}
       <Group justify="flex-end" mt="md">
         <Button
           onClick={() => {

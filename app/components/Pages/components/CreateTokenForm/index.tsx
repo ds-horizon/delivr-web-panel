@@ -39,7 +39,7 @@ export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
         onClose();
         reset();
       }}
-      title={"Create Token Flow"}
+      title={"Create Token"}
     >
       <Center>
         <Box w={"300px"}>
