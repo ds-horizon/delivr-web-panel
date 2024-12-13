@@ -23,7 +23,7 @@ export const DeleteOrg = ({ onSuccess }: DeleteOrgProps) => {
   return (
     <>
       <Text>
-        Are you sure you want to delete this orgainization (
+        Are you sure you want to delete this orgainisation (
         {searchParams.get("name") ?? ""})?
       </Text>
       <Flex justify={"flex-end"} mt={"lg"}>
