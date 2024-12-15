@@ -35,6 +35,6 @@ corepack enable
 cd ${BASE_DIR}/${SERVICE_NAME}
 
 echo "Installing dependencies..."
-pnpm install
+yes | pnpm install
 
 NODE_ENV=production PORT=3000 pnpm build

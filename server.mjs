@@ -82,7 +82,7 @@ httpServer.listen(port, async () => {
     console.log(
       "  ",
       chalk.greenBright.bold("➜"),
-      chalk.bold("Chekmate:"),
+      chalk.bold("Dota:"),
       chalk.green("Enabled")
     );
 
@@ -128,7 +128,7 @@ httpServer.listen(port, async () => {
     console.log(
       "  ",
       chalk.greenBright.bold("➜"),
-      chalk.bold("Chekmate:"),
+      chalk.bold("Dota:"),
       chalk.red("Disabled")
     );
   }
