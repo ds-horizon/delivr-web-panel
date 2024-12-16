@@ -23,17 +23,18 @@
 # pnpm install
 # pnpm --version
 
-# corepack --version
+corepack --version
 
-# npm install -g corepack
+npm install -g corepack
 
-# corepack --version
+corepack --version
 
 corepack enable
+
 
 cd ${BASE_DIR}/${SERVICE_NAME}
 
 echo "Installing dependencies..."
-yes | yarn install
+yes | pnpm install
 
-NODE_ENV=production PORT=3000 yarn build
+NODE_ENV=production PORT=3000 pnpm build

@@ -39,4 +39,4 @@ export DEPLOYMENT=production
 
 echo "codepush-web-dashboard starting......."
 
-NODE_ENV=production PORT=3000 envconsul ${CONFIG_OPTS} yarn start
+NODE_ENV=production PORT=3000 envconsul ${CONFIG_OPTS} pnpm start
