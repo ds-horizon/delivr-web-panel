@@ -11,9 +11,9 @@
     "typecheck": "tsc",
     "gen:routes": "yarn routes-gen -d @routes-gen/remix",
     "gen:config": "yarn tsx ./scripts/make-version-file.ts",
-    "postinstall": "pnpm gen:routes && pnpm gen:config",
-    "test": "NODE_ENV=test pnpm vitest run",
-    "test:coverage": "NODE_ENV=test pnpm vitest run --coverage"
+    "postinstall": "yarn gen:routes",
+    "test": "NODE_ENV=test yarn vitest run",
+    "test:coverage": "NODE_ENV=test yarn vitest run --coverage"
   },
   "dependencies": {
     "@mantine/core": "^7.13.2",
@@ -37,9 +37,10 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
-    "remix-auth": "^3.7.0",
+    "remix-auth": "^3.5.0",
     "remix-auth-google": "^2.0.0",
-    "routes-gen": "^0.6.1"
+    "routes-gen": "^0.6.1",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.13.1",
@@ -72,6 +73,7 @@
     "vitest": "^2.1.5"
   },
   "engines": {
-    "node": ">=18.18.0 <18.18.1"
-  }
+    "node": ">=18.18.0"
+  },
+  "packageManager": "yarn@4.0.0"
 }

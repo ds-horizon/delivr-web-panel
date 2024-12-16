@@ -11,7 +11,7 @@
         "artifact_name": "cp-web-dashboard",
         "artifact_version": "1.0.3-SNAPSHOT",
         "build_type": "debian-node",
-        "build_version": "18.18.0",
+        "build_version": "20.16.0",
         "discovery": "both",
         "port": 3000
       }
