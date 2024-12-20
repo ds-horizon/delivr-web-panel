@@ -41,6 +41,7 @@ export class Auth {
           prompt: "consent",
         },
         async (args) => {
+          console.log("args in constructing Auth:", args);
           return CodepushService.getUser(args.extraParams.id_token);
         }
       )
@@ -76,6 +77,7 @@ export class Auth {
 
   async callback(provider: SocialsProvider, request: AuthRequest) {
     const redirectUri = await redirectTo.parse(request.headers.get("Cookie"));
+    console.log("redirectUri:", redirectUri, request.headers.get("Cookie"));
     return Auth.authenticator.authenticate(provider, request, {
       failureRedirect: AuthenticatorRoutes.LOGIN,
       successRedirect: redirectUri ?? "/dashboard",
@@ -89,6 +91,7 @@ export class Auth {
   async isAuthenticated(
     request: AuthRequest
   ): Promise<User | TypedResponse<never>> {
+    console.log("headers:", request.headers.entries());
     const apiKey = request.headers.get("api-key") ?? "";
 
     if (apiKey.length) {
@@ -97,6 +100,7 @@ export class Auth {
     }
 
     try {
+      console.log("Trying to authenticate:")
       return await Auth.authenticator.authenticate(
         SocialsProvider.GOOGLE,
         request,
@@ -105,6 +109,7 @@ export class Auth {
         }
       );
     } catch (e) {
+      console.log("error", e);
       return redirect(AuthenticatorRoutes.LOGIN, {
         headers: {
           "Set-Cookie": await redirectTo.serialize(
