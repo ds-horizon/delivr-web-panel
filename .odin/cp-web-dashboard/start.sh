@@ -28,7 +28,7 @@ echo "CONSUL_ADDR: ${CONSUL_ADDR}"
 echo "VAULT_ADDR: ${VAULT_ADDR}"
 echo "CONFIG_OPTS: ${CONFIG_OPTS}"
 
-envconsul ${CONFIG_OPTS} env > .env
+envconsul ${CONFIG_OPTS} env | grep -i VAULT > .env
 source .env
 
 echo "Code push server url :: ${VAULT_SERVICE_CODEPUSH_SERVER_URL}"
