@@ -165,11 +165,12 @@ const getDetailedErrorMessage = (error: any): { title: string; message: string; 
 
 export const useCreateRelease = () => {
   return useMutation(createRelease, {
-    onSuccess: () => {
+    onSuccess: (data) => {
+      const releaseLabel = data.package?.label || 'new release';
       notifications.show({
         color: "green",
         title: "Release Created Successfully",
-        message: "Your release has been created and is now available for deployment!",
+        message: `Release ${releaseLabel} has been created and is now available for deployment!`,
       });
     },
     onError: (error) => {

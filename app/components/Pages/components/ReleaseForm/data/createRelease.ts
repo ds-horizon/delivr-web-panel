@@ -5,7 +5,6 @@ export interface CreateReleaseRequest {
   appName: string;
   deploymentName: string;
   formData: FormData;
-  onProgress?: (progress: number) => void;
 }
 
 export interface CreateReleaseResponse {
@@ -28,7 +27,6 @@ export const createRelease = async ({
   appName,
   deploymentName,
   formData,
-  onProgress,
 }: CreateReleaseRequest): Promise<CreateReleaseResponse> => {
   const appIdentifier = `${orgName}/${appName}`;
   
@@ -38,12 +36,6 @@ export const createRelease = async ({
     {
       headers: {
         "Content-Type": "multipart/form-data",
-      },
-      onUploadProgress: (progressEvent) => {
-        if (onProgress && progressEvent.total) {
-          const progress = (progressEvent.loaded / progressEvent.total) * 100;
-          onProgress(progress);
-        }
       },
     }
   );

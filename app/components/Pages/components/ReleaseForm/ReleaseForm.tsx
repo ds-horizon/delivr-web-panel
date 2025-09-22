@@ -31,7 +31,6 @@ export function ReleaseForm() {
   const { data: deployments, isLoading: deploymentsLoading } = useGetDeploymentsForApp();
   const { mutate: createRelease, isLoading: isUploading } = useCreateRelease();
   
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [directoryBlob, setDirectoryBlob] = useState<Blob | null>(null);
   const [directoryName, setDirectoryName] = useState<string>("");
@@ -140,7 +139,6 @@ export function ReleaseForm() {
         appName: params.app,
         deploymentName: values.deploymentName,
         formData,
-        onProgress: setUploadProgress,
       },
       {
         onSuccess: () => {
@@ -148,10 +146,6 @@ export function ReleaseForm() {
           form.reset();
           setDirectoryBlob(null);
           setDirectoryName("");
-          setUploadProgress(0);
-        },
-        onError: () => {
-          setUploadProgress(0);
         },
       }
     );
@@ -192,7 +186,6 @@ export function ReleaseForm() {
             <ReleaseFormActions
               isUploading={isUploading}
               isProcessing={isProcessing}
-              uploadProgress={uploadProgress}
               hasDirectory={!!directoryBlob}
             />
           </Stack>
