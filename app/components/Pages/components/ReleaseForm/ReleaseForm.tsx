@@ -88,6 +88,8 @@ export function ReleaseForm() {
         uniqueDeployments.set(deployment.name, {
           value: deployment.name,
           label: deployment.name,
+          deploymentKey: deployment.deploymentKey,
+          description: `Key: ${deployment.deploymentKey}`,
           originalIndex: index
         });
       } else {

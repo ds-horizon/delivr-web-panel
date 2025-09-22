@@ -5,6 +5,9 @@ import {
   NumberInput,
   Switch,
   Stack,
+  Group,
+  Text,
+  Code,
 } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
 
@@ -18,11 +21,19 @@ interface ReleaseFormData {
   disabled: boolean;
 }
 
+interface DeploymentOption {
+  value: string;
+  label: string;
+  deploymentKey: string;
+  description: string;
+}
+
 interface ReleaseMetadataProps {
   form: UseFormReturnType<ReleaseFormData>;
-  deploymentOptions: Array<{ value: string; label: string }>;
+  deploymentOptions: DeploymentOption[];
   deploymentsLoading: boolean;
 }
+
 
 export function ReleaseMetadata({ form, deploymentOptions, deploymentsLoading }: ReleaseMetadataProps) {
   return (
@@ -40,13 +51,26 @@ export function ReleaseMetadata({ form, deploymentOptions, deploymentsLoading }:
       {/* Target Deployment */}
       <Select
         label="Target Deployment"
-        placeholder="Select deployment"
+        placeholder="Search deployments by name or key..."
         required
         data={deploymentOptions}
         key={form.key("deploymentName")}
         {...form.getInputProps("deploymentName")}
         disabled={deploymentsLoading}
         description="The deployment environment to release to"
+        searchable
+        renderOption={(item) => (
+          <div>
+            <Text size="sm" fw={500}>
+              {item.option.label}
+            </Text>
+            <Text size="xs" c="dimmed" truncate>
+              Key: {(item.option as any).deploymentKey}
+            </Text>
+          </div>
+        )}
+        maxDropdownHeight={300}
+        nothingFoundMessage="No deployments found matching your search"
       />
 
       {/* Rollout Percentage */}
