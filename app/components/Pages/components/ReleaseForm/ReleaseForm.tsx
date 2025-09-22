@@ -13,13 +13,16 @@ import {
   Switch,
   rem,
   Alert,
+  ActionIcon,
+  Loader,
+  Badge,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { IconUpload, IconFolder, IconInfoCircle } from "@tabler/icons-react";
+import { IconUpload, IconFolder, IconInfoCircle, IconX, IconCheck } from "@tabler/icons-react";
 import { useParams } from "@remix-run/react";
 import { useGetDeploymentsForApp } from "../../DeploymentList/hooks/getDeploymentsForApp";
 import { useCreateRelease } from "./hooks/useCreateRelease";
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import JSZip from "jszip";
 
 interface ReleaseFormData {
@@ -32,6 +35,14 @@ interface ReleaseFormData {
   disabled: boolean;
 }
 
+type DirectoryUploadState = 'idle' | 'selecting' | 'processing' | 'completed' | 'error';
+
+interface DirectoryInfo {
+  name: string;
+  fileCount: number;
+  files: FileList | null;
+}
+
 export function ReleaseForm() {
   const params = useParams();
   const { data: deployments, isLoading: deploymentsLoading } = useGetDeploymentsForApp();
@@ -39,6 +50,11 @@ export function ReleaseForm() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const directoryInputRef = useRef<HTMLInputElement>(null);
+  
+  // Directory upload state
+  const [directoryUploadState, setDirectoryUploadState] = useState<DirectoryUploadState>('idle');
+  const [directoryInfo, setDirectoryInfo] = useState<DirectoryInfo | null>(null);
+  const [processingProgress, setProcessingProgress] = useState(0);
 
   const form = useForm<ReleaseFormData>({
     mode: "uncontrolled",
@@ -79,12 +95,21 @@ export function ReleaseForm() {
       // Use the webkitRelativePath to maintain directory structure
       const relativePath = file.webkitRelativePath || file.name;
       zip.file(relativePath, file);
+      
+      // Update progress
+      const progress = Math.round(((i + 1) / files.length) * 50); // First 50% for adding files
+      setProcessingProgress(progress);
     }
     
+    // Generate ZIP with progress tracking
     return await zip.generateAsync({
       type: "blob",
       compression: "DEFLATE",
       compressionOptions: { level: 6 }
+    }, (metadata) => {
+      // Second 50% for ZIP generation
+      const progress = 50 + Math.round((metadata.percent || 0) * 0.5);
+      setProcessingProgress(progress);
     });
   };
 
@@ -135,15 +160,49 @@ export function ReleaseForm() {
     }
   };
 
-  const handleDirectorySelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDirectorySelect = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (files && files.length > 0) {
-      // Create a synthetic File object to represent the directory
-      const directoryName = files[0].webkitRelativePath.split('/')[0] || 'Selected Directory';
+    if (!files || files.length === 0) return;
+
+    const directoryName = files[0].webkitRelativePath.split('/')[0] || 'Selected Directory';
+    
+    // Set directory info and processing state
+    setDirectoryInfo({
+      name: directoryName,
+      fileCount: files.length,
+      files: files
+    });
+    setDirectoryUploadState('processing');
+    setProcessingProgress(0);
+
+    try {
+      // Simulate processing delay for better UX (optional)
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Create synthetic file for form validation
       const syntheticFile = new File([''], `${directoryName} (${files.length} files)`, { type: 'directory' });
       form.setFieldValue('directory', syntheticFile);
+      
+      setDirectoryUploadState('completed');
+      setProcessingProgress(100);
+    } catch (error) {
+      console.error('Error processing directory:', error);
+      setDirectoryUploadState('error');
     }
-  };
+  }, [form]);
+
+  const handleCancelDirectory = useCallback(() => {
+    // Reset all directory-related state
+    setDirectoryInfo(null);
+    setDirectoryUploadState('idle');
+    setProcessingProgress(0);
+    form.setFieldValue('directory', null);
+    
+    // Clear the file input
+    if (directoryInputRef.current) {
+      directoryInputRef.current.value = '';
+    }
+  }, [form]);
 
   const deploymentOptions = deployments?.map((deployment) => ({
     value: deployment.name, // Keep using name as value since that's what the API expects
@@ -189,47 +248,107 @@ export function ReleaseForm() {
                   Select a directory containing your bundle file and any assets (required)
                 </Text>
                 
-                <div style={{ position: 'relative' }}>
-                  <input
-                    ref={directoryInputRef}
-                    type="file"
-                    webkitdirectory=""
-                    multiple
-                    required
-                    onChange={handleDirectorySelect}
-                    disabled={isUploading || isProcessing}
-                    style={{
-                      position: 'absolute',
-                      opacity: 0,
-                      width: '100%',
-                      height: '100%',
-                      cursor: 'pointer'
-                    }}
-                  />
-                  <Button
-                    variant="outline"
-                    leftSection={<IconFolder style={{ width: rem(16), height: rem(16) }} />}
-                    disabled={isUploading || isProcessing}
-                    style={{ 
-                      width: '100%', 
-                      pointerEvents: 'none',
-                      borderColor: form.errors.directory ? 'var(--mantine-color-red-5)' : undefined
-                    }}
-                  >
-                    {form.values.directory 
-                      ? form.values.directory.name 
-                      : 'Choose Directory...'
-                    }
-                  </Button>
-                </div>
-                
-                {form.values.directory && (
-                  <Text size="xs" c="dimmed" mt={5}>
-                    Selected: {form.values.directory.name}
-                  </Text>
+                {/* Directory Upload States */}
+                {directoryUploadState === 'idle' && (
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      ref={directoryInputRef}
+                      type="file"
+                      webkitdirectory=""
+                      multiple
+                      required
+                      onChange={handleDirectorySelect}
+                      disabled={isUploading || isProcessing}
+                      style={{
+                        position: 'absolute',
+                        opacity: 0,
+                        width: '100%',
+                        height: '100%',
+                        cursor: 'pointer'
+                      }}
+                    />
+                    <Button
+                      variant="outline"
+                      leftSection={<IconFolder style={{ width: rem(16), height: rem(16) }} />}
+                      disabled={isUploading || isProcessing}
+                      style={{ 
+                        width: '100%', 
+                        pointerEvents: 'none',
+                        borderColor: form.errors.directory ? 'var(--mantine-color-red-5)' : undefined
+                      }}
+                    >
+                      Choose Directory...
+                    </Button>
+                  </div>
+                )}
+
+                {/* Processing State */}
+                {directoryUploadState === 'processing' && directoryInfo && (
+                  <div>
+                    <Group justify="space-between" mb="xs">
+                      <Group gap="sm">
+                        <Loader size="sm" />
+                        <div>
+                          <Text size="sm" fw={500}>{directoryInfo.name}</Text>
+                          <Text size="xs" c="dimmed">Processing {directoryInfo.fileCount} files...</Text>
+                        </div>
+                      </Group>
+                      <ActionIcon
+                        variant="subtle"
+                        color="red"
+                        onClick={handleCancelDirectory}
+                        title="Cancel directory upload"
+                      >
+                        <IconX style={{ width: rem(16), height: rem(16) }} />
+                      </ActionIcon>
+                    </Group>
+                    <Progress value={processingProgress} animated />
+                  </div>
+                )}
+
+                {/* Completed State */}
+                {directoryUploadState === 'completed' && directoryInfo && (
+                  <div>
+                    <Group justify="space-between" align="center">
+                      <Group gap="sm">
+                        <IconCheck style={{ width: rem(20), height: rem(20), color: 'var(--mantine-color-green-6)' }} />
+                        <div>
+                          <Text size="sm" fw={500}>{directoryInfo.name}</Text>
+                          <Badge size="xs" color="green" variant="light">
+                            {directoryInfo.fileCount} files ready
+                          </Badge>
+                        </div>
+                      </Group>
+                      <ActionIcon
+                        variant="subtle"
+                        color="red"
+                        onClick={handleCancelDirectory}
+                        title="Remove directory"
+                      >
+                        <IconX style={{ width: rem(16), height: rem(16) }} />
+                      </ActionIcon>
+                    </Group>
+                  </div>
+                )}
+
+                {/* Error State */}
+                {directoryUploadState === 'error' && (
+                  <div>
+                    <Alert color="red" variant="light" mb="sm">
+                      <Text size="sm">Failed to process directory. Please try again.</Text>
+                    </Alert>
+                    <Button
+                      variant="outline"
+                      leftSection={<IconFolder style={{ width: rem(16), height: rem(16) }} />}
+                      onClick={handleCancelDirectory}
+                      style={{ width: '100%' }}
+                    >
+                      Choose Different Directory
+                    </Button>
+                  </div>
                 )}
                 
-                {form.errors.directory && (
+                {form.errors.directory && directoryUploadState === 'idle' && (
                   <Text size="xs" c="red" mt={5}>
                     {form.errors.directory}
                   </Text>
