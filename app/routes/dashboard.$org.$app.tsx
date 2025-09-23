@@ -1,5 +1,5 @@
 import { rem, Tabs } from "@mantine/core";
-import { IconPhoto, IconSettings, IconUpload } from "@tabler/icons-react";
+import { IconPhoto, IconSettings, IconRocket } from "@tabler/icons-react";
 import { CollabaratorList } from "~/components/Pages/components/CollaboratorList";
 import { DeploymentList } from "~/components/Pages/DeploymentList";
 import { ReleaseForm } from "~/components/Pages/components/ReleaseForm/ReleaseForm";
@@ -15,12 +15,12 @@ export default function AppDetails() {
         >
           Deployments
         </Tabs.Tab>
-        <Tabs.Tab
-          value="Release"
-          leftSection={<IconUpload style={iconStyle} />}
-        >
-          Release
-        </Tabs.Tab>
+            <Tabs.Tab
+              value="Release"
+              leftSection={<IconRocket style={iconStyle} />}
+            >
+              Release
+            </Tabs.Tab>
         <Tabs.Tab
           value="Collaborators"
           leftSection={<IconSettings style={iconStyle} />}
