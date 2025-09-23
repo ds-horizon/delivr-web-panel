@@ -24,6 +24,7 @@ interface ReleaseFormData {
 interface DeploymentOption {
   value: string;
   label: string;
+  displayName?: string; // Optional: original deployment name for display
   deploymentKey: string;
   description: string;
 }
@@ -62,7 +63,7 @@ export function ReleaseMetadata({ form, deploymentOptions, deploymentsLoading }:
         renderOption={(item) => (
           <div>
             <Text size="sm" fw={500}>
-              {item.option.label}
+              {(item.option as any).displayName || item.option.label}
             </Text>
             <Text size="xs" c="dimmed" truncate>
               Key: {(item.option as any).deploymentKey}

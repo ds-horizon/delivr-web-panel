@@ -87,7 +87,8 @@ export function ReleaseForm() {
       if (!uniqueDeployments.has(deployment.name)) {
         uniqueDeployments.set(deployment.name, {
           value: deployment.name,
-          label: deployment.name,
+          label: `${deployment.name} | ${deployment.deploymentKey}`, // Include key in label for search with delimiter
+          displayName: deployment.name, // Keep original name for display
           deploymentKey: deployment.deploymentKey,
           description: `Key: ${deployment.deploymentKey}`,
           originalIndex: index
