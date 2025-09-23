@@ -30,25 +30,38 @@ interface DirectoryUploadProps {
 
 export function DirectoryUpload({ onDirectorySelect, disabled = false, error }: DirectoryUploadProps) {
   const directoryInputRef = useRef<HTMLInputElement>(null);
+  const cancelledRef = useRef<boolean>(false);
   
   // Directory upload state
   const [directoryUploadState, setDirectoryUploadState] = useState<DirectoryUploadState>('idle');
   const [directoryInfo, setDirectoryInfo] = useState<DirectoryInfo | null>(null);
   const [processingProgress, setProcessingProgress] = useState(0);
 
-  const createZipFromFiles = async (files: FileList): Promise<Blob> => {
+  const createZipFromFiles = async (files: FileList): Promise<Blob | null> => {
     const zip = new JSZip();
     
     // Process each file and maintain directory structure
     for (let i = 0; i < files.length; i++) {
+      // Check if operation was cancelled
+      if (cancelledRef.current) {
+        return null;
+      }
+      
       const file = files[i];
       // Use the webkitRelativePath to maintain directory structure
       const relativePath = file.webkitRelativePath || file.name;
       zip.file(relativePath, file);
       
-      // Update progress
-      const progress = Math.round(((i + 1) / files.length) * 50); // First 50% for adding files
-      setProcessingProgress(progress);
+      // Update progress only if not cancelled
+      if (!cancelledRef.current) {
+        const progress = Math.round(((i + 1) / files.length) * 50); // First 50% for adding files
+        setProcessingProgress(progress);
+      }
+    }
+    
+    // Check if cancelled before ZIP generation
+    if (cancelledRef.current) {
+      return null;
     }
     
     // Generate ZIP with progress tracking
@@ -57,6 +70,11 @@ export function DirectoryUpload({ onDirectorySelect, disabled = false, error }: 
       compression: "DEFLATE",
       compressionOptions: { level: 6 }
     }, (metadata) => {
+      // Check if cancelled during ZIP generation
+      if (cancelledRef.current) {
+        return;
+      }
+      
       // Second 50% for ZIP generation
       const progress = 50 + Math.round((metadata.percent || 0) * 0.5);
       setProcessingProgress(progress);
@@ -66,6 +84,9 @@ export function DirectoryUpload({ onDirectorySelect, disabled = false, error }: 
   const handleDirectorySelect = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
+
+    // Reset cancellation flag for new upload
+    cancelledRef.current = false;
 
     // Get directory name from the first file's path
     const firstFile = files[0];
@@ -85,6 +106,11 @@ export function DirectoryUpload({ onDirectorySelect, disabled = false, error }: 
       // Create ZIP from files
       const zipBlob = await createZipFromFiles(files);
       
+      // Check if operation was cancelled before updating state
+      if (cancelledRef.current || zipBlob === null) {
+        return; // Exit early if cancelled
+      }
+      
       // Update state to completed
       setDirectoryUploadState('completed');
       setProcessingProgress(100);
@@ -93,11 +119,16 @@ export function DirectoryUpload({ onDirectorySelect, disabled = false, error }: 
       onDirectorySelect(zipBlob, directoryName);
     } catch (error) {
       console.error('Error creating ZIP:', error);
-      setDirectoryUploadState('error');
+      if (!cancelledRef.current) {
+        setDirectoryUploadState('error');
+      }
     }
   }, [onDirectorySelect]);
 
   const handleCancelDirectory = useCallback(() => {
+    // Set cancellation flag to stop any ongoing processing
+    cancelledRef.current = true;
+    
     // Reset all directory-related state
     setDirectoryInfo(null);
     setDirectoryUploadState('idle');
