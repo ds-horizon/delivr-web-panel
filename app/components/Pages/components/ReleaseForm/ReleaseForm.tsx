@@ -41,7 +41,7 @@ export function ReleaseForm() {
       directory: null,
       appVersion: "",
       deploymentName: "",
-      rollout: 100,
+      rollout: 1,
       description: "",
       mandatory: false,
       disabled: false,

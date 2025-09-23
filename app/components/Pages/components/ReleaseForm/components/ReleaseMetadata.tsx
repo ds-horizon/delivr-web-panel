@@ -76,7 +76,7 @@ export function ReleaseMetadata({ form, deploymentOptions, deploymentsLoading }:
       {/* Rollout Percentage */}
       <NumberInput
         label="Rollout Percentage"
-        placeholder="100"
+        placeholder="1"
         required
         min={1}
         max={100}
