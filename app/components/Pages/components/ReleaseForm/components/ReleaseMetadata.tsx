@@ -96,21 +96,12 @@ export function ReleaseMetadata({ form, deploymentOptions, deploymentsLoading }:
       />
 
       {/* Release Options */}
-      <Stack gap="xs">
-        <Switch
-          label="Mandatory Update"
-          description="Force users to install this update immediately"
-          key={form.key("mandatory")}
-          {...form.getInputProps("mandatory", { type: "checkbox" })}
-        />
-        
-        <Switch
-          label="Disabled Release"
-          description="Create the release but keep it disabled initially"
-          key={form.key("disabled")}
-          {...form.getInputProps("disabled", { type: "checkbox" })}
-        />
-      </Stack>
+      <Switch
+        label="Disabled Release"
+        description="Create the release but keep it disabled initially"
+        key={form.key("disabled")}
+        {...form.getInputProps("disabled", { type: "checkbox" })}
+      />
     </Stack>
   );
 }
