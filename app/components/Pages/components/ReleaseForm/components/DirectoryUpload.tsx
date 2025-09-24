@@ -67,20 +67,31 @@ export function DirectoryUpload({ onDirectorySelect, onCancel, disabled = false,
     }
     
     // Generate ZIP with progress tracking
-    return await zip.generateAsync({
+    const zipPromise = zip.generateAsync({
       type: "blob",
       compression: "DEFLATE",
       compressionOptions: { level: 6 }
     }, (metadata) => {
       // Check if cancelled during ZIP generation
       if (cancelledRef.current) {
-        return;
+        return; // Stop progress updates but can't stop ZIP generation
       }
       
       // Second 50% for ZIP generation
       const progress = 50 + Math.round((metadata.percent || 0) * 0.5);
       setProcessingProgress(progress);
     });
+
+    // Wait for ZIP generation to complete
+    const result = await zipPromise;
+    
+    // Final check after ZIP generation completes
+    if (cancelledRef.current) {
+      console.log('ZIP generation completed but operation was cancelled - returning null');
+      return null; // Return null to indicate cancellation
+    }
+    
+    return result;
   };
 
   const handleDirectorySelect = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,9 +119,17 @@ export function DirectoryUpload({ onDirectorySelect, onCancel, disabled = false,
       // Create ZIP from files
       const zipBlob = await createZipFromFiles(files);
       
-      // Check if operation was cancelled before updating state
-      if (cancelledRef.current || zipBlob === null) {
-        return; // Exit early if cancelled
+      // CRITICAL: Check cancellation immediately after async operation
+      // This prevents race conditions where ZIP completes after cancellation
+      if (cancelledRef.current) {
+        console.log('Upload was cancelled during processing - callback prevented');
+        return; // Exit early if cancelled - NO callback execution
+      }
+      
+      // Additional safety check for null zipBlob (cancellation during ZIP creation)
+      if (zipBlob === null) {
+        console.log('ZIP creation returned null - callback prevented');
+        return; // Exit early if ZIP creation was cancelled
       }
       
       // Update state to completed
@@ -120,10 +139,18 @@ export function DirectoryUpload({ onDirectorySelect, onCancel, disabled = false,
       // Store ZIP blob for download testing
       setZipBlob(zipBlob);
       
-      // Call the parent callback
+      // FINAL check before callback execution (paranoid but safe)
+      if (cancelledRef.current) {
+        console.log('Pre-callback cancellation check - callback prevented');
+        return;
+      }
+      
+      // Call the parent callback - only if we're absolutely sure it's not cancelled
+      console.log('Executing callback - upload completed successfully');
       onDirectorySelect(zipBlob, directoryName);
     } catch (error) {
       console.error('Error creating ZIP:', error);
+      // Only set error state if not cancelled (cancelled operations shouldn't show errors)
       if (!cancelledRef.current) {
         setDirectoryUploadState('error');
       }

@@ -118,25 +118,13 @@ export const DeploymentList = () => {
               leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} />}
               style={{ flexGrow: 1, maxWidth: 400 }}
             />
-            <Group gap="sm">
-              <Button
-                leftSection={<IconPlus style={{ width: rem(16), height: rem(16) }} />}
-                onClick={() => setCreateFormOpen(true)}
-                variant="filled"
-              >
-                Create
-              </Button>
-              {details && (
-                <Button
-                  leftSection={<IconTrash style={{ width: rem(16), height: rem(16) }} />}
-                  onClick={handleDelete}
-                  variant="outline"
-                  color="red"
-                >
-                  Delete
-                </Button>
-              )}
-            </Group>
+            <Button
+              leftSection={<IconPlus style={{ width: rem(16), height: rem(16) }} />}
+              onClick={() => setCreateFormOpen(true)}
+              variant="filled"
+            >
+              Create
+            </Button>
           </Group>
 
           {/* Search Results Dropdown */}
@@ -208,33 +196,50 @@ export const DeploymentList = () => {
                 </Text>
                 <Text size="xs" c="dimmed">Selected Deployment</Text>
               </div>
-              <CopyButton value={details.deploymentKey} timeout={2000}>
-                {({ copied, copy }) => (
-                  <Tooltip
-                    label={
-                      copied
-                        ? "Copied"
-                        : `Copy Deployment Key (${details.deploymentKey})`
-                    }
-                    withArrow
-                    position="left"
-                    color={copied ? "teal" : "blue"}
-                  >
-                    <ActionIcon
-                      color={copied ? "teal" : "gray"}
-                      variant="subtle"
-                      onClick={copy}
-                      size="lg"
+              <Group gap="xs">
+                <CopyButton value={details.deploymentKey} timeout={2000}>
+                  {({ copied, copy }) => (
+                    <Tooltip
+                      label={
+                        copied
+                          ? "Copied"
+                          : `Copy Deployment Key (${details.deploymentKey})`
+                      }
+                      withArrow
+                      position="left"
+                      color={copied ? "teal" : "blue"}
                     >
-                      {copied ? (
-                        <IconCheck style={{ width: rem(18) }} />
-                      ) : (
-                        <IconCopy style={{ width: rem(18) }} />
-                      )}
-                    </ActionIcon>
-                  </Tooltip>
-                )}
-              </CopyButton>
+                      <ActionIcon
+                        color={copied ? "teal" : "gray"}
+                        variant="subtle"
+                        onClick={copy}
+                        size="lg"
+                      >
+                        {copied ? (
+                          <IconCheck style={{ width: rem(18) }} />
+                        ) : (
+                          <IconCopy style={{ width: rem(18) }} />
+                        )}
+                      </ActionIcon>
+                    </Tooltip>
+                  )}
+                </CopyButton>
+                <Tooltip
+                  label={`Delete ${details.name} deployment`}
+                  withArrow
+                  position="left"
+                  color="red"
+                >
+                  <ActionIcon
+                    color="red"
+                    variant="subtle"
+                    onClick={handleDelete}
+                    size="lg"
+                  >
+                    <IconTrash style={{ width: rem(18) }} />
+                  </ActionIcon>
+                </Tooltip>
+              </Group>
             </Flex>
           </Card>
         ) : isLoading ? (
