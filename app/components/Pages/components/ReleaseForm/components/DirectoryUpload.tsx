@@ -24,11 +24,12 @@ interface DirectoryInfo {
 
 interface DirectoryUploadProps {
   onDirectorySelect: (zipBlob: Blob, directoryName: string) => void;
+  onCancel?: () => void; // Optional callback when upload is cancelled
   disabled?: boolean;
   error?: string;
 }
 
-export function DirectoryUpload({ onDirectorySelect, disabled = false, error }: DirectoryUploadProps) {
+export function DirectoryUpload({ onDirectorySelect, onCancel, disabled = false, error }: DirectoryUploadProps) {
   const directoryInputRef = useRef<HTMLInputElement>(null);
   const cancelledRef = useRef<boolean>(false);
   
@@ -138,7 +139,12 @@ export function DirectoryUpload({ onDirectorySelect, disabled = false, error }: 
     if (directoryInputRef.current) {
       directoryInputRef.current.value = '';
     }
-  }, []);
+    
+    // Notify parent component to clear its state
+    if (onCancel) {
+      onCancel();
+    }
+  }, [onCancel]);
 
   return (
     <Stack gap="sm">

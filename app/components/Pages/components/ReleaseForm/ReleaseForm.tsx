@@ -113,6 +113,16 @@ export function ReleaseForm() {
     form.clearFieldError('directory');
   };
 
+  const handleDirectoryCancel = () => {
+    // Clear parent state
+    setDirectoryBlob(null);
+    setDirectoryName("");
+    
+    // Clear form field and validation
+    form.setFieldValue('directory', null);
+    form.clearFieldError('directory');
+  };
+
   const handleSubmit = (values: ReleaseFormData) => {
     if (!directoryBlob || !params.org || !params.app) {
       console.error("Missing required data for release");
@@ -174,6 +184,7 @@ export function ReleaseForm() {
             {/* Directory Upload */}
             <DirectoryUpload
               onDirectorySelect={handleDirectorySelect}
+              onCancel={handleDirectoryCancel}
               disabled={isUploading || isProcessing}
               error={form.errors.directory as string}
             />
