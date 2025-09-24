@@ -24,6 +24,7 @@ interface ReleaseFormData {
 interface DeploymentOption {
   value: string;
   label: string;
+  searchableText?: string; // Optional: text used for search functionality
   displayName?: string; // Optional: original deployment name for display
   deploymentKey: string;
   description: string;
@@ -60,6 +61,12 @@ export function ReleaseMetadata({ form, deploymentOptions, deploymentsLoading }:
         disabled={deploymentsLoading}
         description="The deployment environment to release to"
         searchable
+        filter={({ options, search }) => {
+          return options.filter((option: any) => {
+            const searchText = option.searchableText || option.label;
+            return searchText.toLowerCase().includes(search.toLowerCase().trim());
+          });
+        }}
         renderOption={(item) => (
           <div>
             <Text size="sm" fw={500}>
