@@ -10,7 +10,7 @@ import {
   Stack,
   rem,
 } from "@mantine/core";
-import { IconFolder, IconInfoCircle, IconX, IconCheck } from "@tabler/icons-react";
+import { IconFolder, IconInfoCircle, IconX, IconCheck, IconDownload } from "@tabler/icons-react";
 import { useState, useRef, useCallback } from "react";
 import JSZip from "jszip";
 
@@ -37,6 +37,7 @@ export function DirectoryUpload({ onDirectorySelect, onCancel, disabled = false,
   const [directoryUploadState, setDirectoryUploadState] = useState<DirectoryUploadState>('idle');
   const [directoryInfo, setDirectoryInfo] = useState<DirectoryInfo | null>(null);
   const [processingProgress, setProcessingProgress] = useState(0);
+  const [zipBlob, setZipBlob] = useState<Blob | null>(null); // Store ZIP for download testing
 
   const createZipFromFiles = async (files: FileList): Promise<Blob | null> => {
     const zip = new JSZip();
@@ -116,6 +117,9 @@ export function DirectoryUpload({ onDirectorySelect, onCancel, disabled = false,
       setDirectoryUploadState('completed');
       setProcessingProgress(100);
       
+      // Store ZIP blob for download testing
+      setZipBlob(zipBlob);
+      
       // Call the parent callback
       onDirectorySelect(zipBlob, directoryName);
     } catch (error) {
@@ -134,6 +138,7 @@ export function DirectoryUpload({ onDirectorySelect, onCancel, disabled = false,
     setDirectoryInfo(null);
     setDirectoryUploadState('idle');
     setProcessingProgress(0);
+    setZipBlob(null); // Clear stored ZIP blob
     
     // Clear the file input
     if (directoryInputRef.current) {
@@ -145,6 +150,26 @@ export function DirectoryUpload({ onDirectorySelect, onCancel, disabled = false,
       onCancel();
     }
   }, [onCancel]);
+
+  const handleDownloadZip = useCallback(() => {
+    if (!zipBlob || !directoryInfo) return;
+    
+    // Create download URL
+    const url = URL.createObjectURL(zipBlob);
+    
+    // Create temporary download link
+    const downloadLink = document.createElement('a');
+    downloadLink.href = url;
+    downloadLink.download = `${directoryInfo.name}-bundle.zip`;
+    
+    // Trigger download
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    
+    // Cleanup
+    document.body.removeChild(downloadLink);
+    URL.revokeObjectURL(url);
+  }, [zipBlob, directoryInfo]);
 
   return (
     <Stack gap="sm">
@@ -236,14 +261,24 @@ export function DirectoryUpload({ onDirectorySelect, onCancel, disabled = false,
                   </Badge>
                 </div>
               </Group>
-              <ActionIcon
-                variant="subtle"
-                color="red"
-                onClick={handleCancelDirectory}
-                title="Remove directory"
-              >
-                <IconX style={{ width: rem(16), height: rem(16) }} />
-              </ActionIcon>
+              <Group gap="xs">
+                <ActionIcon
+                  variant="subtle"
+                  color="blue"
+                  onClick={handleDownloadZip}
+                  title="Download ZIP for testing"
+                >
+                  <IconDownload style={{ width: rem(16), height: rem(16) }} />
+                </ActionIcon>
+                <ActionIcon
+                  variant="subtle"
+                  color="red"
+                  onClick={handleCancelDirectory}
+                  title="Remove directory"
+                >
+                  <IconX style={{ width: rem(16), height: rem(16) }} />
+                </ActionIcon>
+              </Group>
             </Group>
           </div>
         )}
