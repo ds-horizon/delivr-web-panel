@@ -1,6 +1,6 @@
 # export ENV=stag
 # echo "ENV: ${ENV}"
-# export SERVICE_NAME="cp-web-dashboard"
+# export SERVICE_NAME="dota"
 # export NAMESPACE="master"
 # export CONFIG_BRANCH="master"
 # echo "SERVICE_NAME: ${SERVICE_NAME}"

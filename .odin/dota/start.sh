@@ -31,12 +31,12 @@ echo "CONFIG_OPTS: ${CONFIG_OPTS}"
 envconsul ${CONFIG_OPTS} env | grep -i VAULT > .env
 source .env
 
-echo "Code push server url :: ${VAULT_SERVICE_CODEPUSH_SERVER_URL}"
+echo "DOTA server url :: ${VAULT_SERVICE_DOTA_SERVER_URL}"
 echo "Google client id :: ${VAULT_SERVICE_GOOGLE_CLIENT_ID}"
 echo "Google client secret :: ${VAULT_SERVICE_GOOGLE_CLIENT_SECRET}"
 
 export DEPLOYMENT=production
 
-echo "codepush-web-dashboard starting......."
+echo "dota-dashboard starting......."
 
 NODE_ENV=production PORT=3000 envconsul ${CONFIG_OPTS} pnpm start

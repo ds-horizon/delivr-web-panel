@@ -11,4 +11,4 @@ rsync -r --verbose \
 	--exclude='.husky' \
 	--exclude='.config' \
 	--exclude='.env' \
-	./ ./target/cp-web-dashboard
+	./ ./target/dota
