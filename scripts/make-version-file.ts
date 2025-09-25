@@ -6,7 +6,7 @@ const __dirname = process.env.INIT_CWD ?? "";
 const genConfigFile = async () => {
   const version = fs
     .readFileSync(
-      path.join(__dirname, ".odin/cp-web-dashboard/application-spec.yml")
+      path.join(__dirname, ".odin/dota/application-spec.yml")
     )
     .toString()
     .split(" ")[1]
