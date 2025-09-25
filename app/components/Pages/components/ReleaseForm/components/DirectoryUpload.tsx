@@ -11,7 +11,7 @@ import {
   rem,
 } from "@mantine/core";
 import { IconFolder, IconInfoCircle, IconX, IconCheck, IconDownload } from "@tabler/icons-react";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import JSZip from "jszip";
 
 type DirectoryUploadState = 'idle' | 'selecting' | 'processing' | 'completed' | 'error';
@@ -25,11 +25,12 @@ interface DirectoryInfo {
 interface DirectoryUploadProps {
   onDirectorySelect: (zipBlob: Blob, directoryName: string) => void;
   onCancel?: () => void; // Optional callback when upload is cancelled
+  resetTrigger?: number; // Increment this to trigger a reset
   disabled?: boolean;
   error?: string;
 }
 
-export function DirectoryUpload({ onDirectorySelect, onCancel, disabled = false, error }: DirectoryUploadProps) {
+export function DirectoryUpload({ onDirectorySelect, onCancel, resetTrigger, disabled = false, error }: DirectoryUploadProps) {
   const directoryInputRef = useRef<HTMLInputElement>(null);
   const cancelledRef = useRef<boolean>(false);
   
@@ -157,26 +158,45 @@ export function DirectoryUpload({ onDirectorySelect, onCancel, disabled = false,
     }
   }, [onDirectorySelect]);
 
+  // Reset function to clear all internal state
+  const resetDirectoryUpload = useCallback(() => {
+    // Reset cancellation flag
+    cancelledRef.current = false;
+    
+    // Reset all state
+    setDirectoryInfo(null);
+    setDirectoryUploadState('idle');
+    setProcessingProgress(0);
+    setZipBlob(null);
+    
+    // Clear file input
+    if (directoryInputRef.current) {
+      directoryInputRef.current.value = '';
+    }
+    
+    console.log('🔄 DirectoryUpload component state reset');
+  }, []);
+
   const handleCancelDirectory = useCallback(() => {
     // Set cancellation flag to stop any ongoing processing
     cancelledRef.current = true;
     
-    // Reset all directory-related state
-    setDirectoryInfo(null);
-    setDirectoryUploadState('idle');
-    setProcessingProgress(0);
-    setZipBlob(null); // Clear stored ZIP blob
-    
-    // Clear the file input
-    if (directoryInputRef.current) {
-      directoryInputRef.current.value = '';
-    }
+    // Use shared reset function (but keep cancellation flag set)
+    resetDirectoryUpload();
+    cancelledRef.current = true; // Re-set cancellation flag after reset
     
     // Notify parent component to clear its state
     if (onCancel) {
       onCancel();
     }
-  }, [onCancel]);
+  }, [onCancel, resetDirectoryUpload]);
+
+  // Listen for reset trigger from parent
+  useEffect(() => {
+    if (resetTrigger && resetTrigger > 0) {
+      resetDirectoryUpload();
+    }
+  }, [resetTrigger, resetDirectoryUpload]);
 
   const handleDownloadZip = useCallback(() => {
     if (!zipBlob || !directoryInfo) return;

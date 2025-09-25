@@ -34,6 +34,7 @@ export function ReleaseForm() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [directoryBlob, setDirectoryBlob] = useState<Blob | null>(null);
   const [directoryName, setDirectoryName] = useState<string>("");
+  const [resetTrigger, setResetTrigger] = useState<number>(0);
 
   const form = useForm<ReleaseFormData>({
     mode: "uncontrolled",
@@ -160,6 +161,9 @@ export function ReleaseForm() {
           form.reset();
           setDirectoryBlob(null);
           setDirectoryName("");
+          
+          // Trigger DirectoryUpload component reset
+          setResetTrigger(prev => prev + 1);
         },
       }
     );
@@ -183,12 +187,13 @@ export function ReleaseForm() {
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack gap="md">
             {/* Directory Upload */}
-            <DirectoryUpload
-              onDirectorySelect={handleDirectorySelect}
-              onCancel={handleDirectoryCancel}
-              disabled={isUploading || isProcessing}
-              error={form.errors.directory as string}
-            />
+          <DirectoryUpload
+            onDirectorySelect={handleDirectorySelect}
+            onCancel={handleDirectoryCancel}
+            resetTrigger={resetTrigger}
+            disabled={isUploading || isProcessing}
+            error={form.errors.directory as string}
+          />
 
             {/* Release Metadata */}
             <ReleaseMetadata
