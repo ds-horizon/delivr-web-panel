@@ -44,12 +44,12 @@ import {
 
 class Codepush {
   private __client = axios.create({
-    baseURL: env.CODEPUSH_SERVER_URL,
+    baseURL: env.DOTA_SERVER_URL,
     timeout: 10000,
   });
 
   async getUser(token: string): Promise<User> {
-    if (!env.CODEPUSH_SERVER_URL.length) {
+    if (!env.DOTA_SERVER_URL.length) {
       return Promise.resolve({
         authenticated: true,
         user: {
@@ -345,7 +345,7 @@ class Codepush {
   }
 
   async createRelease(data: CreateReleaseRequest) {
-    if (!env.CODEPUSH_SERVER_URL.length) {
+    if (!env.DOTA_SERVER_URL.length) {
       // Development mode - return mock response
       const mockResponse: CreateReleaseResponse = {
         package: {
