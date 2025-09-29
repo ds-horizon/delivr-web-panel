@@ -17,6 +17,8 @@ import {
   CreateAppResponse,
   CreateDeploymentsRequest,
   CreateDeploymentsResponse,
+  CreateReleaseRequest,
+  CreateReleaseResponse,
   DeleteAccessKeyRequest,
   DeleteAccessKeyResponse,
   DeleteAppRequest,
@@ -340,6 +342,56 @@ class Codepush {
         headers,
       }
     );
+  }
+
+  async createRelease(data: CreateReleaseRequest) {
+    if (!env.CODEPUSH_SERVER_URL.length) {
+      // Development mode - return mock response
+      const mockResponse: CreateReleaseResponse = {
+        package: {
+          label: `v${Date.now()}`,
+          appVersion: data.packageInfo.appVersion,
+          description: data.packageInfo.description || "",
+          packageHash: "mock-hash-" + Date.now(),
+          blobUrl: "mock-blob-url",
+          size: data.packageFile.size,
+          rollout: data.packageInfo.rollout || 100,
+          isMandatory: data.packageInfo.isMandatory || false,
+          isDisabled: data.packageInfo.isDisabled || false,
+          uploadTime: Date.now(),
+        },
+      };
+      return { data: mockResponse, status: 201 };
+    }
+
+    // Create multipart form data for CodePush server
+    const formData = new FormData();
+    formData.append("package", data.packageFile);
+    formData.append("packageInfo", JSON.stringify(data.packageInfo));
+
+    const headers = {
+      "userId": data.userId,
+      "tenant": data.tenant,
+      "Accept": "application/vnd.code-push.v1+json",
+    };
+
+    // Use fetch for multipart form data (axios has issues with File objects)
+    const response = await fetch(
+      `${env.CODEPUSH_SERVER_URL}/apps/${encodeURIComponent(data.appId)}/deployments/${encodeURIComponent(data.deploymentName)}/release`,
+      {
+        method: "POST",
+        headers,
+        body: formData,
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || `CodePush server error: ${response.status} ${response.statusText}`);
+    }
+
+    const responseData = await response.json();
+    return { data: responseData, status: response.status };
   }
 }
 
