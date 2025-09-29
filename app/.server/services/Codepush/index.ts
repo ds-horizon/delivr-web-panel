@@ -375,23 +375,14 @@ class Codepush {
       "Accept": "application/vnd.code-push.v1+json",
     };
 
-    // Use fetch for multipart form data (axios has issues with File objects)
-    const response = await fetch(
-      `${env.CODEPUSH_SERVER_URL}/apps/${encodeURIComponent(data.appId)}/deployments/${encodeURIComponent(data.deploymentName)}/release`,
-      {
-        method: "POST",
-        headers,
-        body: formData,
-      }
+    // Use axios client for consistency (configured with baseURL)
+    const response = await this.__client.post<CreateReleaseResponse>(
+      `/apps/${encodeURIComponent(data.appId)}/deployments/${encodeURIComponent(data.deploymentName)}/release`,
+      formData,
+      { headers }
     );
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(errorText || `CodePush server error: ${response.status} ${response.statusText}`);
-    }
-
-    const responseData = await response.json();
-    return { data: responseData, status: response.status };
+    return { data: response.data, status: response.status };
   }
 }
 
