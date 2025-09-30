@@ -79,9 +79,6 @@ export function ReleaseForm() {
   const deploymentOptions = useMemo(() => {
     if (!deployments?.length) return [];
     
-    // Debug logging
-    console.log('🔍 Raw deployments data:', deployments);
-    
     // Create a Map to deduplicate by name (keep the first occurrence)
     const uniqueDeployments = new Map();
     deployments.forEach((deployment, index) => {
@@ -101,7 +98,6 @@ export function ReleaseForm() {
     });
     
     const options = Array.from(uniqueDeployments.values());
-    console.log('✅ Final deployment options:', options);
     
     return options;
   }, [deployments]);
