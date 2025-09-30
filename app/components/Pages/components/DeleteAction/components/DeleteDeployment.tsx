@@ -1,6 +1,6 @@
 import { Flex, Button, Text } from "@mantine/core";
 import { BaseDeleteProps } from "..";
-import { useSearchParams } from "@remix-run/react";
+import { useSearchParams, useNavigate } from "@remix-run/react";
 import { useDeleteDeployment } from "../../DeploymentsSearch/hooks/useDeleteDeployment";
 
 type DeleteDeploymentProps = BaseDeleteProps;
@@ -8,6 +8,7 @@ type DeleteDeploymentProps = BaseDeleteProps;
 export const DeleteDeployment = ({ onSuccess }: DeleteDeploymentProps) => {
   const { mutate, isLoading } = useDeleteDeployment();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const deploymentName = searchParams.get("name") ?? "";
   const appId = searchParams.get("appId") ?? "";
@@ -21,7 +22,12 @@ export const DeleteDeployment = ({ onSuccess }: DeleteDeploymentProps) => {
         deploymentName,
       },
       {
-        onSuccess: onSuccess,
+        onSuccess: () => {
+          // Close the modal first
+          onSuccess();
+          // Then navigate back to avoid staying on deleted deployment page
+          navigate(-1);
+        },
       }
     );
   };
