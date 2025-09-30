@@ -375,14 +375,32 @@ class Codepush {
       "Accept": "application/vnd.code-push.v1+json",
     };
 
-    // Use axios client for consistency (configured with baseURL)
-    const response = await this.__client.post<CreateReleaseResponse>(
-      `/apps/${encodeURIComponent(data.appId)}/deployments/${encodeURIComponent(data.deploymentName)}/release`,
-      formData,
-      { headers }
-    );
+    try {
+      // Use axios client for consistency (configured with baseURL)
+      const response = await this.__client.post<CreateReleaseResponse>(
+        `/apps/${encodeURIComponent(data.appId)}/deployments/${encodeURIComponent(data.deploymentName)}/release`,
+        formData,
+        { headers }
+      );
 
-    return { data: response.data, status: response.status };
+      return { data: response.data, status: response.status };
+    } catch (error) {
+      // Handle axios errors to preserve original status codes and messages
+      if (error.response) {
+        // Server responded with error status (4xx, 5xx)
+        return {
+          data: error.response.data,
+          status: error.response.status,
+          error: true
+        };
+      } else if (error.request) {
+        // Network error - no response received
+        throw new Error("Network error: Unable to reach CodePush server");
+      } else {
+        // Other error
+        throw error;
+      }
+    }
   }
 }
 

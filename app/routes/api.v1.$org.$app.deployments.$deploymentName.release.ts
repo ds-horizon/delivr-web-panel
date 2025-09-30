@@ -29,7 +29,7 @@ export const action: ActionFunction = authenticateActionRequest({
       const packageInfo = JSON.parse(packageInfoStr);
 
       // Use CodepushService for consistent API handling
-      const { data, status } = await CodepushService.createRelease({
+      const result = await CodepushService.createRelease({
         userId: user.user.id,
         tenant: org, // org is the tenant ID
         appId: app,
@@ -38,28 +38,31 @@ export const action: ActionFunction = authenticateActionRequest({
         packageInfo,
       });
 
-      return new Response(JSON.stringify(data), {
-        status,
+      // Check if CodepushService returned an error response
+      if (result.error) {
+        // Return the original error status and data from CodePush server
+        return new Response(JSON.stringify(result.data), {
+          status: result.status,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
+      // Success case
+      return new Response(JSON.stringify(result.data), {
+        status: result.status,
         headers: { "Content-Type": "application/json" },
       });
       
     } catch (error) {
       console.error("Release creation error:", error);
       
-      // Parse detailed error message from CodePush server
+      // Handle unexpected errors (network issues, etc.)
       const errorMessage = error instanceof Error ? error.message : "Failed to create release";
-      let errorResponse;
-      try {
-        errorResponse = JSON.parse(errorMessage);
-      } catch {
-        errorResponse = errorMessage;
-      }
       
       return new Response(
         JSON.stringify({ 
           message: errorMessage,
-          details: errorMessage,
-          originalError: errorResponse
+          details: errorMessage
         }),
         { status: 500, headers: { "Content-Type": "application/json" } }
       );
