@@ -22,11 +22,11 @@ export function Intro() {
       <div className={classes.inner}>
         <div className={classes.content}>
           <Title className={classes.title}>
-            Welcome to the new{" "}
-            <span className={classes.highlight}>Codepush</span> Interface <br />{" "}
+            Welcome to the{" "}
+            <span className={classes.highlight}>DOTA</span> Dashboard <br />{" "}
           </Title>
           <Text c="dimmed" mt="md">
-            Instantly update your mobile apps with ease – CodePush by App Center
+            Instantly update your mobile apps with ease – DOTA
             lets you deploy real-time updates for React Native with support for
             code, images, and assets to keep your app agile and up-to-date in
             any scenario.

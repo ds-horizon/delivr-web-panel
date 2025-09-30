@@ -17,7 +17,7 @@ export function LoginForm({ onClickLogin }: LoginProps) {
       >
         <Stack align="center">
           <Text size="xl" fw={700}>
-            Welcome to Codepush
+            Welcome to DOTA Dashboard
           </Text>
           <Text size="sm">Instantly manage your app updates with ease.</Text>
           <Group grow mb="md" mt="md">
