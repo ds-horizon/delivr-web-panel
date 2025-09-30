@@ -8,15 +8,6 @@ const getDetailedErrorMessage = (error: any): { title: string; message: string; 
   const status = error?.response?.status;
   const responseData = error?.response?.data;
   
-  // Debug logging to understand error structure
-  console.log('🔍 Error Analysis:', {
-    status,
-    responseData,
-    responseDataType: typeof responseData,
-    errorMessage: error.message,
-    fullError: error
-  });
-  
   // Extract error message with multiple fallbacks
   let errorMessage = '';
   if (typeof responseData === 'string') {
@@ -179,15 +170,6 @@ export const useCreateRelease = () => {
       // Ensure message is never empty
       const finalMessage = message && message.trim() ? message : "An error occurred while creating the release. Please check the console for details.";
       
-      // Debug what we're about to show in the toast
-      console.log('🍞 Toast Content:', { 
-        title, 
-        message: finalMessage, 
-        color,
-        originalMessage: message,
-        messageLength: message?.length 
-      });
-      
       notifications.show({
         color,
         title,
@@ -196,10 +178,7 @@ export const useCreateRelease = () => {
       });
 
       // Log detailed error for debugging
-      console.group('🚨 Release Creation Error');
-      console.error('Status:', (error as any)?.response?.status);
-      console.error('Response:', (error as any)?.response?.data);
-      console.error('Full Error:', error);
+      console.group('🚨 Release Creation Error: ', finalMessage);
       console.groupEnd();
     },
   });

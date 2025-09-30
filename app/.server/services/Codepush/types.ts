@@ -255,3 +255,21 @@ export type PromoteReleaseToDeploymentRequest = BaseHeader & {
 export type PromoteReleaseToDeploymentResponse = {
   package: Package;
 };
+
+export type CreateReleaseRequest = BaseHeader & {
+  tenant: string;
+  appId: string;
+  deploymentName: string;
+  packageFile: File;
+  packageInfo: {
+    appVersion: string;
+    description?: string;
+    rollout?: number;
+    isMandatory?: boolean;
+    isDisabled?: boolean;
+  };
+};
+
+export type CreateReleaseResponse = {
+  package: Package;
+};

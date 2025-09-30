@@ -17,6 +17,8 @@ import {
   CreateAppResponse,
   CreateDeploymentsRequest,
   CreateDeploymentsResponse,
+  CreateReleaseRequest,
+  CreateReleaseResponse,
   DeleteAccessKeyRequest,
   DeleteAccessKeyResponse,
   DeleteAppRequest,
@@ -42,12 +44,12 @@ import {
 
 class Codepush {
   private __client = axios.create({
-    baseURL: env.CODEPUSH_SERVER_URL,
+    baseURL: env.DOTA_SERVER_URL,
     timeout: 10000,
   });
 
   async getUser(token: string): Promise<User> {
-    if (!env.CODEPUSH_SERVER_URL.length) {
+    if (!env.DOTA_SERVER_URL.length) {
       return Promise.resolve({
         authenticated: true,
         user: {
@@ -340,6 +342,65 @@ class Codepush {
         headers,
       }
     );
+  }
+
+  async createRelease(data: CreateReleaseRequest) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock response
+      const mockResponse: CreateReleaseResponse = {
+        package: {
+          label: `v${Date.now()}`,
+          appVersion: data.packageInfo.appVersion,
+          description: data.packageInfo.description || "",
+          packageHash: "mock-hash-" + Date.now(),
+          blobUrl: "mock-blob-url",
+          size: data.packageFile.size,
+          rollout: data.packageInfo.rollout || 100,
+          isMandatory: data.packageInfo.isMandatory || false,
+          isDisabled: data.packageInfo.isDisabled || false,
+          uploadTime: Date.now(),
+        },
+      };
+      return { data: mockResponse, status: 201 };
+    }
+
+    // Create multipart form data for CodePush server
+    const formData = new FormData();
+    formData.append("package", data.packageFile);
+    formData.append("packageInfo", JSON.stringify(data.packageInfo));
+
+    const headers = {
+      "userId": data.userId,
+      "tenant": data.tenant,
+      "Accept": "application/vnd.code-push.v1+json",
+    };
+
+    try {
+      // Use axios client for consistency (configured with baseURL)
+      const response = await this.__client.post<CreateReleaseResponse>(
+        `/apps/${encodeURIComponent(data.appId)}/deployments/${encodeURIComponent(data.deploymentName)}/release`,
+        formData,
+        { headers }
+      );
+
+      return { data: response.data, status: response.status };
+    } catch (error) {
+      // Handle axios errors to preserve original status codes and messages
+      if (error.response) {
+        // Server responded with error status (4xx, 5xx)
+        return {
+          data: error.response.data,
+          status: error.response.status,
+          error: true
+        };
+      } else if (error.request) {
+        // Network error - no response received
+        throw new Error("Network error: Unable to reach CodePush server");
+      } else {
+        // Other error
+        throw error;
+      }
+    }
   }
 }
 
