@@ -62,19 +62,8 @@ export const DeploymentList = () => {
   const handleDelete = () => {
     const currentDeployment = searchParams.get("deployment");
     if (currentDeployment) {
-      deleteDeployment(
-        {
-          appId: params.app ?? "",
-          tenant: params.org ?? "",
-          deploymentName: currentDeployment,
-        },
-        {
-          onSuccess: () => {
-            refetch();
-            navigate(-1);
-          },
-        }
-      );
+      // Use the existing modal pattern like organization deletion
+      navigate(`/dashboard/delete?type=deployment&name=${encodeURIComponent(currentDeployment)}&id=${encodeURIComponent(currentDeployment)}&appId=${encodeURIComponent(params.app ?? "")}&tenant=${encodeURIComponent(params.org ?? "")}`);
     }
   };
 
