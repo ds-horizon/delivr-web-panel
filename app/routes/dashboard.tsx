@@ -8,21 +8,38 @@ import {
   Image,
   rem,
 } from "@mantine/core";
-import { NavbarNested } from "~/components/NavbarNested";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import { Logo } from "~/components/Logo";
 import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
-import { authenticateLoaderRequest } from "~/utils/authenticate";
-import { User } from "~/.server/services/Auth/Auth.interface";
+import { useMemo } from "react";
 import { route } from "routes-gen";
+import type { User } from "~/.server/services/Auth/Auth.interface";
+import { Logo } from "~/components/Logo";
+import { NavbarNested } from "~/components/NavbarNested";
+import { TermsGuard } from "~/components/TermsAndConditions/TermsGuard";
+import type { TermsConfig } from "~/components/TermsAndConditions/types/termsTypes";
+import { authenticateLoaderRequest } from "~/utils/authenticate";
 import cpIcon from './../assets/images/second.png';
 
 export const loader = authenticateLoaderRequest();
 
-export default function Hello() {
-  const data = useLoaderData<User>();
+export default function Dashboard() {
+  const user = useLoaderData<User>();
   const navigate = useNavigate();
   const [opened, { toggle }] = useDisclosure();
+
+  // Memoize terms config to prevent unnecessary re-renders
+  const termsConfig = useMemo<TermsConfig>(() => ({
+    checkOn: 'mount',
+    triggerConditions: {
+      requireOwner: true,
+      requireAcceptance: true,
+      requireCurrentVersion: true,
+    },
+    modalConfig: {
+      closeable: false,
+      blockingMode: true,
+    },
+  }), []);
   const openCreateApp = () => {
     navigate(route("/dashboard/create/app"));
   };
@@ -60,10 +77,12 @@ export default function Hello() {
         </Flex>
       </AppShell.Header>
       <AppShell.Navbar style={{ overflow: "hidden" }}>
-        <NavbarNested user={data} />
+        <NavbarNested user={user} />
       </AppShell.Navbar>
       <AppShell.Main>
-        <Outlet />
+        <TermsGuard config={termsConfig}>
+          <Outlet />
+        </TermsGuard>
       </AppShell.Main>
     </AppShell>
   );
