@@ -30,7 +30,7 @@ export const useSimpleTerms = () => {
     if (!termsStatus || isLoading) return;
 
     // Show modal if terms not accepted
-    if (!termsStatus.termsAccepted) {
+    if (termsStatus.isOwner && !termsStatus.termsAccepted) {
       setShowModal(true);
     } else {
       setShowModal(false);
