@@ -15,8 +15,7 @@ import { route } from "routes-gen";
 import type { User } from "~/.server/services/Auth/Auth.interface";
 import { Logo } from "~/components/Logo";
 import { NavbarNested } from "~/components/NavbarNested";
-import { TermsGuard } from "~/components/TermsAndConditions/TermsGuard";
-import type { TermsConfig } from "~/components/TermsAndConditions/types/termsTypes";
+import { SimpleTermsGuard } from "~/components/TermsAndConditions/SimpleTermsGuard";
 import { authenticateLoaderRequest } from "~/utils/authenticate";
 import cpIcon from './../assets/images/second.png';
 
@@ -27,19 +26,6 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [opened, { toggle }] = useDisclosure();
 
-  // Memoize terms config to prevent unnecessary re-renders
-  const termsConfig = useMemo<TermsConfig>(() => ({
-    checkOn: 'mount',
-    triggerConditions: {
-      requireOwner: true,
-      requireAcceptance: true,
-      requireCurrentVersion: true,
-    },
-    modalConfig: {
-      closeable: false,
-      blockingMode: true,
-    },
-  }), []);
   const openCreateApp = () => {
     navigate(route("/dashboard/create/app"));
   };
@@ -80,9 +66,9 @@ export default function Dashboard() {
         <NavbarNested user={user} />
       </AppShell.Navbar>
       <AppShell.Main>
-        <TermsGuard config={termsConfig}>
+        <SimpleTermsGuard>
           <Outlet />
-        </TermsGuard>
+        </SimpleTermsGuard>
       </AppShell.Main>
     </AppShell>
   );
