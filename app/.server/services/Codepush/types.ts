@@ -4,6 +4,58 @@ export type Organization = {
   role: "Owner" | "Collaborator";
 };
 
+// Base types for terms-related entities
+export type TermsAccountInfo = {
+  accountId: string;
+  email: string;
+};
+
+export type TermsVersionInfo = {
+  termsVersion: string;
+  acceptedTime: number; // Epoch timestamp
+};
+
+export type TermsStatusInfo = {
+  termsAccepted: boolean;
+  isCurrentVersion: boolean;
+  currentRequiredVersion: string;
+};
+
+export type OwnershipInfo = {
+  isOwner: boolean;
+  ownerAppCount: number;
+};
+
+// Composed types using base types
+export type TermsAcceptance = TermsAccountInfo & TermsVersionInfo & {
+  id: string;
+};
+
+export type OwnerTermsStatusResponse = TermsAccountInfo & 
+  TermsStatusInfo & 
+  OwnershipInfo & {
+    termsVersion: string | null;
+    acceptedTime?: number;
+    message?: string;
+  };
+
+export type OwnerTermsStatusRequest = BaseHeader;
+
+export type AcceptTermsRequest = BaseHeader & {
+  termsVersion: string;
+};
+
+export type AcceptTermsResponse = {
+  message: string;
+  termsAcceptance: TermsAcceptance;
+};
+
+// Utility types for different use cases
+export type TermsAcceptanceRecord = Pick<TermsAcceptance, 'termsVersion' | 'acceptedTime'>;
+export type UserAccountInfo = Pick<TermsAcceptance, 'accountId' | 'email'>;
+export type TermsCheckResult = Pick<OwnerTermsStatusResponse, 'termsAccepted' | 'isCurrentVersion'>;
+export type OwnershipStatus = Pick<OwnerTermsStatusResponse, 'isOwner' | 'ownerAppCount'>;
+
 type Collaborator = {
   isCurrentAccount: boolean;
   permission: Organization["role"];

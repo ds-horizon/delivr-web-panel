@@ -1,7 +1,9 @@
 import axios, { AxiosResponse } from "axios";
-import { env } from "../config";
 import { User } from "../Auth/Auth.interface";
+import { env } from "../config";
 import {
+  AcceptTermsRequest,
+  AcceptTermsResponse,
   AccessKeyRequest,
   AccessKeyResponse,
   AddCollabaratorsRequest,
@@ -30,6 +32,8 @@ import {
   DeploymentsReleaseResponse,
   DeploymentsRequest,
   DeploymentsResponse,
+  OwnerTermsStatusRequest,
+  OwnerTermsStatusResponse,
   PromoteReleaseToDeploymentRequest,
   PromoteReleaseToDeploymentResponse,
   RemoveCollabaratorsRequest,
@@ -401,6 +405,34 @@ class Codepush {
         throw error;
       }
     }
+  }
+
+  async getOwnerTermsStatus(data: OwnerTermsStatusRequest) {
+    const headers: Pick<OwnerTermsStatusRequest, "userId"> = data;
+
+    return this.__client.get<null, AxiosResponse<OwnerTermsStatusResponse>>(
+      "/account/ownerTermsStatus",
+      {
+        headers,
+      }
+    );
+  }
+
+  async acceptTerms(data: AcceptTermsRequest) {
+    const headers: Pick<AcceptTermsRequest, "userId"> = data;
+
+    return this.__client.post<
+      Pick<AcceptTermsRequest, "termsVersion">,
+      AxiosResponse<AcceptTermsResponse>
+    >(
+      "/account/acceptTerms",
+      {
+        termsVersion: data.termsVersion,
+      },
+      {
+        headers,
+      }
+    );
   }
 }
 
