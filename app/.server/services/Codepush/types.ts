@@ -159,6 +159,7 @@ export type CreateAppResponse = {
 
 export type DeploymentsRequest = BaseHeader & {
   appId: string;
+  tenant: string;
 };
 
 export type DeploymentsResponse = {
@@ -178,6 +179,7 @@ export type DeleteDeploymentsResponse = {
 export type CreateDeploymentsRequest = BaseHeader & {
   appId: string;
   name: string;
+  tenant: string;
 };
 
 export type CreateDeploymentsResponse = {
@@ -187,6 +189,7 @@ export type CreateDeploymentsResponse = {
 export type DeploymentsReleaseRequest = BaseHeader & {
   appId: string;
   deploymentName: string;
+  tenant: string;
 };
 
 export type DeploymentsReleaseResponse = {

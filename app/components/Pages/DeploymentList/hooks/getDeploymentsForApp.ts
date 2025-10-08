@@ -6,6 +6,6 @@ export const useGetDeploymentsForApp = () => {
   const params = useParams();
 
   return useQuery(`${params.org}-${params.app}-deployment-list`, () =>
-    getDeploymentsForApp(params.app ?? "")
+      getDeploymentsForApp(params.app ?? "", params.org ?? "")
   );
 };
