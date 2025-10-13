@@ -29,12 +29,13 @@ const updateRelease: AuthenticatedActionFunction = async ({
   return json(data, { status });
 };
 
-export const loader = authenticateLoaderRequest(async ({ user, params }) => {
+export const loader = authenticateLoaderRequest(async ({ user, params, request }) => {
   const { data, status } = await CodepushService.getReleasesForDeployentsForApp(
     {
       userId: user.user.id,
       appId: params.app ?? "",
       deploymentName: params.deploymentName ?? "",
+      tenant: request.headers.get("tenant") ?? "",
     }
   );
   return json(data, { status });

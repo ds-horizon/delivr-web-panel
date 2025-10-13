@@ -134,12 +134,18 @@ export type DeploymentData = {
 // ];
 
 export const getDeploymentsForApp = async (
-  id: string
+  app: string,
+  org: string
 ): Promise<DeploymentData[]> => {
   const { data } = await axios.get<null, AxiosResponse<DeploymentsResponse>>(
     route("/api/v1/:app/deployments", {
-      app: id,
-    })
+      app: app,
+    }),
+    {
+      headers: {
+        tenant: org,
+      },
+    }
   );
 
   return data.deployments.map((item) => {
