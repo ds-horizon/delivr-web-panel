@@ -22,6 +22,10 @@ export function AddCollboratorForm({ open, onClose }: AddCollboratorFormProps) {
       },
     },
   });
+
+  // Debug log to see what params we're getting
+  console.log('AddCollaboratorForm params:', { app: params.app, org: params.org });
+
   return (
     <Modal opened={open} onClose={onClose} title={"Add Collborator"}>
       <Center>
@@ -42,6 +46,11 @@ export function AddCollboratorForm({ open, onClose }: AddCollboratorFormProps) {
             disabled={!!Object.keys(form.errors).length && !isLoading}
             loading={isLoading}
             onClick={() => {
+              console.log('Submitting with:', {
+                appId: params.app,
+                tenant: params.org,
+                email: form.getValues().name,
+              });
               mutate(
                 {
                   appId: params.app ?? "",
