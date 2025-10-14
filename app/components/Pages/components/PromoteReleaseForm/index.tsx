@@ -18,17 +18,19 @@ export const PromoteReleaseForm = ({
   const { data } = useGetDeploymentsForApp();
   const { mutate, isLoading } = usePromoteRelease();
   const [value, setValue] = useState("");
-  const [serachParams] = useSearchParams();
+  const [serachParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const close = () => {
-    navigate(-1);
+    setSearchParams((p) => {
+      p.delete("promote");
+      return p;
+    });
   };
 
   return (
     <Modal
       opened={
-        !!serachParams.get("releaseId") &&
         !!serachParams.get("promote") &&
         serachParams.get("promote") === "true"
       }

@@ -128,7 +128,7 @@ export default function ReleaseDetailPage() {
           <ActionIcon
             variant="subtle"
             size="lg"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(`/dashboard/${params.org}/${params.app}`)}
           >
             <IconArrowLeft size={20} />
           </ActionIcon>
