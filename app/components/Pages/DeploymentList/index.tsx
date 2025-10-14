@@ -9,16 +9,14 @@ import {
   Tooltip,
   TextInput,
   Group,
-  Button,
   ScrollArea,
 } from "@mantine/core";
 import { useNavigate, useSearchParams, useParams } from "@remix-run/react";
 import { DeploymentsSearch } from "../components/DeploymentsSearch";
 import { useGetDeploymentsForApp } from "./hooks/getDeploymentsForApp";
-import { IconCheck, IconCopy, IconSearch, IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconCheck, IconCopy, IconSearch, IconTrash } from "@tabler/icons-react";
 import { ReleaseListForDeploymentTable } from "../components/ReleaseListForDeploymentTable";
 import { ReleaseDeatilCardModal } from "../components/ReleaseDetailCardModal";
-import { CreateDeploymentForm } from "../components/CreateDeploymentForm";
 import { useDeleteDeployment } from "../components/DeploymentsSearch/hooks/useDeleteDeployment";
 import { useEffect, useState, useRef } from "react";
 
@@ -31,7 +29,6 @@ export const DeploymentList = () => {
   
   // Local state for the new UI
   const [searchQuery, setSearchQuery] = useState("");
-  const [createFormOpen, setCreateFormOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
@@ -96,25 +93,16 @@ export const DeploymentList = () => {
     <>
       {/* New improved layout */}
       <Flex direction="column" gap="md">
-        {/* Search and Actions Bar */}
+        {/* Search Bar */}
         <div ref={searchContainerRef} style={{ position: 'relative' }}>
-          <Group justify="space-between" align="center">
-            <TextInput
-              placeholder="Search deployments by name or key..."
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.currentTarget.value)}
-              onFocus={() => setSearchFocused(true)}
-              leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} />}
-              style={{ flexGrow: 1, maxWidth: 400 }}
-            />
-            <Button
-              leftSection={<IconPlus style={{ width: rem(16), height: rem(16) }} />}
-              onClick={() => setCreateFormOpen(true)}
-              variant="filled"
-            >
-              Create
-            </Button>
-          </Group>
+          <TextInput
+            placeholder="Search deployments by name or key..."
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.currentTarget.value)}
+            onFocus={() => setSearchFocused(true)}
+            leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} />}
+            style={{ maxWidth: 400 }}
+          />
 
           {/* Search Results Dropdown */}
           {shouldShowResults && (
@@ -250,14 +238,6 @@ export const DeploymentList = () => {
           navigate(-1);
         }}
         deploymentName={details?.name}
-      />
-      
-      <CreateDeploymentForm
-        open={createFormOpen}
-        onClose={() => {
-          setCreateFormOpen(false);
-          refetch();
-        }}
       />
     </>
   );

@@ -157,12 +157,12 @@ export default function CreateReleasePage() {
     const formData = new FormData();
     formData.append("package", directoryBlob, directoryName || "app-bundle.zip");
     formData.append("packageInfo", JSON.stringify({
+      appVersion: values.appVersion,
       description: values.description,
       isDisabled: values.disabled,
       isMandatory: values.mandatory,
       rollout: values.rollout,
     }));
-    formData.append("appVersion", values.appVersion);
 
     createRelease(
       {

@@ -1,5 +1,5 @@
 import { rem, Tabs, Flex, Box, Skeleton, Button, Group, Title } from "@mantine/core";
-import { IconPhoto, IconSettings, IconRocket } from "@tabler/icons-react";
+import { IconPhoto, IconSettings, IconRocket, IconKey } from "@tabler/icons-react";
 import { CollabaratorList } from "~/components/Pages/components/CollaboratorList";
 import { DeploymentList } from "~/components/Pages/DeploymentList";
 import { CombinedSidebar } from "~/components/Pages/components/AppDetailPage/components/CombinedSidebar";
@@ -9,6 +9,8 @@ import { route } from "routes-gen";
 import { User } from "~/.server/services/Auth/Auth.interface";
 import { authenticateLoaderRequest } from "~/utils/authenticate";
 import { useState } from "react";
+import { CreateDeploymentForm } from "~/components/Pages/components/CreateDeploymentForm";
+import { useGetDeploymentsForApp } from "~/components/Pages/DeploymentList/hooks/getDeploymentsForApp";
 
 export const loader = authenticateLoaderRequest();
 
@@ -18,8 +20,10 @@ export default function AppDetails() {
   const params = useParams();
   const navigate = useNavigate();
   const [showCollaborators, setShowCollaborators] = useState(false);
+  const [createDeploymentOpen, setCreateDeploymentOpen] = useState(false);
 
   const { data: orgs = [], isLoading: orgsLoading } = useGetOrgList();
+  const { refetch: refetchDeployments } = useGetDeploymentsForApp();
 
   if (orgsLoading) {
     return (
@@ -55,21 +59,58 @@ export default function AppDetails() {
           <>
             <Group justify="space-between" mb="md">
               <Title order={2}>Releases</Title>
-              <Button
-                leftSection={<IconRocket size={18} />}
-                onClick={() => {
-                  navigate(`/dashboard/${params.org}/${params.app}/create-release`);
-                }}
-                variant="gradient"
-                gradient={{ from: "#667eea", to: "#764ba2", deg: 135 }}
-              >
-                Create Release
-              </Button>
+              <Group gap="sm">
+                <Button
+                  leftSection={<IconKey size={18} />}
+                  onClick={() => setCreateDeploymentOpen(true)}
+                  variant="light"
+                  color="violet"
+                  styles={{
+                    root: {
+                      transition: "all 200ms ease",
+                      "&:hover": {
+                        transform: "translateY(-2px)",
+                        boxShadow: "0 8px 20px rgba(102, 126, 234, 0.25)",
+                      },
+                    },
+                  }}
+                >
+                  Create Deployment Key
+                </Button>
+                <Button
+                  leftSection={<IconRocket size={18} />}
+                  onClick={() => {
+                    navigate(`/dashboard/${params.org}/${params.app}/create-release`);
+                  }}
+                  variant="gradient"
+                  gradient={{ from: "#667eea", to: "#764ba2", deg: 135 }}
+                  styles={{
+                    root: {
+                      transition: "all 200ms ease",
+                      "&:hover": {
+                        transform: "translateY(-2px)",
+                        boxShadow: "0 8px 20px rgba(102, 126, 234, 0.35)",
+                      },
+                    },
+                  }}
+                >
+                  Create Release
+                </Button>
+              </Group>
             </Group>
             <DeploymentList />
           </>
         )}
       </Box>
+
+      {/* Create Deployment Modal */}
+      <CreateDeploymentForm
+        open={createDeploymentOpen}
+        onClose={() => {
+          setCreateDeploymentOpen(false);
+          refetchDeployments();
+        }}
+      />
     </Flex>
   );
 }
