@@ -45,6 +45,26 @@ import {
   UpdateDeploymentsReleaseRequest,
   UpdatePackageRequest,
 } from "./types";
+import {
+  createMockTenantsResponse,
+  createMockAppsResponse,
+  createMockDeploymentsResponse,
+  createMockCollaboratorsResponse,
+  createMockAccessKeysResponse,
+  createMockReleasesResponse,
+  createMockCreateAppResponse,
+  createMockCreateDeploymentResponse,
+  createMockCreateReleaseResponse,
+  createMockAddCollaboratorResponse,
+  createMockUpdateCollaboratorResponse,
+  createMockRemoveCollaboratorResponse,
+  createMockDeleteAppResponse,
+  createMockDeleteDeploymentResponse,
+  createMockDeleteTenantResponse,
+  createMockCreateAccessKeyResponse,
+  createMockDeleteAccessKeyResponse,
+  createMockPromoteReleaseResponse,
+} from "./mockData";
 
 class Codepush {
   private __client = axios.create({
@@ -91,6 +111,12 @@ class Codepush {
   }
 
   async getTenants(userId: string) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock data
+      const mockResponse = createMockTenantsResponse();
+      return { data: mockResponse, status: 200 };
+    }
+
     const headers: TenantsRequest = {
       userId,
     };
@@ -101,6 +127,12 @@ class Codepush {
   }
 
   async getAppsForTenants(data: AppsRequest) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock data
+      const mockResponse = createMockAppsResponse();
+      return { data: mockResponse, status: 200 };
+    }
+
     const headers: AppsRequest = data;
 
     return this.__client.get<null, AxiosResponse<AppsResponse>>("/apps", {
@@ -109,6 +141,12 @@ class Codepush {
   }
 
   async createAppForTenant(data: CreateAppRequest) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock data
+      const mockResponse = createMockCreateAppResponse(data.name);
+      return { data: mockResponse, status: 201 };
+    }
+
     const headers: CreateAppRequest = data;
 
     const payload = data.orgId?.length
@@ -132,6 +170,12 @@ class Codepush {
   }
 
   async deleteTenant(data: AppsRequest) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock data
+      const mockResponse = createMockDeleteTenantResponse();
+      return { data: mockResponse, status: 200 };
+    }
+
     const headers: Omit<AppsRequest, "userId"> = data;
 
     return this.__client.delete<null, AxiosResponse<DeleteTenantResponse>>(
@@ -143,6 +187,12 @@ class Codepush {
   }
 
   async getDeployentsForApp(data: DeploymentsRequest) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock data
+      const mockResponse = createMockDeploymentsResponse();
+      return { data: mockResponse, status: 200 };
+    }
+
     const headers: DeploymentsRequest = data;
 
     return this.__client.get<null, AxiosResponse<DeploymentsResponse>>(
@@ -154,6 +204,12 @@ class Codepush {
   }
 
   async deleteDeployentsForApp(data: DeleteDeploymentsRequest) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock data
+      const mockResponse = createMockDeleteDeploymentResponse();
+      return { data: mockResponse, status: 200 };
+    }
+
     const headers: DeleteDeploymentsRequest = data;
 
     return this.__client.delete<null, AxiosResponse<DeleteDeploymentsResponse>>(
@@ -167,6 +223,12 @@ class Codepush {
   }
 
   async getCollaboratorForApp(data: CollabaratorsRequest) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock data
+      const mockResponse = createMockCollaboratorsResponse();
+      return { data: mockResponse, status: 200 };
+    }
+
     const headers: CollabaratorsRequest = data;
 
     return this.__client.get<null, AxiosResponse<CollabaratorsResponse>>(
@@ -178,6 +240,12 @@ class Codepush {
   }
 
   async deleteAppForTenant(data: DeleteAppRequest) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock data
+      const mockResponse = createMockDeleteAppResponse();
+      return { data: mockResponse, status: 200 };
+    }
+
     const headers: Omit<DeleteAppRequest, "appId"> = data;
 
     return this.__client.delete<null, AxiosResponse<DeleteAppResponse>>(
@@ -189,6 +257,12 @@ class Codepush {
   }
 
   async addCollaboratorForApp(data: AddCollabaratorsRequest) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock data
+      const mockResponse = createMockAddCollaboratorResponse();
+      return { data: mockResponse, status: 201 };
+    }
+
     const headers: AddCollabaratorsRequest = data;
 
     return this.__client.post<null, AxiosResponse<AddCollabaratorsResponse>>(
@@ -203,6 +277,12 @@ class Codepush {
   }
 
   async removeCollaboratorForApp(data: RemoveCollabaratorsRequest) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock data
+      const mockResponse = createMockRemoveCollaboratorResponse();
+      return { data: mockResponse, status: 200 };
+    }
+
     const headers: RemoveCollabaratorsRequest = data;
 
     return this.__client.delete<
@@ -219,6 +299,12 @@ class Codepush {
   }
 
   async updateCollaboratorPermissionForApp(data: UpdateCollabaratorsRequest) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock data
+      const mockResponse = createMockUpdateCollaboratorResponse();
+      return { data: mockResponse, status: 200 };
+    }
+
     const headers: UpdateCollabaratorsRequest = data;
 
     return this.__client.patch<
@@ -238,6 +324,12 @@ class Codepush {
   }
 
   async createDeployentsForApp(data: CreateDeploymentsRequest) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock data
+      const mockResponse = createMockCreateDeploymentResponse(data.name);
+      return { data: mockResponse, status: 201 };
+    }
+
     const headers: BaseHeader = data;
 
     return this.__client.post<null, AxiosResponse<CreateDeploymentsResponse>>(
@@ -252,6 +344,12 @@ class Codepush {
   }
 
   async getReleasesForDeployentsForApp(data: DeploymentsReleaseRequest) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock data
+      const mockResponse = createMockReleasesResponse();
+      return { data: mockResponse, status: 200 };
+    }
+
     const headers: DeploymentsReleaseRequest = data;
 
     return this.__client.get<null, AxiosResponse<DeploymentsReleaseResponse>>(
@@ -283,6 +381,12 @@ class Codepush {
   }
 
   async getAccessKeys(data: AccessKeyRequest) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock data
+      const mockResponse = createMockAccessKeysResponse();
+      return { data: mockResponse, status: 200 };
+    }
+
     const headers: AccessKeyRequest = data;
 
     return this.__client.get<null, AxiosResponse<AccessKeyResponse>>(
@@ -294,6 +398,12 @@ class Codepush {
   }
 
   async createAccessKey(data: CreateAccessKeyRequest) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock data
+      const mockResponse = createMockCreateAccessKeyResponse(data.name);
+      return { data: mockResponse, status: 201 };
+    }
+
     const headers: AccessKeyRequest = data;
 
     return this.__client.post<null, AxiosResponse<CreateAccessKeyResponse>>(
@@ -309,6 +419,12 @@ class Codepush {
   }
 
   async deleteAccessKey(data: DeleteAccessKeyRequest) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock data
+      const mockResponse = createMockDeleteAccessKeyResponse();
+      return { data: mockResponse, status: 200 };
+    }
+
     const headers: BaseHeader = data;
 
     return this.__client.delete<null, AxiosResponse<DeleteAccessKeyResponse>>(
@@ -320,6 +436,12 @@ class Codepush {
   }
 
   async promoteReleaseFromDeployment(data: PromoteReleaseToDeploymentRequest) {
+    if (!env.DOTA_SERVER_URL.length) {
+      // Development mode - return mock data
+      const mockResponse = createMockPromoteReleaseResponse();
+      return { data: mockResponse, status: 200 };
+    }
+
     const headers: Pick<
       PromoteReleaseToDeploymentRequest,
       "userId" | "tenant"
@@ -351,20 +473,7 @@ class Codepush {
   async createRelease(data: CreateReleaseRequest) {
     if (!env.DOTA_SERVER_URL.length) {
       // Development mode - return mock response
-      const mockResponse: CreateReleaseResponse = {
-        package: {
-          label: `v${Date.now()}`,
-          appVersion: data.packageInfo.appVersion,
-          description: data.packageInfo.description || "",
-          packageHash: "mock-hash-" + Date.now(),
-          blobUrl: "mock-blob-url",
-          size: data.packageFile.size,
-          rollout: data.packageInfo.rollout || 100,
-          isMandatory: data.packageInfo.isMandatory || false,
-          isDisabled: data.packageInfo.isDisabled || false,
-          uploadTime: Date.now(),
-        },
-      };
+      const mockResponse = createMockCreateReleaseResponse(data);
       return { data: mockResponse, status: 201 };
     }
 
@@ -388,7 +497,7 @@ class Codepush {
       );
 
       return { data: response.data, status: response.status };
-    } catch (error) {
+    } catch (error: any) {
       // Handle axios errors to preserve original status codes and messages
       if (error.response) {
         // Server responded with error status (4xx, 5xx)
