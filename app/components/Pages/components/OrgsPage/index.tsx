@@ -155,7 +155,7 @@ export function OrgsPage() {
             radius="md"
             variant="gradient"
             gradient={{ from: theme.other.brand.primary, to: theme.other.brand.secondary, deg: 135 }}
-            mb="md"
+            mb="sm"
             style={{
               fontSize: theme.other.typography.fontSize.sm,
               fontWeight: theme.other.typography.fontWeight.bold,
@@ -173,17 +173,13 @@ export function OrgsPage() {
           >
             New Features In Development
           </Title>
-          <Text size="sm" c={theme.other.text.tertiary} mb="lg">
+          <Text size="sm" c={theme.other.text.tertiary} mb="md">
             Advanced build automation and release orchestration coming soon
           </Text>
 
           <SimpleGrid 
             cols={{ base: 1, sm: 2 }} 
             spacing="lg"
-            style={{ 
-              maxWidth: "800px",
-              margin: "0 auto",
-            }}
           >
             {/* Build Management Card */}
             <Card
