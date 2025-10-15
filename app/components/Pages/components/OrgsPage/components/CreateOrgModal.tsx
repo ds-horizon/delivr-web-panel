@@ -19,8 +19,10 @@ export function CreateOrgModal({ onSuccess }: CreateOrgModalProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<{ orgName: string; appName: string }>({
-    mode: "uncontrolled",
+    mode: "controlled",
     initialValues: { orgName: "", appName: "" },
+    validateInputOnChange: true,
+    validateInputOnBlur: true,
     validate: {
       orgName: (value) => {
         if (!value || value.length === 0) return "Organization name is required";
@@ -36,6 +38,11 @@ export function CreateOrgModal({ onSuccess }: CreateOrgModalProps) {
   });
 
   const handleSubmit = async (values: { orgName: string; appName: string }) => {
+    // Validate before submitting
+    if (form.validate().hasErrors) {
+      return;
+    }
+
     setIsLoading(true);
     try {
       // Create org by creating an app with orgName
@@ -77,8 +84,10 @@ export function CreateOrgModal({ onSuccess }: CreateOrgModalProps) {
           placeholder="My Company"
           leftSection={<IconBuilding size={18} />}
           required
+          withAsterisk
           key={form.key("orgName")}
           {...form.getInputProps("orgName")}
+          disabled={isLoading}
         />
 
         <TextInput
@@ -86,15 +95,22 @@ export function CreateOrgModal({ onSuccess }: CreateOrgModalProps) {
           placeholder="My First App"
           description="Every organization needs at least one app"
           required
+          withAsterisk
           key={form.key("appName")}
           {...form.getInputProps("appName")}
+          disabled={isLoading}
         />
 
         <Button
           type="submit"
           fullWidth
           loading={isLoading}
-          disabled={!!Object.keys(form.errors).length}
+          disabled={
+            isLoading ||
+            !!Object.keys(form.errors).length ||
+            !form.values.orgName?.trim() ||
+            !form.values.appName?.trim()
+          }
         >
           Create Organization
         </Button>
