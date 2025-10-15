@@ -161,9 +161,6 @@ export function OrgsPage() {
               fontWeight: theme.other.typography.fontWeight.bold,
               letterSpacing: theme.other.typography.letterSpacing.wide,
               textTransform: "uppercase",
-              display: "block",
-              margin: "0 auto",
-              width: "fit-content",
             }}
           >
             Coming Soon
@@ -172,12 +169,11 @@ export function OrgsPage() {
             order={3} 
             fw={theme.other.typography.fontWeight.semibold}
             mb="xs"
-            ta="center"
             c={theme.other.text.primary}
           >
             New Features In Development
           </Title>
-          <Text size="sm" c={theme.other.text.tertiary} mb="lg" maw={600} mx="auto" ta="center">
+          <Text size="sm" c={theme.other.text.tertiary} mb="lg">
             Advanced build automation and release orchestration coming soon
           </Text>
 
