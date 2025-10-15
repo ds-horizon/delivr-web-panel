@@ -109,28 +109,35 @@ export function AppListPage({ user }: AppListPageProps) {
 
   return (
     <Box>
-      <Group justify="space-between" align="center" mb="lg">
-        <Group gap="xs" align="center">
-          <Text size="md" fw={theme.other.typography.fontWeight.semibold} c={theme.other.text.primary}>
+      <Box mb="lg">
+        <Group gap="xs" align="center" mb="xs">
+          <Text 
+            size="sm" 
+            fw={theme.other.typography.fontWeight.medium} 
+            c={theme.other.text.tertiary}
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate(route("/dashboard"))}
+          >
             {currentOrg?.orgName || "Organization"}
           </Text>
-          <IconChevronRight size={theme.other.sizes.icon.md} color={theme.other.text.tertiary} />
-          <Text size="md" fw={theme.other.typography.fontWeight.semibold} c={theme.other.text.primary}>
+          <IconChevronRight size={theme.other.sizes.icon.sm} color={theme.other.text.tertiary} />
+          <Text size="sm" fw={theme.other.typography.fontWeight.semibold} c={theme.other.text.primary}>
             Applications
           </Text>
         </Group>
-        <CTAButton
-          leftSection={<IconPlus size={theme.other.sizes.icon.lg} />}
-          onClick={() => navigate(route("/dashboard/create/app"))}
-          styles={{
-            root: {
-              boxShadow: theme.other.shadows.md,
-            },
-          }}
-        >
-          Create App
-        </CTAButton>
-      </Group>
+        
+        <Group justify="space-between" align="center">
+          <Title order={3} fw={theme.other.typography.fontWeight.semibold} c={theme.other.text.primary}>
+            Applications
+          </Title>
+          <CTAButton
+            leftSection={<IconPlus size={theme.other.sizes.icon.lg} />}
+            onClick={() => navigate(route("/dashboard/create/app"))}
+          >
+            Create App
+          </CTAButton>
+        </Group>
+      </Box>
 
       <Flex gap="lg" wrap="wrap">
         {data.map((app) => (
