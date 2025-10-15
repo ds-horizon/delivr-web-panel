@@ -1,6 +1,5 @@
 import {
   Button,
-  Center,
   TextInput,
   Box,
   Modal,
@@ -8,10 +7,15 @@ import {
   rem,
   CopyButton,
   Text,
+  Group,
+  Title,
+  useMantineTheme,
+  ThemeIcon,
+  Stack,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useCreateToken } from "./hooks/useCreateToken";
-import { IconCheck, IconCopy } from "@tabler/icons-react";
+import { IconCheck, IconCopy, IconKey } from "@tabler/icons-react";
 import { CreateTokenArgs } from "./data/createToken";
 
 export type CreateTokenFormProps = {
@@ -20,6 +24,7 @@ export type CreateTokenFormProps = {
 };
 
 export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
+  const theme = useMantineTheme();
   const { mutate, data, isLoading, reset } = useCreateToken();
   const form = useForm<{ name: string; access: CreateTokenArgs["access"] }>({
     mode: "uncontrolled",
@@ -39,66 +44,98 @@ export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
         onClose();
         reset();
       }}
-      title={"Create Token"}
+      title={
+        <Group gap="md" align="center">
+          <ThemeIcon
+            size={44}
+            radius="md"
+            variant="gradient"
+            gradient={{ from: theme.other.brand.primary, to: theme.other.brand.secondary, deg: 135 }}
+          >
+            <IconKey size={22} />
+          </ThemeIcon>
+          <Title order={3} fw={600}>Create Token</Title>
+        </Group>
+      }
+      size="lg"
+      centered
+      padding="xl"
+      radius="md"
     >
-      <Center>
-        <Box w={"300px"}>
+      <Box>
+        <Stack gap="lg" mt="md">
           <TextInput
             label="Enter Token Name"
             placeholder="Token Name"
             key={form.key("name")}
             {...form.getInputProps("name")}
-            mt={"md"}
             disabled={isLoading}
+            size="md"
+            styles={{
+              label: {
+                fontWeight: 500,
+                marginBottom: rem(8),
+              },
+            }}
           />
 
           <NativeSelect
             label="Access Type"
             data={["All", "Write", "Read"]}
-            mt={"md"}
             key={form.key("access")}
             {...form.getInputProps("access")}
             disabled={isLoading}
+            size="md"
+            styles={{
+              label: {
+                fontWeight: 500,
+                marginBottom: rem(8),
+              },
+            }}
           />
 
           {data && (
             <CopyButton value={data.name}>
               {({ copied, copy }) => (
                 <Button
-                  leftSection={
-                    <Text
-                      style={{
-                        textOverflow: "ellipsis",
-                        width: rem(90),
-                        overflow: "hidden",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {data.name}
-                    </Text>
-                  }
                   onClick={copy}
+                  fullWidth
+                  size="md"
+                  h={48}
+                  variant="gradient"
+                  gradient={{ from: theme.other.brand.primary, to: theme.other.brand.secondary, deg: 135 }}
+                  leftSection={<IconCopy size={18} />}
                   rightSection={
-                    copied ? (
-                      <IconCheck style={{ width: rem(18) }} />
-                    ) : (
-                      <IconCopy style={{ width: rem(18) }} />
-                    )
+                    copied && <IconCheck size={18} />
                   }
-                  w={"100%"}
-                  mt={"md"}
-                  variant="light"
-                />
+                  styles={{
+                    root: {
+                      transition: "all 200ms ease",
+                      "&:hover": {
+                        transform: "translateY(-2px)",
+                        boxShadow: `0 8px 20px ${theme.other.brand.primary}35`,
+                      },
+                    },
+                    label: {
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    },
+                  }}
+                >
+                  {copied ? "Copied!" : data.name}
+                </Button>
               )}
             </CopyButton>
           )}
 
           {!data && (
             <Button
-              color="blue"
+              variant="gradient"
+              gradient={{ from: theme.other.brand.primary, to: theme.other.brand.secondary, deg: 135 }}
               fullWidth
-              mt="md"
-              radius="md"
+              size="md"
+              h={48}
               disabled={!!Object.keys(form.errors).length && !isLoading}
               loading={isLoading}
               onClick={() => {
@@ -107,12 +144,21 @@ export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
                 }
                 mutate(form.getValues());
               }}
+              styles={{
+                root: {
+                  transition: "all 200ms ease",
+                  "&:hover": {
+                    transform: "translateY(-2px)",
+                    boxShadow: `0 8px 20px ${theme.other.brand.primary}35`,
+                  },
+                },
+              }}
             >
               Create Token
             </Button>
           )}
-        </Box>
-      </Center>
+        </Stack>
+      </Box>
     </Modal>
   );
 }

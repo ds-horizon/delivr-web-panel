@@ -10,7 +10,10 @@ import {
   rem,
   Flex,
   Button,
+  Title,
+  useMantineTheme,
 } from "@mantine/core";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
 import classes from "./index.module.css";
 import { useGetAccessTokenList } from "./hooks/useGetAccessTokenList";
 import { CreateTokenForm } from "~/components/Pages/components/CreateTokenForm";
@@ -24,6 +27,7 @@ type TokenActionProps = {
 };
 
 const TokenAction = ({ selected, refetch }: TokenActionProps) => {
+  const theme = useMantineTheme();
   const { mutateAsync } = useDeleteAccessToken();
   const [open, setOpen] = useState(false);
   const numberOfSelected = selected.length;
@@ -42,10 +46,10 @@ const TokenAction = ({ selected, refetch }: TokenActionProps) => {
               onError: (e) => {
                 notifications.show({
                   color: "red",
-                  title: `Collaborator Deletion ${item}`,
+                  title: `Token Deletion ${item}`,
                   message: handleApiError(
                     e,
-                    "Error While Removing Collaborator"
+                    "Error While Removing Token"
                   ),
                 });
               },
@@ -57,11 +61,11 @@ const TokenAction = ({ selected, refetch }: TokenActionProps) => {
 
       const isFailed = data.filter((item) => item.status === "rejected");
 
-      if (!isFailed) {
+      if (isFailed.length === 0) {
         notifications.show({
           color: "green",
-          title: `Collaborator Deletion`,
-          message: `${selected.join(",")}  collaborators removed successfully!`,
+          title: `Token Deletion`,
+          message: `${selected.length} token(s) removed successfully!`,
         });
       }
       refetch();
@@ -79,23 +83,50 @@ const TokenAction = ({ selected, refetch }: TokenActionProps) => {
           refetch();
         }}
       />
-      <Flex align={"center"} justify={"space-between"}>
-        <Text>
-          {numberOfSelected ? `${numberOfSelected} rows selected` : "Tokens"}
-        </Text>
-        <Button
-          color={numberOfSelected ? "red" : "blue"}
-          loading={disable}
-          onClick={() => {
-            if (!numberOfSelected) {
-              return setOpen(true);
-            }
-            onDelete();
-          }}
-        >
-          {numberOfSelected ? `Delete ${numberOfSelected} Tokens` : "Add Token"}
-        </Button>
-      </Flex>
+      <Group justify="space-between" align="center" mb="xl">
+        <Title order={2} c="gray.9" fw={600}>
+          {numberOfSelected ? `${numberOfSelected} Token${numberOfSelected > 1 ? 's' : ''} Selected` : "Access Tokens"}
+        </Title>
+        <Group gap="sm">
+          {numberOfSelected > 0 && (
+            <Button
+              leftSection={<IconTrash size={18} />}
+              color="red"
+              variant="light"
+              loading={disable}
+              onClick={onDelete}
+              styles={{
+                root: {
+                  transition: "all 200ms ease",
+                  "&:hover": {
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 8px 20px rgba(250, 82, 82, 0.25)",
+                  },
+                },
+              }}
+            >
+              Delete {numberOfSelected} Token{numberOfSelected > 1 ? 's' : ''}
+            </Button>
+          )}
+          <Button
+            leftSection={<IconPlus size={18} />}
+            onClick={() => setOpen(true)}
+            variant="gradient"
+            gradient={{ from: theme.other.brand.primary, to: theme.other.brand.secondary, deg: 135 }}
+            styles={{
+              root: {
+                transition: "all 200ms ease",
+                "&:hover": {
+                  transform: "translateY(-2px)",
+                  boxShadow: `0 8px 20px ${theme.other.brand.primary}35`,
+                },
+              },
+            }}
+          >
+            Create Token
+          </Button>
+        </Group>
+      </Group>
     </>
   );
 };
