@@ -68,55 +68,39 @@ export function OrgsPage() {
   }
 
   return (
-    <Container size="xl" py="xl">
-      <Stack gap="xl">
-        <Box style={{ textAlign: "center", marginTop: theme.other.spacing["3xl"], marginBottom: theme.other.spacing.lg }}>
+    <Container size="xl" py="md">
+      <Stack gap="lg">
+        <Box style={{ textAlign: "center", marginTop: theme.other.spacing.xl, marginBottom: theme.other.spacing.md }}>
           <Badge
-            size="lg"
-            radius="md"
+            size="md"
+            radius="sm"
             variant="light"
-            mb="md"
+            mb="sm"
             style={{
               backgroundColor: theme.other.brand.light,
               color: theme.other.brand.primaryDark,
-              fontSize: theme.other.typography.fontSize.sm,
+              fontSize: theme.other.typography.fontSize.xs,
               fontWeight: theme.other.typography.fontWeight.semibold,
-              letterSpacing: theme.other.typography.letterSpacing.wider,
-              padding: `${theme.other.spacing.sm} ${theme.other.spacing.xl}`,
+              letterSpacing: theme.other.typography.letterSpacing.wide,
+              textTransform: "uppercase",
             }}
           >
-            OTA AIR UPDATES
+            OTA Air Updates
           </Badge>
           <Title 
             order={1} 
-            size="h1"
             fw={theme.other.typography.fontWeight.bold}
-            mb="sm"
-            style={{
-              background: theme.other.brand.gradient,
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
+            mb="xs"
+            c={theme.other.text.primary}
           >
             Your Organizations
           </Title>
-          <Text size="lg" c="dimmed" mb="xl" maw={600} mx="auto">
-            Manage over-the-air updates for your applications across all organizations
+          <Text size="md" c={theme.other.text.tertiary} mb="lg" maw={500} mx="auto">
+            Manage over-the-air updates for your applications
           </Text>
           <CTAButton
-            size="md"
-            leftSection={<IconPlus size={theme.other.sizes.icon.xl} />}
+            leftSection={<IconPlus size={theme.other.sizes.icon.lg} />}
             onClick={() => navigate(route("/dashboard/create/org"))}
-            styles={{
-              root: {
-                height: theme.other.sizes.button.lg,
-                paddingLeft: theme.other.spacing["2xl"],
-                paddingRight: theme.other.spacing["2xl"],
-                fontSize: theme.other.typography.fontSize.base,
-                boxShadow: theme.other.shadows.md,
-              },
-            }}
           >
             Create Organization
           </CTAButton>
@@ -155,52 +139,49 @@ export function OrgsPage() {
         {/* Coming Soon Section */}
         <Box 
           style={{ 
-            marginTop: theme.other.spacing["5xl"],
-            padding: theme.other.spacing["3xl"],
-            borderRadius: theme.other.borderRadius.xl,
-            background: `linear-gradient(135deg, ${theme.other.backgrounds.secondary} 0%, ${theme.other.backgrounds.tertiary} 100%)`,
-            border: `2px dashed ${theme.other.borders.primary}`,
+            marginTop: theme.other.spacing["4xl"],
+            padding: theme.other.spacing.xl,
+            borderRadius: theme.other.borderRadius.lg,
+            background: theme.other.backgrounds.secondary,
+            border: `1px solid ${theme.other.borders.primary}`,
           }}
         >
           <Badge
-            size="xl"
+            size="lg"
             radius="md"
             variant="gradient"
             gradient={{ from: theme.other.brand.primary, to: theme.other.brand.secondary, deg: 135 }}
-            mb="lg"
+            mb="md"
             style={{
-              fontSize: theme.other.typography.fontSize.base,
+              fontSize: theme.other.typography.fontSize.sm,
               fontWeight: theme.other.typography.fontWeight.bold,
-              letterSpacing: theme.other.typography.letterSpacing.wider,
-              padding: `${theme.other.spacing.md} ${theme.other.spacing["2xl"]}`,
+              letterSpacing: theme.other.typography.letterSpacing.wide,
+              textTransform: "uppercase",
               display: "block",
               margin: "0 auto",
               width: "fit-content",
             }}
           >
-            COMING SOON
+            Coming Soon
           </Badge>
           <Title 
-            order={2} 
-            size="h2"
-            fw={theme.other.typography.fontWeight.bold}
-            mb="md"
+            order={3} 
+            fw={theme.other.typography.fontWeight.semibold}
+            mb="xs"
             ta="center"
-            style={{
-              color: theme.other.text.primary,
-            }}
+            c={theme.other.text.primary}
           >
-            Expand Your Deployment Capabilities
+            New Features In Development
           </Title>
-          <Text size="lg" c={theme.other.text.secondary} mb="xl" maw={700} mx="auto" ta="center" fw={theme.other.typography.fontWeight.medium}>
-            Exciting new features are on the way to enhance your deployment experience with advanced build automation and release orchestration
+          <Text size="sm" c={theme.other.text.tertiary} mb="lg" maw={600} mx="auto" ta="center">
+            Advanced build automation and release orchestration coming soon
           </Text>
 
           <SimpleGrid 
             cols={{ base: 1, sm: 2 }} 
-            spacing="xl"
+            spacing="lg"
             style={{ 
-              maxWidth: "900px",
+              maxWidth: "800px",
               margin: "0 auto",
             }}
           >
