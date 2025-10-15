@@ -12,11 +12,14 @@ export default function Profile() {
     navigation(-1);
   };
 
+  const type = searchParams.get("type");
+  const title = type === "org" ? "Delete Organization" : `Delete ${type}`;
+
   return (
     <Modal
       opened={true}
       onClose={close}
-      title={`Delete ${searchParams.get("type")}`}
+      title={title}
       centered
     >
       <DeleteAction onSuccess={close} />

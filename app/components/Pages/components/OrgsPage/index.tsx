@@ -23,12 +23,21 @@ import { CTAButton } from "~/components/CTAButton";
 import { useState, useEffect } from "react";
 import { CreateOrgModal } from "./components/CreateOrgModal";
 import { ACTION_EVENTS, actions } from "~/utils/event-emitter";
+import { useDeleteOrg } from "../DeleteAction/hooks/useDeleteOrg";
+import { Button } from "@mantine/core";
+
+type DeleteOrgState = {
+  id: string;
+  name: string;
+} | null;
 
 export function OrgsPage() {
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const { data, isLoading, isError, refetch } = useGetOrgList();
   const [createOrgOpen, setCreateOrgOpen] = useState(false);
+  const [deleteOrgState, setDeleteOrgState] = useState<DeleteOrgState>(null);
+  const { mutate: deleteOrg, isLoading: isDeleting } = useDeleteOrg();
 
   // Listen for refetch events
   useEffect(() => {
@@ -145,9 +154,7 @@ export function OrgsPage() {
                   );
                 }}
                 onDelete={() => {
-                  navigate(
-                    route("/dashboard/delete") + `?type=org&id=${org.id}&name=${org.orgName}&tenant=${org.id}`
-                  );
+                  setDeleteOrgState({ id: org.id, name: org.orgName });
                 }}
               />
             ))}
@@ -424,6 +431,47 @@ export function OrgsPage() {
           }}
         />
       </Modal>
+
+      {/* Delete Organization Modal */}
+      {deleteOrgState && (
+        <Modal
+          opened={true}
+          onClose={() => setDeleteOrgState(null)}
+          title="Delete Organization"
+          centered
+        >
+          <Text>
+            Are you sure you want to delete this organization ({deleteOrgState.name})?
+          </Text>
+          <Group justify="flex-end" mt="lg">
+            <Button 
+              variant="default" 
+              onClick={() => setDeleteOrgState(null)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              color="red"
+              loading={isDeleting}
+              onClick={() => {
+                deleteOrg(
+                  { tenant: deleteOrgState.id },
+                  {
+                    onSuccess: () => {
+                      actions.trigger(ACTION_EVENTS.REFETCH_ORGS);
+                      setDeleteOrgState(null);
+                      refetch();
+                    },
+                  }
+                );
+              }}
+            >
+              Delete
+            </Button>
+          </Group>
+        </Modal>
+      )}
     </Container>
   );
 }
