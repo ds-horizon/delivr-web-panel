@@ -109,8 +109,8 @@ export function AppListPage({ user }: AppListPageProps) {
 
   return (
     <Box>
-      <Box mb="lg">
-        <Group gap="xs" align="center" mb="xs">
+      <Group justify="space-between" align="center" mb="lg">
+        <Group gap="xs" align="center">
           <Text 
             size="sm" 
             fw={theme.other.typography.fontWeight.medium} 
@@ -126,18 +126,13 @@ export function AppListPage({ user }: AppListPageProps) {
           </Text>
         </Group>
         
-        <Group justify="space-between" align="center">
-          <Title order={3} fw={theme.other.typography.fontWeight.semibold} c={theme.other.text.primary}>
-            Applications
-          </Title>
-          <CTAButton
-            leftSection={<IconPlus size={theme.other.sizes.icon.lg} />}
-            onClick={() => navigate(route("/dashboard/create/app"))}
-          >
-            Create App
-          </CTAButton>
-        </Group>
-      </Box>
+        <CTAButton
+          leftSection={<IconPlus size={theme.other.sizes.icon.lg} />}
+          onClick={() => navigate(route("/dashboard/create/app"))}
+        >
+          Create App
+        </CTAButton>
+      </Group>
 
       <Flex gap="lg" wrap="wrap">
         {data.map((app) => (
