@@ -72,44 +72,40 @@ export function OrgsPage() {
     <Container size="xl" py="md">
       <Stack gap="lg">
         <Box style={{ marginTop: theme.other.spacing.xl, marginBottom: theme.other.spacing.md }}>
-          <Group justify="center" mb="sm">
-            <Badge
-              size="md"
-              radius="sm"
-              variant="light"
-              style={{
-                backgroundColor: theme.other.brand.light,
-                color: theme.other.brand.primaryDark,
-                fontSize: theme.other.typography.fontSize.xs,
-                fontWeight: theme.other.typography.fontWeight.semibold,
-                letterSpacing: theme.other.typography.letterSpacing.wide,
-                textTransform: "uppercase",
-              }}
-            >
-              OTA Air Updates
-            </Badge>
-          </Group>
+          <Badge
+            size="lg"
+            radius="md"
+            variant="light"
+            mb="md"
+            style={{
+              backgroundColor: theme.other.brand.light,
+              color: theme.other.brand.primaryDark,
+              fontSize: theme.other.typography.fontSize.sm,
+              fontWeight: theme.other.typography.fontWeight.bold,
+              letterSpacing: theme.other.typography.letterSpacing.wide,
+              textTransform: "uppercase",
+            }}
+          >
+            OTA Air Updates
+          </Badge>
           
           <Group justify="space-between" align="center" mb="xs">
-            <Box style={{ flex: 1 }} />
             <Title 
-              order={1} 
-              fw={theme.other.typography.fontWeight.bold}
+              order={3} 
+              fw={theme.other.typography.fontWeight.semibold}
               c={theme.other.text.primary}
             >
               Organizations
             </Title>
-            <Box style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-              <CTAButton
-                leftSection={<IconPlus size={theme.other.sizes.icon.lg} />}
-                onClick={() => navigate(route("/dashboard/create/org"))}
-              >
-                Create Organization
-              </CTAButton>
-            </Box>
+            <CTAButton
+              leftSection={<IconPlus size={theme.other.sizes.icon.lg} />}
+              onClick={() => navigate(route("/dashboard/create/org"))}
+            >
+              Create Organization
+            </CTAButton>
           </Group>
           
-          <Text size="md" c={theme.other.text.tertiary} ta="center" maw={500} mx="auto">
+          <Text size="sm" c={theme.other.text.tertiary}>
             Manage over-the-air updates for your applications
           </Text>
         </Box>
