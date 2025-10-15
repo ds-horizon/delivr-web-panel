@@ -30,12 +30,13 @@ export function CreateDeploymentForm({ open, onClose }: CreateTokenFormProps) {
   const params = useParams();
   const { mutate, data, isLoading } = useCreateDeployment();
   const form = useForm<{ name: string }>({
-    mode: "uncontrolled",
+    mode: "controlled",
     initialValues: { name: "" },
     validateInputOnChange: true,
+    validateInputOnBlur: true,
     validate: {
       name: (value) => {
-        if (!value.length) return "Deployment name is required";
+        if (!value || !value.length) return "Deployment name is required";
         if (value.length < 3) return "Name must be at least 3 characters";
         if (!/^[a-zA-Z0-9-_]+$/.test(value)) return "Only alphanumeric, dash and underscore allowed";
         return null;
@@ -100,6 +101,8 @@ export function CreateDeploymentForm({ open, onClose }: CreateTokenFormProps) {
               label="Deployment Name"
               placeholder="e.g., Production, Staging, Development"
               description="Choose a unique name for this deployment environment"
+              required
+              withAsterisk
               key={form.key("name")}
               {...form.getInputProps("name")}
               disabled={isLoading}
@@ -127,6 +130,11 @@ export function CreateDeploymentForm({ open, onClose }: CreateTokenFormProps) {
                 disabled={!!Object.keys(form.errors).length}
                 loading={isLoading}
                 onClick={() => {
+                  // Validate form before submitting
+                  if (form.validate().hasErrors) {
+                    return;
+                  }
+                  
                   mutate(
                     { ...form.getValues(), appId: params.app ?? "", tenant: params.org ?? "" },
                     {
