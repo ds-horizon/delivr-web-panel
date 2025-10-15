@@ -23,10 +23,10 @@ export function Intro() {
         <div className={classes.content}>
           <Title className={classes.title}>
             Welcome to the{" "}
-            <span className={classes.highlight}>DOTA</span> Dashboard <br />{" "}
+            <span className={classes.highlight}>Delivr</span> Dashboard <br />{" "}
           </Title>
           <Text c="dimmed" mt="md">
-            Instantly update your mobile apps with ease – DOTA
+            Instantly update your mobile apps with ease – Delivr
             lets you deploy real-time updates for React Native with support for
             code, images, and assets to keep your app agile and up-to-date in
             any scenario.
