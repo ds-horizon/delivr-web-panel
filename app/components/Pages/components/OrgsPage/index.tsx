@@ -10,6 +10,7 @@ import {
   useMantineTheme,
   Card,
   Badge,
+  Group,
 } from "@mantine/core";
 import { IconPlus, IconCode, IconRocket } from "@tabler/icons-react";
 import { useNavigate } from "@remix-run/react";
@@ -70,40 +71,47 @@ export function OrgsPage() {
   return (
     <Container size="xl" py="md">
       <Stack gap="lg">
-        <Box style={{ textAlign: "center", marginTop: theme.other.spacing.xl, marginBottom: theme.other.spacing.md }}>
-          <Badge
-            size="md"
-            radius="sm"
-            variant="light"
-            mb="sm"
-            style={{
-              backgroundColor: theme.other.brand.light,
-              color: theme.other.brand.primaryDark,
-              fontSize: theme.other.typography.fontSize.xs,
-              fontWeight: theme.other.typography.fontWeight.semibold,
-              letterSpacing: theme.other.typography.letterSpacing.wide,
-              textTransform: "uppercase",
-            }}
-          >
-            OTA Air Updates
-          </Badge>
-          <Title 
-            order={1} 
-            fw={theme.other.typography.fontWeight.bold}
-            mb="xs"
-            c={theme.other.text.primary}
-          >
-            Your Organizations
-          </Title>
-          <Text size="md" c={theme.other.text.tertiary} mb="lg" maw={500} mx="auto">
+        <Box style={{ marginTop: theme.other.spacing.xl, marginBottom: theme.other.spacing.md }}>
+          <Group justify="center" mb="sm">
+            <Badge
+              size="md"
+              radius="sm"
+              variant="light"
+              style={{
+                backgroundColor: theme.other.brand.light,
+                color: theme.other.brand.primaryDark,
+                fontSize: theme.other.typography.fontSize.xs,
+                fontWeight: theme.other.typography.fontWeight.semibold,
+                letterSpacing: theme.other.typography.letterSpacing.wide,
+                textTransform: "uppercase",
+              }}
+            >
+              OTA Air Updates
+            </Badge>
+          </Group>
+          
+          <Group justify="space-between" align="center" mb="xs">
+            <Box style={{ flex: 1 }} />
+            <Title 
+              order={1} 
+              fw={theme.other.typography.fontWeight.bold}
+              c={theme.other.text.primary}
+            >
+              Organizations
+            </Title>
+            <Box style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+              <CTAButton
+                leftSection={<IconPlus size={theme.other.sizes.icon.lg} />}
+                onClick={() => navigate(route("/dashboard/create/org"))}
+              >
+                Create Organization
+              </CTAButton>
+            </Box>
+          </Group>
+          
+          <Text size="md" c={theme.other.text.tertiary} ta="center" maw={500} mx="auto">
             Manage over-the-air updates for your applications
           </Text>
-          <CTAButton
-            leftSection={<IconPlus size={theme.other.sizes.icon.lg} />}
-            onClick={() => navigate(route("/dashboard/create/org"))}
-          >
-            Create Organization
-          </CTAButton>
         </Box>
 
         <Box>
