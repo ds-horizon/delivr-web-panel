@@ -10,160 +10,13 @@ import {
   Group,
   Select,
   useMantineTheme,
-  Box,
-  Stack,
-  SimpleGrid,
-  Badge,
-  Divider,
-  Title,
 } from "@mantine/core";
 import { useNavigate, useSearchParams, useParams } from "@remix-run/react";
 import { useGetDeploymentsForApp } from "./hooks/getDeploymentsForApp";
-import { IconCheck, IconCopy, IconTrash, IconKey, IconUser } from "@tabler/icons-react";
+import { IconCheck, IconCopy, IconTrash, IconKey } from "@tabler/icons-react";
 import { ReleaseListForDeploymentTable } from "../components/ReleaseListForDeploymentTable";
 import { ReleaseDeatilCardModal } from "../components/ReleaseDetailCardModal";
 import { useEffect, useMemo } from "react";
-import { DeploymentData } from "./data/getDeploymentsForApp";
-
-const DeploymentCard = ({ 
-  deployment, 
-  isSelected,
-  onClick,
-  onDelete,
-}: { 
-  deployment: DeploymentData;
-  isSelected: boolean;
-  onClick: () => void;
-  onDelete: () => void;
-}) => {
-  const theme = useMantineTheme();
-
-  return (
-    <Card
-      withBorder
-      padding="md"
-      radius="md"
-      onClick={onClick}
-      style={{
-        cursor: "pointer",
-        transition: theme.other.transitions.normal,
-        borderColor: isSelected ? theme.other.brand.primary : theme.other.borders.primary,
-        backgroundColor: isSelected ? theme.other.backgrounds.active : theme.other.backgrounds.primary,
-        borderWidth: isSelected ? "2px" : "1px",
-      }}
-      styles={{
-        root: {
-          "&:hover": {
-            transform: "translateY(-2px)",
-            boxShadow: theme.other.shadows.md,
-            borderColor: theme.other.brand.primary,
-          },
-        },
-      }}
-    >
-      <Group justify="space-between" align="flex-start" mb="sm" wrap="nowrap">
-        <Box
-          style={{
-            width: theme.other.sizes.icon["4xl"],
-            height: theme.other.sizes.icon["4xl"],
-            borderRadius: theme.other.borderRadius.md,
-            background: isSelected ? theme.other.brand.gradient : theme.other.backgrounds.secondary,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-          }}
-        >
-          <IconKey 
-            size={theme.other.sizes.icon.xl} 
-            color={isSelected ? theme.other.text.white : theme.other.brand.primary}
-          />
-        </Box>
-        
-        {isSelected && (
-          <Badge
-            variant="gradient"
-            gradient={{ from: theme.other.brand.primary, to: theme.other.brand.secondary, deg: 135 }}
-            size="sm"
-          >
-            Selected
-          </Badge>
-        )}
-      </Group>
-
-      <Text 
-        size="lg" 
-        fw={theme.other.typography.fontWeight.semibold} 
-        c={theme.other.text.primary}
-        mb="xs"
-        style={{
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {deployment.name}
-      </Text>
-
-      <Group gap="xs" mb="sm">
-        <IconUser size={theme.other.sizes.icon.sm} color={theme.other.text.tertiary} />
-        <Text size="xs" c="dimmed">
-          Created by {deployment.createdBy}
-        </Text>
-      </Group>
-
-      <Divider mb="sm" />
-
-      <Group justify="space-between" align="center" wrap="nowrap">
-        <Text 
-          size="xs" 
-          c="dimmed"
-          style={{
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            flex: 1,
-          }}
-        >
-          {deployment.deploymentKey.substring(0, 16)}...
-        </Text>
-
-        <Group gap="xs" wrap="nowrap">
-          <CopyButton value={deployment.deploymentKey} timeout={2000}>
-            {({ copied, copy }) => (
-              <Tooltip label={copied ? "Copied!" : "Copy Key"} withArrow position="top">
-                <ActionIcon
-                  color={copied ? "teal" : "gray"}
-                  variant="light"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    copy();
-                  }}
-                  size="sm"
-                >
-                  {copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
-                </ActionIcon>
-              </Tooltip>
-            )}
-          </CopyButton>
-          <Tooltip label="Delete Deployment" withArrow position="top">
-            <ActionIcon
-              color="red"
-              variant="light"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete();
-              }}
-              size="sm"
-            >
-              <IconTrash size={14} />
-            </ActionIcon>
-          </Tooltip>
-        </Group>
-      </Group>
-    </Card>
-  );
-};
 
 export const DeploymentList = () => {
   const theme = useMantineTheme();
@@ -172,12 +25,11 @@ export const DeploymentList = () => {
   const params = useParams();
   const { data, isLoading } = useGetDeploymentsForApp();
 
-  const selectedDeployment = searchParams.get("deployment");
-
   const details = data?.find(
-    (item) => item.name === selectedDeployment
+    (item) => item.name === searchParams.get("deployment")
   );
 
+  // Create select options from deployments
   const deploymentOptions = useMemo(() => {
     return data?.map(deployment => ({
       value: deployment.name,
@@ -194,8 +46,12 @@ export const DeploymentList = () => {
     }
   };
 
-  const handleDelete = (deploymentName: string) => {
-    navigate(`/dashboard/delete?type=deployment&name=${encodeURIComponent(deploymentName)}&id=${encodeURIComponent(deploymentName)}&appId=${encodeURIComponent(params.app ?? "")}&tenant=${encodeURIComponent(params.org ?? "")}`);
+  const handleDelete = () => {
+    const currentDeployment = searchParams.get("deployment");
+    if (currentDeployment) {
+      // Use the existing modal pattern like organization deletion
+      navigate(`/dashboard/delete?type=deployment&name=${encodeURIComponent(currentDeployment)}&id=${encodeURIComponent(currentDeployment)}&appId=${encodeURIComponent(params.app ?? "")}&tenant=${encodeURIComponent(params.org ?? "")}`);
+    }
   };
 
   useEffect(() => {
@@ -207,98 +63,158 @@ export const DeploymentList = () => {
     }
   }, [data, searchParams, setSearchParams]);
 
-  if (isLoading) {
-    return (
-      <Stack gap="xl">
-        <Skeleton h={60} />
-        <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg">
-          {Array(6).fill(0).map((_, i) => (
-            <Skeleton key={i} height={180} radius="md" />
-          ))}
-        </SimpleGrid>
-      </Stack>
-    );
-  }
-
-  if (!data || data.length === 0) {
-    return (
-      <Card
-        withBorder
-        radius="md"
-        padding="xl"
-        style={{ 
-          textAlign: "center",
-          backgroundColor: theme.other.backgrounds.secondary,
-        }}
-      >
-        <IconKey size={48} color={theme.other.text.disabled} style={{ margin: "0 auto 16px" }} />
-        <Text size="lg" fw={theme.other.typography.fontWeight.semibold} mb="xs">
-          No Deployment Keys
-        </Text>
-        <Text c="dimmed">
-          Create your first deployment key to start managing releases!
-        </Text>
-      </Card>
-    );
-  }
-
   return (
     <>
-      <Stack gap="xl">
-        <Box>
-          <Group justify="space-between" align="flex-end" mb="md">
-            <Box>
-              <Title order={4} mb="xs">
-                Deployment Keys
-              </Title>
-              <Text size="sm" c="dimmed">
-                Select a deployment to view and manage its releases
-              </Text>
-            </Box>
-            <Select
-              placeholder="Filter by deployment..."
-              data={deploymentOptions}
-              value={selectedDeployment}
-              onChange={handleDeploymentChange}
-              searchable
-              clearable
-              leftSection={<IconKey style={{ width: rem(16), height: rem(16) }} />}
-              style={{ minWidth: 250 }}
-              styles={{
-                input: {
-                  borderColor: theme.other.borders.primary,
-                  "&:focus": {
-                    borderColor: theme.other.brand.primary,
+      <Flex direction="column" gap="md">
+        {/* Deployment Key Selector and Details in One Row */}
+        {isLoading ? (
+          <Skeleton h={80} />
+        ) : details ? (
+          <Card
+            withBorder
+            radius="md"
+            padding="lg"
+            styles={{
+              root: {
+                background: `linear-gradient(135deg, ${theme.other.backgrounds.secondary} 0%, ${theme.other.backgrounds.primary} 100%)`,
+                borderColor: theme.other.borders.primary,
+              },
+            }}
+          >
+            <Group justify="space-between" align="flex-start" wrap="nowrap">
+              {/* Left: Selector */}
+              <Select
+                label="Deployment Key"
+                placeholder="Choose a deployment..."
+                data={deploymentOptions}
+                value={searchParams.get("deployment")}
+                onChange={handleDeploymentChange}
+                searchable
+                leftSection={<IconKey style={{ width: rem(18), height: rem(18) }} />}
+                style={{ flex: 1, maxWidth: 350 }}
+                styles={{
+                  input: {
+                    borderColor: theme.other.borders.primary,
+                    backgroundColor: theme.other.backgrounds.primary,
+                    "&:focus": {
+                      borderColor: theme.other.brand.primary,
+                    },
                   },
-                },
-              }}
-            />
-          </Group>
-
-          <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg">
-            {data.map((deployment) => (
-              <DeploymentCard
-                key={deployment.id}
-                deployment={deployment}
-                isSelected={deployment.name === selectedDeployment}
-                onClick={() => handleDeploymentChange(deployment.name)}
-                onDelete={() => handleDelete(deployment.name)}
+                }}
+                comboboxProps={{ shadow: "md" }}
+                disabled={!data || data.length === 0}
               />
-            ))}
-          </SimpleGrid>
-        </Box>
 
-        {details && (
-          <Box>
-            <Divider mb="lg" />
-            <Title order={4} mb="md">
-              Releases for {details.name}
-            </Title>
-            <ReleaseListForDeploymentTable />
-          </Box>
+              {/* Right: Deployment Details */}
+              <Card
+                withBorder
+                radius="md"
+                padding="md"
+                style={{ 
+                  flex: 1,
+                  maxWidth: 500,
+                  backgroundColor: theme.other.backgrounds.primary,
+                  borderColor: theme.other.brand.primary,
+                }}
+              >
+                <Group justify="space-between" align="center" wrap="nowrap">
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <Group gap="xs" mb={4}>
+                      <Text size="sm" fw={theme.other.typography.fontWeight.semibold} c={theme.other.text.secondary}>
+                        Key:
+                      </Text>
+                      <Text
+                        size="sm"
+                        fw={theme.other.typography.fontWeight.bold}
+                        c={theme.other.brand.primaryDark}
+                        style={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {details.deploymentKey}
+                      </Text>
+                    </Group>
+                    <Text size="xs" c="dimmed">
+                      {details.name} deployment key
+                    </Text>
+                  </div>
+
+                  <Group gap="xs" wrap="nowrap">
+                    <CopyButton value={details.deploymentKey} timeout={2000}>
+                      {({ copied, copy }) => (
+                        <Tooltip
+                          label={copied ? "Copied!" : "Copy Key"}
+                          withArrow
+                          position="top"
+                        >
+                          <ActionIcon
+                            color={copied ? "teal" : "gray"}
+                            variant="light"
+                            onClick={copy}
+                            size="lg"
+                            style={{
+                              transition: theme.other.transitions.fast,
+                            }}
+                          >
+                            {copied ? (
+                              <IconCheck style={{ width: rem(18) }} />
+                            ) : (
+                              <IconCopy style={{ width: rem(18) }} />
+                            )}
+                          </ActionIcon>
+                        </Tooltip>
+                      )}
+                    </CopyButton>
+                    <Tooltip label="Delete Deployment" withArrow position="top">
+                      <ActionIcon
+                        color="red"
+                        variant="light"
+                        onClick={handleDelete}
+                        size="lg"
+                        style={{
+                          transition: theme.other.transitions.fast,
+                        }}
+                      >
+                        <IconTrash style={{ width: rem(18) }} />
+                      </ActionIcon>
+                    </Tooltip>
+                  </Group>
+                </Group>
+              </Card>
+            </Group>
+          </Card>
+        ) : data?.length ? (
+          <Card
+            withBorder
+            radius="md"
+            padding="lg"
+            style={{ 
+              textAlign: "center",
+              backgroundColor: theme.other.backgrounds.secondary,
+            }}
+          >
+            <Text c="dimmed">Select a deployment key from the dropdown to view releases</Text>
+          </Card>
+        ) : (
+          <Card
+            withBorder
+            radius="md"
+            padding="lg"
+            style={{ 
+              textAlign: "center",
+              backgroundColor: theme.other.backgrounds.secondary,
+            }}
+          >
+            <Text c="dimmed">No deployments found. Create your first deployment key!</Text>
+          </Card>
         )}
-      </Stack>
+      </Flex>
 
+      <ReleaseListForDeploymentTable />
+      
+      {/* Modals */}
       <ReleaseDeatilCardModal
         id={searchParams.get("releaseId")}
         opened={!!searchParams.get("releaseId")}
