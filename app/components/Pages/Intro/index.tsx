@@ -65,22 +65,11 @@ export function Intro() {
               size="md"
               className={classes.control}
               onClick={() => {
-                navigate(route("/dashboard/create/app"));
-              }}
-            >
-              Create App
-            </Button>
-            {/* <Button
-              variant="default"
-              radius="xl"
-              size="md"
-              className={classes.control}
-              onClick={() => {
                 navigate(route("/dashboard/create/org"));
               }}
             >
               Create Organization
-            </Button> */}
+            </Button>
           </Group>
         </div>
         <Image src={image} className={classes.image} />
