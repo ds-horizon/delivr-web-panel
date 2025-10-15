@@ -11,6 +11,7 @@ import {
   Card,
   Badge,
   Group,
+  Modal,
 } from "@mantine/core";
 import { IconPlus, IconCode, IconRocket } from "@tabler/icons-react";
 import { useNavigate } from "@remix-run/react";
@@ -19,11 +20,24 @@ import { useGetOrgList } from "../OrgListNavbar/hooks/useGetOrgList";
 import { OrgCard } from "./components/OrgCard";
 import { Intro } from "../../Intro";
 import { CTAButton } from "~/components/CTAButton";
+import { useState, useEffect } from "react";
+import { CreateOrgModal } from "./components/CreateOrgModal";
+import { ACTION_EVENTS, actions } from "~/utils/event-emitter";
 
 export function OrgsPage() {
   const theme = useMantineTheme();
   const navigate = useNavigate();
-  const { data, isLoading, isError } = useGetOrgList();
+  const { data, isLoading, isError, refetch } = useGetOrgList();
+  const [createOrgOpen, setCreateOrgOpen] = useState(false);
+
+  // Listen for refetch events
+  useEffect(() => {
+    const handleRefetch = () => {
+      refetch();
+    };
+
+    actions.add(ACTION_EVENTS.REFETCH_ORGS, handleRefetch);
+  }, [refetch]);
 
   // Show intro page if no organizations exist
   if (!isLoading && !isError && (!data || data.length === 0)) {
@@ -99,7 +113,7 @@ export function OrgsPage() {
             </Title>
             <CTAButton
               leftSection={<IconPlus size={theme.other.sizes.icon.lg} />}
-              onClick={() => navigate(route("/dashboard/create/org"))}
+              onClick={() => setCreateOrgOpen(true)}
             >
               Create Organization
             </CTAButton>
@@ -395,6 +409,21 @@ export function OrgsPage() {
           </SimpleGrid>
         </Box>
       </Stack>
+
+      {/* Create Organization Modal */}
+      <Modal
+        opened={createOrgOpen}
+        onClose={() => setCreateOrgOpen(false)}
+        title="Create Organization"
+        centered
+      >
+        <CreateOrgModal
+          onSuccess={() => {
+            actions.trigger(ACTION_EVENTS.REFETCH_ORGS);
+            setCreateOrgOpen(false);
+          }}
+        />
+      </Modal>
     </Container>
   );
 }

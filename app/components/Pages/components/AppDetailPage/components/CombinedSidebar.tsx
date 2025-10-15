@@ -6,6 +6,7 @@ import {
   ScrollArea,
   useMantineTheme,
   Collapse,
+  Modal,
 } from "@mantine/core";
 import {
   IconPlus,
@@ -19,6 +20,8 @@ import { useNavigate } from "@remix-run/react";
 import { route } from "routes-gen";
 import { useGetAppListForOrg } from "../../AppList/hooks/useGetAppListForOrg";
 import { CTAButton } from "~/components/CTAButton";
+import { CreateOrgModal } from "~/components/Pages/components/OrgsPage/components/CreateOrgModal";
+import { ACTION_EVENTS, actions } from "~/utils/event-emitter";
 
 type Organization = {
   id: string;
@@ -224,6 +227,7 @@ export function CombinedSidebar({
   const theme = useMantineTheme();
   const navigate = useNavigate();
   const [expandedOrgId, setExpandedOrgId] = useState<string | null>(currentOrgId || null);
+  const [createOrgOpen, setCreateOrgOpen] = useState(false);
 
   return (
     <Box
@@ -292,7 +296,7 @@ export function CombinedSidebar({
           <CTAButton
             fullWidth
             leftSection={<IconPlus size={theme.other.sizes.icon.lg} />}
-            onClick={() => navigate(route("/dashboard/create/org"))}
+            onClick={() => setCreateOrgOpen(true)}
             styles={{
               root: {
                 boxShadow: theme.other.shadows.md,
@@ -303,6 +307,21 @@ export function CombinedSidebar({
           </CTAButton>
         </Box>
       </Box>
+
+      {/* Create Organization Modal */}
+      <Modal
+        opened={createOrgOpen}
+        onClose={() => setCreateOrgOpen(false)}
+        title="Create Organization"
+        centered
+      >
+        <CreateOrgModal
+          onSuccess={() => {
+            actions.trigger(ACTION_EVENTS.REFETCH_ORGS);
+            setCreateOrgOpen(false);
+          }}
+        />
+      </Modal>
     </Box>
   );
 }
