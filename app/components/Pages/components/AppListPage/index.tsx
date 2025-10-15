@@ -5,8 +5,8 @@ import {
   Group,
   Skeleton,
   Box,
-  Button,
   Flex,
+  useMantineTheme,
 } from "@mantine/core";
 import { IconPlus, IconChevronRight } from "@tabler/icons-react";
 import { useNavigate, useParams } from "@remix-run/react";
@@ -15,13 +15,14 @@ import { User } from "~/.server/services/Auth/Auth.interface";
 import { useGetAppListForOrg } from "../AppList/hooks/useGetAppListForOrg";
 import { AppListRow } from "./components/AppListRow";
 import { useGetOrgList } from "../OrgListNavbar/hooks/useGetOrgList";
-import { text } from "~/theme";
+import { CTAButton } from "~/components/CTAButton";
 
 type AppListPageProps = {
   user: User;
 };
 
 export function AppListPage({ user }: AppListPageProps) {
+  const theme = useMantineTheme();
   const params = useParams();
   const navigate = useNavigate();
 
@@ -54,15 +55,15 @@ export function AppListPage({ user }: AppListPageProps) {
   if (isError) {
     return (
       <Box>
-        <Group justify="space-between" align="center" mb="xl">
+        <Group justify="space-between" align="center" mb="lg">
           <Group gap="xs" align="center">
-            <Title order={4} style={{ color: text.secondary }} fw={500}>
+            <Text size="md" fw={theme.other.typography.fontWeight.semibold} c={theme.other.text.primary}>
               {currentOrg?.orgName || "Organization"}
-            </Title>
-            <IconChevronRight size={18} color={text.secondary} />
-            <Title order={4} style={{ color: text.secondary }} fw={500}>
+            </Text>
+            <IconChevronRight size={theme.other.sizes.icon.md} color={theme.other.text.tertiary} />
+            <Text size="md" fw={theme.other.typography.fontWeight.semibold} c={theme.other.text.primary}>
               Applications
-            </Title>
+            </Text>
           </Group>
         </Group>
         <Text c="red" ta="center" p="xl">
@@ -75,34 +76,27 @@ export function AppListPage({ user }: AppListPageProps) {
   if (!data || data.length === 0) {
     return (
       <Box>
-        <Group justify="space-between" align="center" mb="xl">
+        <Group justify="space-between" align="center" mb="lg">
           <Group gap="xs" align="center">
-            <Title order={4} style={{ color: text.secondary }} fw={500}>
+            <Text size="md" fw={theme.other.typography.fontWeight.semibold} c={theme.other.text.primary}>
               {currentOrg?.orgName || "Organization"}
-            </Title>
-            <IconChevronRight size={18} color={text.secondary} />
-            <Title order={4} style={{ color: text.secondary }} fw={500}>
+            </Text>
+            <IconChevronRight size={theme.other.sizes.icon.md} color={theme.other.text.tertiary} />
+            <Text size="md" fw={theme.other.typography.fontWeight.semibold} c={theme.other.text.primary}>
               Applications
-            </Title>
+            </Text>
           </Group>
-          <Button
-            leftSection={<IconPlus size={18} />}
+          <CTAButton
+            leftSection={<IconPlus size={theme.other.sizes.icon.lg} />}
             onClick={() => navigate(route("/dashboard/create/app"))}
-            variant="gradient"
-            gradient={{ from: "#6366f1", to: "#8b5cf6", deg: 135 }}
             styles={{
               root: {
-                boxShadow: "0 4px 12px rgba(99, 102, 241, 0.3)",
-                transition: "all 200ms ease",
-                "&:hover": {
-                  boxShadow: "0 6px 16px rgba(99, 102, 241, 0.4)",
-                  transform: "translateY(-1px)",
-                },
+                boxShadow: theme.other.shadows.md,
               },
             }}
           >
             Create App
-          </Button>
+          </CTAButton>
         </Group>
         <Paper withBorder p="xl" radius="md">
           <Text c="dimmed" ta="center">
@@ -115,34 +109,27 @@ export function AppListPage({ user }: AppListPageProps) {
 
   return (
     <Box>
-      <Group justify="space-between" align="center" mb="xl">
+      <Group justify="space-between" align="center" mb="lg">
         <Group gap="xs" align="center">
-          <Title order={4} style={{ color: text.secondary }} fw={500}>
+          <Text size="md" fw={theme.other.typography.fontWeight.semibold} c={theme.other.text.primary}>
             {currentOrg?.orgName || "Organization"}
-          </Title>
-          <IconChevronRight size={18} color={text.secondary} />
-          <Title order={4} style={{ color: text.secondary }} fw={500}>
+          </Text>
+          <IconChevronRight size={theme.other.sizes.icon.md} color={theme.other.text.tertiary} />
+          <Text size="md" fw={theme.other.typography.fontWeight.semibold} c={theme.other.text.primary}>
             Applications
-          </Title>
+          </Text>
         </Group>
-        <Button
-          leftSection={<IconPlus size={18} />}
+        <CTAButton
+          leftSection={<IconPlus size={theme.other.sizes.icon.lg} />}
           onClick={() => navigate(route("/dashboard/create/app"))}
-          variant="gradient"
-          gradient={{ from: "#6366f1", to: "#8b5cf6", deg: 135 }}
           styles={{
             root: {
-              boxShadow: "0 4px 12px rgba(99, 102, 241, 0.3)",
-              transition: "all 200ms ease",
-              "&:hover": {
-                boxShadow: "0 6px 16px rgba(99, 102, 241, 0.4)",
-                transform: "translateY(-1px)",
-              },
+              boxShadow: theme.other.shadows.md,
             },
           }}
         >
           Create App
-        </Button>
+        </CTAButton>
       </Group>
 
       <Flex gap="lg" wrap="wrap">

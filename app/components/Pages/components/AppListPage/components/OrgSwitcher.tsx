@@ -6,6 +6,7 @@ import {
   ScrollArea,
   ActionIcon,
   Tooltip,
+  useMantineTheme,
 } from "@mantine/core";
 import {
   IconChevronLeft,
@@ -26,24 +27,19 @@ type OrgSwitcherProps = {
   currentOrgId?: string;
 };
 
-// Generate consistent color based on org name
-const getOrgColor = (orgName: string) => {
+const getOrgColorFromTheme = (orgName: string, theme: any) => {
   const colors = [
-    { bg: "#667eea", light: "#f0f0ff" },
-    { bg: "#764ba2", light: "#f5f0ff" },
-    { bg: "#f093fb", light: "#fff0fb" },
-    { bg: "#4facfe", light: "#f0f8ff" },
-    { bg: "#43e97b", light: "#f0fff5" },
-    { bg: "#fa709a", light: "#fff0f5" },
-    { bg: "#feca57", light: "#fff8e1" },
-    { bg: "#48dbfb", light: "#e6f9ff" },
+    { bg: theme.other.brand.primary, light: theme.other.brand.light },
+    { bg: theme.other.brand.secondary, light: theme.other.brand.light },
+    { bg: theme.other.brand.primaryDark, light: theme.other.brand.light },
+    { bg: theme.other.brand.tertiary, light: theme.other.brand.light },
+    { bg: theme.other.brand.quaternary, light: theme.other.brand.light },
   ];
   
   const hash = orgName.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
   return colors[hash % colors.length];
 };
 
-// Generate initials from org name
 const getInitials = (orgName: string) => {
   const words = orgName.trim().split(" ");
   if (words.length === 1) {
@@ -56,32 +52,32 @@ export function OrgSwitcher({
   organizations,
   currentOrgId,
 }: OrgSwitcherProps) {
+  const theme = useMantineTheme();
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <Box
       style={{
-        width: isCollapsed ? "80px" : "280px",
+        width: isCollapsed ? theme.other.sizes.sidebar.collapsed || "80px" : theme.other.sizes.sidebar.width,
         height: "calc(100vh - 120px)",
-        borderRight: "1px solid #e9ecef",
-        paddingRight: isCollapsed ? "0" : "16px",
-        transition: "width 200ms ease",
+        borderRight: `1px solid ${theme.other.borders.secondary}`,
+        paddingRight: isCollapsed ? "0" : theme.other.spacing.lg,
+        transition: theme.other.transitions.normal,
         position: "relative",
       }}
     >
-      <Stack gap="xs" style={{ paddingLeft: isCollapsed ? "8px" : "0" }}>
-        {/* Header with collapse button */}
+      <Stack gap="xs" style={{ paddingLeft: isCollapsed ? theme.other.spacing.sm : "0" }}>
         <Box
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: isCollapsed ? "center" : "space-between",
-            marginBottom: "8px",
+            marginBottom: theme.other.spacing.sm,
           }}
         >
           {!isCollapsed && (
-            <Text size="sm" c="dimmed" fw={600} tt="uppercase">
+            <Text size="sm" c="dimmed" fw={theme.other.typography.fontWeight.semibold} tt="uppercase">
               Organizations
             </Text>
           )}
@@ -92,9 +88,9 @@ export function OrgSwitcher({
             size="sm"
           >
             {isCollapsed ? (
-              <IconChevronRight size={16} />
+              <IconChevronRight size={theme.other.sizes.icon.md} />
             ) : (
-              <IconChevronLeft size={16} />
+              <IconChevronLeft size={theme.other.sizes.icon.md} />
             )}
           </ActionIcon>
         </Box>
@@ -103,11 +99,10 @@ export function OrgSwitcher({
           <Stack gap="xs">
             {organizations.map((org) => {
               const isActive = org.id === currentOrgId;
-              const colors = getOrgColor(org.orgName);
+              const colors = getOrgColorFromTheme(org.orgName, theme);
               const initials = getInitials(org.orgName);
 
               if (isCollapsed) {
-                // Collapsed view - icon only
                 return (
                   <Tooltip
                     key={org.id}
@@ -122,12 +117,12 @@ export function OrgSwitcher({
                       style={{
                         width: "56px",
                         height: "56px",
-                        borderRadius: "12px",
-                        transition: "all 150ms ease",
+                        borderRadius: theme.other.borderRadius.lg,
+                        transition: theme.other.transitions.fast,
                         border: isActive
-                          ? "2px solid #667eea"
+                          ? `2px solid ${theme.other.brand.primary}`
                           : "2px solid transparent",
-                        padding: "2px",
+                        padding: theme.other.spacing.xxs,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -137,23 +132,23 @@ export function OrgSwitcher({
                         style={{
                           width: "100%",
                           height: "100%",
-                          borderRadius: "10px",
+                          borderRadius: theme.other.borderRadius.md,
                           background: `linear-gradient(135deg, ${colors.bg} 0%, ${colors.bg}dd 100%)`,
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
                           boxShadow: isActive
-                            ? `0 4px 12px ${colors.bg}60`
-                            : `0 2px 8px ${colors.bg}40`,
+                            ? theme.other.shadows.md
+                            : theme.other.shadows.sm,
                         }}
                       >
                         <Text
                           size="sm"
-                          fw={700}
+                          fw={theme.other.typography.fontWeight.bold}
                           c="white"
                           style={{
-                            fontSize: "16px",
-                            letterSpacing: "0.5px",
+                            fontSize: theme.other.typography.fontSize.base,
+                            letterSpacing: theme.other.typography.letterSpacing.wide,
                           }}
                         >
                           {initials}
@@ -164,7 +159,6 @@ export function OrgSwitcher({
                 );
               }
 
-              // Expanded view
               return (
                 <UnstyledButton
                   key={org.id}
@@ -173,37 +167,37 @@ export function OrgSwitcher({
                   }}
                   style={{
                     width: "100%",
-                    padding: "12px 16px",
-                    borderRadius: "8px",
-                    transition: "background-color 150ms ease",
+                    padding: `${theme.other.spacing.md} ${theme.other.spacing.lg}`,
+                    borderRadius: theme.other.borderRadius.md,
+                    transition: theme.other.transitions.fast,
                     backgroundColor: isActive
-                      ? "rgba(103, 126, 234, 0.12)"
+                      ? `rgba(${parseInt(theme.other.brand.primary.slice(1, 3), 16)}, ${parseInt(theme.other.brand.primary.slice(3, 5), 16)}, ${parseInt(theme.other.brand.primary.slice(5, 7), 16)}, 0.12)`
                       : "transparent",
                     border: isActive
-                      ? "2px solid #667eea"
+                      ? `2px solid ${theme.other.brand.primary}`
                       : "2px solid transparent",
                   }}
                   styles={{
                     root: {
                       "&:hover": {
                         backgroundColor: isActive
-                          ? "rgba(103, 126, 234, 0.12)"
-                          : "rgba(103, 126, 234, 0.08)",
+                          ? `rgba(${parseInt(theme.other.brand.primary.slice(1, 3), 16)}, ${parseInt(theme.other.brand.primary.slice(3, 5), 16)}, ${parseInt(theme.other.brand.primary.slice(5, 7), 16)}, 0.12)`
+                          : `rgba(${parseInt(theme.other.brand.primary.slice(1, 3), 16)}, ${parseInt(theme.other.brand.primary.slice(3, 5), 16)}, ${parseInt(theme.other.brand.primary.slice(5, 7), 16)}, ${theme.other.opacity.subtle})`,
                       },
                     },
                   }}
                 >
-                  <Box style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <Box style={{ display: "flex", alignItems: "center", gap: theme.other.spacing.md }}>
                     <Box
                       style={{
-                        width: 36,
-                        height: 36,
-                        borderRadius: "8px",
+                        width: theme.other.sizes.icon["4xl"],
+                        height: theme.other.sizes.icon["4xl"],
+                        borderRadius: theme.other.borderRadius.md,
                         background: `linear-gradient(135deg, ${colors.bg} 0%, ${colors.bg}dd 100%)`,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        boxShadow: `0 2px 8px ${colors.bg}40`,
+                        boxShadow: theme.other.shadows.sm,
                       }}
                     >
                       <Text
@@ -220,9 +214,9 @@ export function OrgSwitcher({
                     </Box>
                     <Box style={{ flex: 1, minWidth: 0 }}>
                       <Text
-                        fw={isActive ? 600 : 500}
+                        fw={isActive ? theme.other.typography.fontWeight.semibold : theme.other.typography.fontWeight.medium}
                         size="sm"
-                        c={isActive ? "#667eea" : "gray.9"}
+                        c={isActive ? theme.other.brand.primary : theme.other.text.primary}
                         style={{
                           overflow: "hidden",
                           textOverflow: "ellipsis",

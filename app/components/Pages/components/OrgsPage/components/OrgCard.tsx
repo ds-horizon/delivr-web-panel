@@ -7,9 +7,9 @@ import {
   Box,
   Group,
   Stack,
+  useMantineTheme,
 } from "@mantine/core";
 import { IconTrash, IconDots, IconExternalLink, IconBuilding } from "@tabler/icons-react";
-import { brand, backgrounds, text, borders, shadows } from "~/theme";
 
 type Organization = {
   id: string;
@@ -24,6 +24,8 @@ type OrgCardProps = {
 };
 
 export function OrgCard({ org, onNavigate, onDelete }: OrgCardProps) {
+  const theme = useMantineTheme();
+  
   return (
     <Card
       withBorder
@@ -31,71 +33,68 @@ export function OrgCard({ org, onNavigate, onDelete }: OrgCardProps) {
       radius="lg"
       style={{
         cursor: "pointer",
-        transition: "all 250ms ease",
+        transition: theme.other.transitions.slow,
         height: "100%",
-        borderColor: borders.primary,
-        backgroundColor: backgrounds.primary,
+        borderColor: theme.other.borders.primary,
+        backgroundColor: theme.other.backgrounds.primary,
         position: "relative",
         overflow: "visible",
       }}
       styles={{
         root: {
           "&:hover": {
-            borderColor: borders.brand,
-            boxShadow: shadows.lg,
+            borderColor: theme.other.borders.brand,
+            boxShadow: theme.other.shadows.lg,
             transform: "translateY(-8px)",
           },
         },
       }}
       onClick={onNavigate}
     >
-      {/* Gradient Header Section */}
       <Card.Section 
         h={80} 
         style={{ 
-          background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+          background: theme.other.brand.gradient,
         }} 
       />
 
-      {/* Icon Container - Overlapping Header */}
       <Box 
         style={{ 
           display: "flex", 
           justifyContent: "center",
-          marginTop: "-40px",
-          marginBottom: "16px",
+          marginTop: `-${theme.other.sizes.avatar.lg}`,
+          marginBottom: theme.other.spacing.lg,
         }}
       >
         <Box
           style={{
-            width: 80,
-            height: 80,
-            borderRadius: "20px",
-            background: backgrounds.primary,
+            width: theme.other.sizes.avatar.xl,
+            height: theme.other.sizes.avatar.xl,
+            borderRadius: theme.other.borderRadius.xl,
+            background: theme.other.backgrounds.primary,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            border: `4px solid ${backgrounds.primary}`,
-            boxShadow: shadows.md,
+            border: `4px solid ${theme.other.backgrounds.primary}`,
+            boxShadow: theme.other.shadows.md,
           }}
         >
           <IconBuilding 
-            size={40} 
-            color={brand.primary}
+            size={theme.other.sizes.icon["4xl"]} 
+            color={theme.other.brand.primary}
             stroke={1.5}
           />
         </Box>
       </Box>
 
-      {/* Badge and Menu positioned at top right */}
       <Group
         justify="space-between"
         wrap="nowrap"
         style={{
           position: "absolute",
-          top: "12px",
-          right: "12px",
-          left: "12px",
+          top: theme.other.spacing.md,
+          right: theme.other.spacing.md,
+          left: theme.other.spacing.md,
         }}
       >
         <Badge
@@ -104,11 +103,11 @@ export function OrgCard({ org, onNavigate, onDelete }: OrgCardProps) {
           radius="sm"
           style={{
             textTransform: "uppercase",
-            fontSize: "10px",
-            fontWeight: 600,
-            letterSpacing: "0.5px",
-            backgroundColor: "rgba(255, 255, 255, 0.95)",
-            color: brand.primaryDark,
+            fontSize: theme.other.typography.fontSize.xs,
+            fontWeight: theme.other.typography.fontWeight.semibold,
+            letterSpacing: theme.other.typography.letterSpacing.wide,
+            backgroundColor: `rgba(255, 255, 255, ${theme.other.opacity.overlay})`,
+            color: theme.other.brand.primaryDark,
           }}
         >
           {org.isAdmin ? "Owner" : "Member"}
@@ -122,10 +121,10 @@ export function OrgCard({ org, onNavigate, onDelete }: OrgCardProps) {
                 size="sm"
                 onClick={(e) => e.stopPropagation()}
                 style={{
-                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  backgroundColor: `rgba(255, 255, 255, ${theme.other.opacity.subtle})`,
                 }}
               >
-                <IconDots size={16} />
+                <IconDots size={theme.other.sizes.icon.md} />
               </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
@@ -155,26 +154,24 @@ export function OrgCard({ org, onNavigate, onDelete }: OrgCardProps) {
       </Group>
 
       <Stack gap="sm" align="center">
-        {/* Org Name */}
         <Text 
           ta="center" 
           size="xl" 
-          fw={600} 
+          fw={theme.other.typography.fontWeight.semibold} 
           lineClamp={2}
           style={{
-            color: text.primary,
-            minHeight: "32px",
+            color: theme.other.text.primary,
+            minHeight: theme.other.spacing["3xl"],
           }}
         >
           {org.orgName}
         </Text>
 
-        {/* Role subtitle */}
         <Text 
           ta="center" 
           size="sm" 
           c="dimmed"
-          fw={500}
+          fw={theme.other.typography.fontWeight.medium}
         >
           {org.isAdmin ? "You own this organization" : "You are a member"}
         </Text>

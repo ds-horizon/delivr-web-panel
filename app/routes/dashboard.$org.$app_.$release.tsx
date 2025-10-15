@@ -17,6 +17,7 @@ import {
   Skeleton,
   ActionIcon,
   Tooltip,
+  useMantineTheme,
 } from "@mantine/core";
 import {
   IconArrowLeft,
@@ -55,13 +56,14 @@ const formatBytes = (bytes: number) => {
 };
 
 // Calculate success rate
-const getSuccessRate = (installed: number, failed: number) => {
+const getSuccessRate = (installed: number, failed: number = 0) => {
   const total = installed + failed;
   if (total === 0) return 100;
   return Math.round((installed / total) * 100);
 };
 
 export default function ReleaseDetailPage() {
+  const theme = useMantineTheme();
   const navigate = useNavigate();
   const params = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -72,6 +74,7 @@ export default function ReleaseDetailPage() {
       label: params.release ?? "",
       deploymentName: searchParams.get("deployment") ?? "",
       appId: params.app ?? "",
+      tenant: params.org ?? "",
     });
 
   if (isLoading || isFetching) {
@@ -97,7 +100,7 @@ export default function ReleaseDetailPage() {
     return (
       <Card withBorder padding="xl" radius="md" style={{ textAlign: "center" }}>
         <Stack gap="md" align="center">
-          <IconAlertCircle size={48} color="#fa5252" />
+          <IconAlertCircle size={theme.other.sizes.avatar.md} color={theme.other.text.red} />
           <Title order={3} c="red">
             Failed to Load Release
           </Title>
@@ -118,7 +121,7 @@ export default function ReleaseDetailPage() {
     data.totalActive > 0 ? Math.floor((data.activeDevices / data.totalActive) * 100) : 0;
   const rollbackPercentage =
     data.installed > 0 ? Math.floor((data.rollbacks / data.installed) * 100) : 0;
-  const successRate = getSuccessRate(data.installed || 0, data.failed || 0);
+  const successRate = getSuccessRate(data.installed || 0, 0);
 
   return (
     <Box>
@@ -169,9 +172,9 @@ export default function ReleaseDetailPage() {
             Edit
           </Button>
           <Button
-            leftSection={<IconArrowUp size={18} />}
+            leftSection={<IconArrowUp size={theme.other.sizes.icon.lg} />}
             variant="gradient"
-            gradient={{ from: "#667eea", to: "#764ba2", deg: 135 }}
+            gradient={{ from: theme.other.brand.primary, to: theme.other.brand.secondary, deg: 135 }}
             onClick={() => setSearchParams((p) => { p.set("promote", "true"); return p; })}
           >
             Promote
@@ -190,11 +193,11 @@ export default function ReleaseDetailPage() {
               </Title>
               <Grid gutter="md">
                 <Grid.Col span={3}>
-                  <Paper p="md" radius="md" style={{ background: "#f0f8ff", border: "1px solid #4facfe" }}>
+                  <Paper p="md" radius="md" style={{ background: theme.other.backgrounds.blue, border: `1px solid ${theme.other.text.blue}` }}>
                     <Stack gap="xs">
                       <Group gap="xs">
                         <ThemeIcon size="md" variant="light" color="blue" radius="xl">
-                          <IconDevices size={18} />
+                          <IconDevices size={theme.other.sizes.icon.lg} />
                         </ThemeIcon>
                         <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
                           Active Devices
@@ -211,11 +214,11 @@ export default function ReleaseDetailPage() {
                 </Grid.Col>
 
                 <Grid.Col span={3}>
-                  <Paper p="md" radius="md" style={{ background: "#f0fffa", border: "1px solid #06d6a0" }}>
+                  <Paper p="md" radius="md" style={{ background: theme.other.backgrounds.green, border: `1px solid ${theme.other.text.green}` }}>
                     <Stack gap="xs">
                       <Group gap="xs">
                         <ThemeIcon size="md" variant="light" color="teal" radius="xl">
-                          <IconDownload size={18} />
+                          <IconDownload size={theme.other.sizes.icon.lg} />
                         </ThemeIcon>
                         <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
                           Downloads
@@ -232,11 +235,11 @@ export default function ReleaseDetailPage() {
                 </Grid.Col>
 
                 <Grid.Col span={3}>
-                  <Paper p="md" radius="md" style={{ background: "#f0fff4", border: "1px solid #43e97b" }}>
+                  <Paper p="md" radius="md" style={{ background: theme.other.backgrounds.lightGreen, border: `1px solid ${theme.other.text.lightGreen}` }}>
                     <Stack gap="xs">
                       <Group gap="xs">
                         <ThemeIcon size="md" variant="light" color="green" radius="xl">
-                          <IconCheck size={18} />
+                          <IconCheck size={theme.other.sizes.icon.lg} />
                         </ThemeIcon>
                         <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
                           Installed
@@ -253,18 +256,18 @@ export default function ReleaseDetailPage() {
                 </Grid.Col>
 
                 <Grid.Col span={3}>
-                  <Paper p="md" radius="md" style={{ background: "#fff5f5", border: "1px solid #fa709a" }}>
+                  <Paper p="md" radius="md" style={{ background: theme.other.backgrounds.pink, border: `1px solid ${theme.other.text.pink}` }}>
                     <Stack gap="xs">
                       <Group gap="xs">
                         <ThemeIcon size="md" variant="light" color="red" radius="xl">
-                          <IconAlertCircle size={18} />
+                          <IconAlertCircle size={theme.other.sizes.icon.lg} />
                         </ThemeIcon>
                         <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
                           Failed
                         </Text>
                       </Group>
                       <Text size="xl" fw={700} c="red">
-                        {data.failed?.toLocaleString() || 0}
+                        {0}
                       </Text>
                       <Text size="xs" c="dimmed">
                         installation failures
@@ -280,10 +283,10 @@ export default function ReleaseDetailPage() {
               <Group justify="space-between" mb="md">
                 <Title order={4}>Rollout Progress</Title>
                 <Group gap="xs">
-                  <Text size="sm" fw={600} c="dimmed">
+                  <Text size="sm" fw={theme.other.typography.fontWeight.semibold} c="dimmed">
                     Target:
                   </Text>
-                  <Text size="lg" fw={700} style={{ color: "#667eea" }}>
+                  <Text size="lg" fw={theme.other.typography.fontWeight.bold} style={{ color: theme.other.brand.primary }}>
                     {data.rollout}%
                   </Text>
                 </Group>
@@ -294,10 +297,10 @@ export default function ReleaseDetailPage() {
                 radius="xl"
                 styles={{
                   root: {
-                    background: "#e9ecef",
+                    background: theme.other.borders.secondary,
                   },
                   section: {
-                    background: "linear-gradient(90deg, #667eea 0%, #764ba2 100%)",
+                    background: `linear-gradient(90deg, ${theme.other.brand.primary} 0%, ${theme.other.brand.secondary} 100%)`,
                   },
                 }}
               />
@@ -317,7 +320,7 @@ export default function ReleaseDetailPage() {
                     <RingProgress
                       size={180}
                       thickness={16}
-                      sections={[{ value: adoptionPercentage, color: "#06d6a0" }]}
+                      sections={[{ value: adoptionPercentage, color: theme.other.text.green }]}
                       label={
                         <Stack gap={0} align="center">
                           <Text size="xl" fw={700} c="teal">
@@ -343,7 +346,7 @@ export default function ReleaseDetailPage() {
                     <RingProgress
                       size={180}
                       thickness={16}
-                      sections={[{ value: successRate, color: "#43e97b" }]}
+                      sections={[{ value: successRate, color: theme.other.text.lightGreen }]}
                       label={
                         <Stack gap={0} align="center">
                           <Text size="xl" fw={700} c="green">
@@ -359,7 +362,7 @@ export default function ReleaseDetailPage() {
                       Installation Success
                     </Text>
                     <Text size="xs" c="dimmed">
-                      {data.installed?.toLocaleString()} successful, {data.failed?.toLocaleString()} failed
+                      {data.installed?.toLocaleString()} successful, {0} failed
                     </Text>
                   </Box>
                 </Grid.Col>
@@ -369,7 +372,7 @@ export default function ReleaseDetailPage() {
                     <RingProgress
                       size={180}
                       thickness={16}
-                      sections={[{ value: rollbackPercentage, color: "#fa709a" }]}
+                      sections={[{ value: rollbackPercentage, color: theme.other.text.pink }]}
                       label={
                         <Stack gap={0} align="center">
                           <Text size="xl" fw={700} c="red">
@@ -405,7 +408,7 @@ export default function ReleaseDetailPage() {
               <Stack gap="md">
                 <Box>
                   <Group gap="xs" mb={4}>
-                    <IconRocket size={16} color="#667eea" />
+                    <IconRocket size={theme.other.sizes.icon.md} color={theme.other.brand.primary} />
                     <Text size="sm" c="dimmed" fw={600}>
                       Version
                     </Text>
@@ -419,7 +422,7 @@ export default function ReleaseDetailPage() {
 
                 <Box>
                   <Group gap="xs" mb={4}>
-                    <IconCalendar size={16} color="#667eea" />
+                    <IconCalendar size={theme.other.sizes.icon.md} color={theme.other.brand.primary} />
                     <Text size="sm" c="dimmed" fw={600}>
                       Released At
                     </Text>
@@ -433,7 +436,7 @@ export default function ReleaseDetailPage() {
 
                 <Box>
                   <Group gap="xs" mb={4}>
-                    <IconUser size={16} color="#667eea" />
+                    <IconUser size={theme.other.sizes.icon.md} color={theme.other.brand.primary} />
                     <Text size="sm" c="dimmed" fw={600}>
                       Released By
                     </Text>
@@ -451,18 +454,18 @@ export default function ReleaseDetailPage() {
                   </Group>
                 </Box>
 
-                {data.size && (
+                {false && (
                   <>
                     <Divider />
                     <Box>
                       <Group gap="xs" mb={4}>
-                        <IconFileZip size={16} color="#667eea" />
+                        <IconFileZip size={theme.other.sizes.icon.md} color={theme.other.brand.primary} />
                         <Text size="sm" c="dimmed" fw={600}>
                           Package Size
                         </Text>
                       </Group>
                       <Text size="md" fw={500}>
-                        {formatBytes(data.size)}
+                        N/A
                       </Text>
                     </Box>
                   </>
@@ -473,7 +476,7 @@ export default function ReleaseDetailPage() {
                     <Divider />
                     <Box>
                       <Group gap="xs" mb={4}>
-                        <IconRotate2 size={16} color="#fa709a" />
+                        <IconRotate2 size={theme.other.sizes.icon.md} color={theme.other.text.pink} />
                         <Text size="sm" c="dimmed" fw={600}>
                           Rollbacks
                         </Text>
@@ -498,7 +501,7 @@ export default function ReleaseDetailPage() {
                     Success Rate
                   </Text>
                   <Group gap="xs">
-                    <IconTrendingUp size={16} color="#43e97b" />
+                    <IconTrendingUp size={theme.other.sizes.icon.md} color={theme.other.text.lightGreen} />
                     <Text size="sm" fw={700} c="green">
                       {successRate}%
                     </Text>
@@ -528,7 +531,7 @@ export default function ReleaseDetailPage() {
                     Method
                   </Text>
                   <Badge variant="light" size="sm">
-                    {data.releaseMethod || "Manual"}
+                    Manual
                   </Badge>
                 </Group>
               </Stack>

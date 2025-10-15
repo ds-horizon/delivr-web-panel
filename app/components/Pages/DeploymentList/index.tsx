@@ -7,53 +7,43 @@ import {
   Skeleton,
   Text,
   Tooltip,
-  TextInput,
   Group,
-  ScrollArea,
+  Select,
+  useMantineTheme,
 } from "@mantine/core";
 import { useNavigate, useSearchParams, useParams } from "@remix-run/react";
-import { DeploymentsSearch } from "../components/DeploymentsSearch";
 import { useGetDeploymentsForApp } from "./hooks/getDeploymentsForApp";
-import { IconCheck, IconCopy, IconSearch, IconTrash } from "@tabler/icons-react";
+import { IconCheck, IconCopy, IconTrash, IconKey } from "@tabler/icons-react";
 import { ReleaseListForDeploymentTable } from "../components/ReleaseListForDeploymentTable";
 import { ReleaseDeatilCardModal } from "../components/ReleaseDetailCardModal";
-import { useDeleteDeployment } from "../components/DeploymentsSearch/hooks/useDeleteDeployment";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useMemo } from "react";
 
 export const DeploymentList = () => {
+  const theme = useMantineTheme();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const params = useParams();
-  const { data, isLoading, refetch } = useGetDeploymentsForApp();
-  const { mutate: deleteDeployment } = useDeleteDeployment();
-  
-  // Local state for the new UI
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchFocused, setSearchFocused] = useState(false);
-  const searchContainerRef = useRef<HTMLDivElement>(null);
+  const { data, isLoading } = useGetDeploymentsForApp();
 
   const details = data?.find(
     (item) => item.name === searchParams.get("deployment")
   );
 
-  // Filter deployments based on search query
-  const filteredDeployments = data?.filter(deployment => 
-    deployment.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    deployment.deploymentKey.toLowerCase().includes(searchQuery.toLowerCase())
-  ) ?? [];
+  // Create select options from deployments
+  const deploymentOptions = useMemo(() => {
+    return data?.map(deployment => ({
+      value: deployment.name,
+      label: deployment.name,
+    })) ?? [];
+  }, [data]);
 
-  // Show all deployments when focused and no search query, or filtered results when searching
-  const displayDeployments = searchFocused && !searchQuery ? data ?? [] : filteredDeployments;
-  const shouldShowResults = searchFocused && displayDeployments.length > 0;
-
-  // Handlers
-  const handleSearchSelect = (deploymentName: string) => {
-    setSearchParams((prev) => {
-      prev.set("deployment", deploymentName);
-      return prev;
-    });
-    setSearchQuery(""); // Clear search after selection
-    setSearchFocused(false); // Close dropdown after selection
+  const handleDeploymentChange = (value: string | null) => {
+    if (value) {
+      setSearchParams((prev) => {
+        prev.set("deployment", value);
+        return prev;
+      });
+    }
   };
 
   const handleDelete = () => {
@@ -65,166 +55,160 @@ export const DeploymentList = () => {
   };
 
   useEffect(() => {
-    if (!searchParams.get("deployment")) {
-      if (data) {
-        setSearchParams((p) => {
-          p.set("deployment", data?.[0]?.name ?? "Production");
-          return p;
-        });
-      }
+    if (!searchParams.get("deployment") && data && data.length > 0) {
+      setSearchParams((p) => {
+        p.set("deployment", data[0].name);
+        return p;
+      });
     }
-  }, [data]);
-
-  // Click outside to close search dropdown
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
-        setSearchFocused(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  }, [data, searchParams, setSearchParams]);
 
   return (
     <>
-      {/* New improved layout */}
       <Flex direction="column" gap="md">
-        {/* Search Bar */}
-        <div ref={searchContainerRef} style={{ position: 'relative' }}>
-          <TextInput
-            placeholder="Search deployment keys by name..."
-            value={searchQuery}
-            onChange={(event) => setSearchQuery(event.currentTarget.value)}
-            onFocus={() => setSearchFocused(true)}
-            leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} />}
-            style={{ maxWidth: 400 }}
-          />
-
-          {/* Search Results Dropdown */}
-          {shouldShowResults && (
-            <Card 
-              withBorder 
-              radius="md" 
-              padding="xs"
-              style={{ 
-                position: 'absolute',
-                top: '100%',
-                left: 0,
-                right: 0,
-                zIndex: 1000,
-                maxWidth: 400,
-                marginTop: '4px'
-              }}
-            >
-              <Text size="sm" c="dimmed" mb="xs">
-                {searchQuery ? `Search Results (${displayDeployments.length})` : `Deployment Keys (${displayDeployments.length})`}
-              </Text>
-              <ScrollArea h={Math.min(displayDeployments.length * 60, 300)} offsetScrollbars>
-                {displayDeployments.map((deployment) => (
-                  <Group
-                    key={deployment.id}
-                    justify="space-between"
-                    p="xs"
-                    style={{ 
-                      cursor: 'pointer',
-                      borderRadius: '4px',
-                      minHeight: '56px'
-                    }}
-                    onClick={() => handleSearchSelect(deployment.name)}
-                    __vars={{
-                      '--group-hover-bg': 'var(--mantine-color-gray-0)'
-                    }}
-                    data-hover
-                  >
-                    <div>
-                      <Text size="sm" fw={500}>{deployment.name}</Text>
-                      <Text size="xs" c="dimmed" truncate style={{ maxWidth: '280px' }}>
-                        {deployment.deploymentKey}
-                      </Text>
-                    </div>
-                  </Group>
-                ))}
-              </ScrollArea>
-              {displayDeployments.length === 0 && searchQuery && (
-                <Text size="sm" c="dimmed" ta="center" py="md">
-                  No deployments found matching "{searchQuery}"
-                </Text>
-              )}
-            </Card>
-          )}
-        </div>
-
-        {/* Selected Deployment Card */}
-        {details && !isLoading ? (
+        {/* Deployment Key Selector and Details in One Row */}
+        {isLoading ? (
+          <Skeleton h={80} />
+        ) : details ? (
           <Card
             withBorder
             radius="md"
-            padding="sm"
-            bg="var(--mantine-color-body)"
+            padding="lg"
+            styles={{
+              root: {
+                background: `linear-gradient(135deg, ${theme.other.backgrounds.secondary} 0%, ${theme.other.backgrounds.primary} 100%)`,
+                borderColor: theme.other.borders.primary,
+              },
+            }}
           >
-            <Flex align={"center"} justify="space-between">
-              <div>
-                <Text fz="md" tt="uppercase" fw={700}>
-                  {details?.name}
-                </Text>
-                <Text size="xs" c="dimmed">Selected Deployment</Text>
-              </div>
-              <Group gap="xs">
-                <CopyButton value={details.deploymentKey} timeout={2000}>
-                  {({ copied, copy }) => (
-                    <Tooltip
-                      label={
-                        copied
-                          ? "Copied"
-                          : `Copy Deployment Key (${details.deploymentKey})`
-                      }
-                      withArrow
-                      position="left"
-                      color={copied ? "teal" : "blue"}
-                    >
-                      <ActionIcon
-                        color={copied ? "teal" : "gray"}
-                        variant="subtle"
-                        onClick={copy}
-                        size="lg"
+            <Group justify="space-between" align="flex-start" wrap="nowrap">
+              {/* Left: Selector */}
+              <Select
+                label="Deployment Key"
+                placeholder="Choose a deployment..."
+                data={deploymentOptions}
+                value={searchParams.get("deployment")}
+                onChange={handleDeploymentChange}
+                searchable
+                leftSection={<IconKey style={{ width: rem(18), height: rem(18) }} />}
+                style={{ flex: 1, maxWidth: 350 }}
+                styles={{
+                  input: {
+                    borderColor: theme.other.borders.primary,
+                    backgroundColor: theme.other.backgrounds.primary,
+                    "&:focus": {
+                      borderColor: theme.other.brand.primary,
+                    },
+                  },
+                }}
+                comboboxProps={{ shadow: "md" }}
+                disabled={!data || data.length === 0}
+              />
+
+              {/* Right: Deployment Details */}
+              <Card
+                withBorder
+                radius="md"
+                padding="md"
+                style={{ 
+                  flex: 1,
+                  maxWidth: 500,
+                  backgroundColor: theme.other.backgrounds.primary,
+                  borderColor: theme.other.brand.primary,
+                }}
+              >
+                <Group justify="space-between" align="center" wrap="nowrap">
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <Group gap="xs" mb={4}>
+                      <Text size="sm" fw={theme.other.typography.fontWeight.semibold} c={theme.other.text.secondary}>
+                        Key:
+                      </Text>
+                      <Text
+                        size="sm"
+                        fw={theme.other.typography.fontWeight.bold}
+                        c={theme.other.brand.primaryDark}
+                        style={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
                       >
-                        {copied ? (
-                          <IconCheck style={{ width: rem(18) }} />
-                        ) : (
-                          <IconCopy style={{ width: rem(18) }} />
-                        )}
+                        {details.deploymentKey}
+                      </Text>
+                    </Group>
+                    <Text size="xs" c="dimmed">
+                      {details.name} deployment key
+                    </Text>
+                  </div>
+
+                  <Group gap="xs" wrap="nowrap">
+                    <CopyButton value={details.deploymentKey} timeout={2000}>
+                      {({ copied, copy }) => (
+                        <Tooltip
+                          label={copied ? "Copied!" : "Copy Key"}
+                          withArrow
+                          position="top"
+                        >
+                          <ActionIcon
+                            color={copied ? "teal" : "gray"}
+                            variant="light"
+                            onClick={copy}
+                            size="lg"
+                            style={{
+                              transition: theme.other.transitions.fast,
+                            }}
+                          >
+                            {copied ? (
+                              <IconCheck style={{ width: rem(18) }} />
+                            ) : (
+                              <IconCopy style={{ width: rem(18) }} />
+                            )}
+                          </ActionIcon>
+                        </Tooltip>
+                      )}
+                    </CopyButton>
+                    <Tooltip label="Delete Deployment" withArrow position="top">
+                      <ActionIcon
+                        color="red"
+                        variant="light"
+                        onClick={handleDelete}
+                        size="lg"
+                        style={{
+                          transition: theme.other.transitions.fast,
+                        }}
+                      >
+                        <IconTrash style={{ width: rem(18) }} />
                       </ActionIcon>
                     </Tooltip>
-                  )}
-                </CopyButton>
-                <Tooltip
-                  label={`Delete ${details.name} deployment`}
-                  withArrow
-                  position="left"
-                  color="red"
-                >
-                  <ActionIcon
-                    color="red"
-                    variant="subtle"
-                    onClick={handleDelete}
-                    size="lg"
-                  >
-                    <IconTrash style={{ width: rem(18) }} />
-                  </ActionIcon>
-                </Tooltip>
-              </Group>
-            </Flex>
+                  </Group>
+                </Group>
+              </Card>
+            </Group>
           </Card>
-        ) : isLoading ? (
-          <Skeleton h={80} />
         ) : data?.length ? (
-          <Text ta="center" c="dimmed">Use the search above to find and select a deployment</Text>
+          <Card
+            withBorder
+            radius="md"
+            padding="lg"
+            style={{ 
+              textAlign: "center",
+              backgroundColor: theme.other.backgrounds.secondary,
+            }}
+          >
+            <Text c="dimmed">Select a deployment key from the dropdown to view releases</Text>
+          </Card>
         ) : (
-          <Text ta="center" c="dimmed">No deployments found. Create your first deployment!</Text>
+          <Card
+            withBorder
+            radius="md"
+            padding="lg"
+            style={{ 
+              textAlign: "center",
+              backgroundColor: theme.other.backgrounds.secondary,
+            }}
+          >
+            <Text c="dimmed">No deployments found. Create your first deployment key!</Text>
+          </Card>
         )}
       </Flex>
 

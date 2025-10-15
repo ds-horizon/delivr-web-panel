@@ -57,6 +57,7 @@ export function ReleaseDetailCard({
       label: id,
       deploymentName: searchParams.get("deployment") ?? "",
       appId: params.app ?? "",
+      tenant: params.org ?? "",
     });
 
   if (isLoading || isFetching) {

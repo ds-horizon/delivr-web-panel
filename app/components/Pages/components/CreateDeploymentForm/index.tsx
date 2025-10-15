@@ -12,11 +12,13 @@ import {
   Title,
   Alert,
   Divider,
+  useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconCheck, IconCopy, IconKey, IconInfoCircle, IconSparkles } from "@tabler/icons-react";
 import { useCreateDeployment } from "./hooks/useCreateDeployment";
 import { useParams } from "@remix-run/react";
+import { CTAButton } from "~/components/CTAButton";
 
 export type CreateTokenFormProps = {
   open: boolean;
@@ -24,6 +26,7 @@ export type CreateTokenFormProps = {
 };
 
 export function CreateDeploymentForm({ open, onClose }: CreateTokenFormProps) {
+  const theme = useMantineTheme();
   const params = useParams();
   const { mutate, data, isLoading } = useCreateDeployment();
   const form = useForm<{ name: string }>({
@@ -55,16 +58,16 @@ export function CreateDeploymentForm({ open, onClose }: CreateTokenFormProps) {
         <Group gap="xs">
           <Box
             style={{
-              width: rem(36),
-              height: rem(36),
-              borderRadius: "8px",
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              width: rem(theme.other.sizes.icon["4xl"]),
+              height: rem(theme.other.sizes.icon["4xl"]),
+              borderRadius: theme.other.borderRadius.md,
+              background: theme.other.brand.gradient,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <IconKey size={20} color="white" />
+            <IconKey size={theme.other.sizes.icon.xl} color={theme.other.text.white} />
           </Box>
           <Title order={3}>Create Deployment Key</Title>
         </Group>
@@ -75,9 +78,20 @@ export function CreateDeploymentForm({ open, onClose }: CreateTokenFormProps) {
           <>
             <Alert 
               icon={<IconInfoCircle size={18} />} 
-              color="violet"
               variant="light"
               radius="md"
+              styles={{
+                root: {
+                  backgroundColor: theme.other.brand.light,
+                  borderColor: theme.other.brand.primary,
+                },
+                icon: {
+                  color: theme.other.brand.primary,
+                },
+                message: {
+                  color: theme.other.text.primary,
+                },
+              }}
             >
               Create a new deployment environment for your app (e.g., Production, Staging, Development)
             </Alert>
@@ -93,7 +107,7 @@ export function CreateDeploymentForm({ open, onClose }: CreateTokenFormProps) {
               styles={{
                 input: {
                   "&:focus": {
-                    borderColor: "#667eea",
+                    borderColor: theme.other.brand.primary,
                   },
                 },
               }}
@@ -108,34 +122,22 @@ export function CreateDeploymentForm({ open, onClose }: CreateTokenFormProps) {
               >
                 Cancel
               </Button>
-              <Button
-                leftSection={<IconSparkles size={18} />}
+              <CTAButton
+                leftSection={<IconSparkles size={theme.other.sizes.icon.lg} />}
                 disabled={!!Object.keys(form.errors).length}
                 loading={isLoading}
                 onClick={() => {
                   mutate(
-                    { ...form.getValues(), appId: params.app ?? "" },
+                    { ...form.getValues(), appId: params.app ?? "", tenant: params.org ?? "" },
                     {
                       onSuccess: () => {
-                        // Don't close immediately - show success state
                       },
                     }
                   );
                 }}
-                variant="gradient"
-                gradient={{ from: "#667eea", to: "#764ba2", deg: 135 }}
-                styles={{
-                  root: {
-                    transition: "all 200ms ease",
-                    "&:hover": {
-                      transform: "translateY(-2px)",
-                      boxShadow: "0 8px 20px rgba(102, 126, 234, 0.35)",
-                    },
-                  },
-                }}
               >
                 Create Deployment
-              </Button>
+              </CTAButton>
             </Group>
           </>
         ) : (
@@ -145,24 +147,24 @@ export function CreateDeploymentForm({ open, onClose }: CreateTokenFormProps) {
               p="xl"
               radius="md"
               style={{
-                background: "linear-gradient(135deg, #f8f9fa 0%, #fff 100%)",
-                borderColor: "#667eea",
+                background: `linear-gradient(135deg, ${theme.other.backgrounds.secondary} 0%, ${theme.other.backgrounds.primary} 100%)`,
+                borderColor: theme.other.brand.primary,
               }}
             >
               <Stack gap="md" align="center">
                 <Box
                   style={{
-                    width: rem(64),
-                    height: rem(64),
-                    borderRadius: "50%",
-                    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                    width: rem(theme.other.sizes.icon["6xl"] || 64),
+                    height: rem(theme.other.sizes.icon["6xl"] || 64),
+                    borderRadius: theme.other.borderRadius.full,
+                    background: theme.other.brand.gradient,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    boxShadow: "0 8px 24px rgba(102, 126, 234, 0.3)",
+                    boxShadow: theme.other.shadows.lg,
                   }}
                 >
-                  <IconCheck size={32} color="white" />
+                  <IconCheck size={theme.other.sizes.icon["3xl"]} color={theme.other.text.white} />
                 </Box>
 
                 <Stack gap="xs" align="center">
@@ -226,26 +228,15 @@ export function CreateDeploymentForm({ open, onClose }: CreateTokenFormProps) {
             </Paper>
 
             <Group justify="center">
-              <Button
+              <CTAButton
                 onClick={() => {
                   form.reset();
                   handleClose();
                 }}
-                variant="gradient"
-                gradient={{ from: "#667eea", to: "#764ba2", deg: 135 }}
                 size="md"
-                styles={{
-                  root: {
-                    transition: "all 200ms ease",
-                    "&:hover": {
-                      transform: "translateY(-2px)",
-                      boxShadow: "0 8px 20px rgba(102, 126, 234, 0.35)",
-                    },
-                  },
-                }}
               >
                 Done
-              </Button>
+              </CTAButton>
             </Group>
           </>
         )}

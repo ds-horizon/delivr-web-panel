@@ -4,14 +4,14 @@ import {
   Stack,
   Group,
   Text,
-  Button,
   Select,
   Skeleton,
   Badge,
   ActionIcon,
   Tooltip,
   Box,
-  LoadingOverlay,
+  Table,
+  useMantineTheme,
 } from "@mantine/core";
 import { IconTrash, IconUserPlus, IconCrown, IconUser } from "@tabler/icons-react";
 
@@ -21,8 +21,8 @@ import { useRemoveCollabarator } from "./hooks/useRemoveCollabarator";
 import { AddCollboratorForm } from "../AddCollboratorForm";
 import { useParams } from "@remix-run/react";
 import { Collaborator } from "./data/getAppCollaborator";
+import { CTAButton } from "~/components/CTAButton";
 
-// Helper to generate initials
 const getInitials = (name: string) => {
   const parts = name.split("@")[0].split(".");
   if (parts.length >= 2) {
@@ -31,17 +31,34 @@ const getInitials = (name: string) => {
   return name.substring(0, 2).toUpperCase();
 };
 
-// Helper to generate avatar color - using indigo/primary theme
-const getAvatarColor = (name: string) => {
-  const colors = ["#6366f1", "#8b5cf6", "#4f46e5", "#7c3aed", "#5b21b6"];
+const getAvatarColorFromTheme = (name: string, theme: any) => {
+  const colors = [
+    theme.other.brand.primary,
+    theme.other.brand.secondary,
+    theme.other.brand.primaryDark,
+    theme.other.brand.tertiary,
+    theme.other.brand.quaternary,
+  ];
   const hash = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
   return colors[hash % colors.length];
 };
 
-export function CollabaratorList() {
+type CollabaratorListProps = {
+  addCollaboratorOpen?: boolean;
+  setAddCollaboratorOpen?: (open: boolean) => void;
+};
+
+export function CollabaratorList({ 
+  addCollaboratorOpen, 
+  setAddCollaboratorOpen 
+}: CollabaratorListProps = {}) {
+  const theme = useMantineTheme();
   const { data, isLoading, isFetching, refetch } = useGetAppCollaboratorList();
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
   const [loadingItems, setLoadingItems] = useState<Set<string>>(new Set());
+  
+  const open = addCollaboratorOpen ?? internalOpen;
+  const setOpen = setAddCollaboratorOpen ?? setInternalOpen;
 
   if (isLoading || isFetching) {
     return (
@@ -59,21 +76,19 @@ export function CollabaratorList() {
     return (
       <Card withBorder padding="xl" radius="md" style={{ textAlign: "center" }}>
         <Stack gap="md" align="center">
-          <IconUser size={48} color="#ccc" />
-          <Text size="lg" fw={500} c="dimmed">
+          <IconUser size={theme.other.sizes.avatar.md} color={theme.other.text.disabled} />
+          <Text size="lg" fw={theme.other.typography.fontWeight.medium} c="dimmed">
             No Collaborators Yet
           </Text>
           <Text size="sm" c="dimmed">
             Add team members to collaborate on this app
           </Text>
-          <Button
-            leftSection={<IconUserPlus size={18} />}
+          <CTAButton
+            leftSection={<IconUserPlus size={theme.other.sizes.icon.lg} />}
             onClick={() => setOpen(true)}
-            variant="gradient"
-            gradient={{ from: "#6366f1", to: "#8b5cf6", deg: 135 }}
           >
             Add Collaborator
-          </Button>
+          </CTAButton>
         </Stack>
       </Card>
     );
@@ -82,44 +97,61 @@ export function CollabaratorList() {
   return (
     <>
       <AddCollboratorForm open={open} onClose={() => setOpen(false)} />
-      
-      <Group justify="flex-end" mb="md">
-        <Button
-          leftSection={<IconUserPlus size={18} />}
-          onClick={() => setOpen(true)}
-          variant="gradient"
-          gradient={{ from: "#6366f1", to: "#8b5cf6", deg: 135 }}
-        >
-          Add Collaborator
-        </Button>
-      </Group>
 
-      <Stack gap="md">
-        {data.map((collaborator) => (
-          <CollaboratorCard
-            key={collaborator.name}
-            collaborator={collaborator}
-            refetch={refetch}
-            isLoading={loadingItems.has(collaborator.name)}
-            onLoadingChange={(loading) => {
-              setLoadingItems((prev) => {
-                const next = new Set(prev);
-                if (loading) {
-                  next.add(collaborator.name);
-                } else {
-                  next.delete(collaborator.name);
-                }
-                return next;
-              });
-            }}
-          />
-        ))}
-      </Stack>
+      <Card withBorder radius="md" padding={0} style={{ overflow: "hidden" }}>
+        <Table horizontalSpacing="lg" verticalSpacing="md" highlightOnHover>
+          <Table.Thead style={{ backgroundColor: theme.other.backgrounds.secondary }}>
+            <Table.Tr>
+              <Table.Th>
+                <Text size="sm" fw={theme.other.typography.fontWeight.semibold} c={theme.other.text.secondary}>
+                  Collaborator
+                </Text>
+              </Table.Th>
+              <Table.Th>
+                <Text size="sm" fw={theme.other.typography.fontWeight.semibold} c={theme.other.text.secondary}>
+                  Role
+                </Text>
+              </Table.Th>
+              <Table.Th>
+                <Text size="sm" fw={theme.other.typography.fontWeight.semibold} c={theme.other.text.secondary}>
+                  Permission
+                </Text>
+              </Table.Th>
+              <Table.Th style={{ width: 100 }}>
+                <Text size="sm" fw={theme.other.typography.fontWeight.semibold} c={theme.other.text.secondary}>
+                  Actions
+                </Text>
+              </Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
+            {data.map((collaborator) => (
+              <CollaboratorRow
+                key={collaborator.name}
+                collaborator={collaborator}
+                refetch={refetch}
+                isLoading={loadingItems.has(collaborator.name)}
+                onLoadingChange={(loading) => {
+                  setLoadingItems((prev) => {
+                    const next = new Set(prev);
+                    if (loading) {
+                      next.add(collaborator.name);
+                    } else {
+                      next.delete(collaborator.name);
+                    }
+                    return next;
+                  });
+                }}
+              />
+            ))}
+          </Table.Tbody>
+        </Table>
+      </Card>
     </>
   );
 }
 
-function CollaboratorCard({
+function CollaboratorRow({
   collaborator,
   refetch,
   isLoading,
@@ -130,13 +162,14 @@ function CollaboratorCard({
   isLoading: boolean;
   onLoadingChange: (loading: boolean) => void;
 }) {
+  const theme = useMantineTheme();
   const params = useParams();
   const { mutate: updatePermission } = useUpdateCollabarator();
   const { mutate: removeCollaborator } = useRemoveCollabarator();
   const [isDeleting, setIsDeleting] = useState(false);
 
   const initials = getInitials(collaborator.name);
-  const avatarColor = getAvatarColor(collaborator.name);
+  const avatarColor = getAvatarColorFromTheme(collaborator.name, theme);
 
   const handlePermissionChange = (value: string | null) => {
     if (!value) return;
@@ -184,97 +217,91 @@ function CollaboratorCard({
   };
 
   return (
-    <Card
-      withBorder
-      padding="lg"
-      radius="md"
-      style={{
-        transition: "all 200ms ease",
-        position: "relative",
-      }}
-      styles={{
-        root: {
-          "&:hover": {
-            boxShadow: "0 4px 16px rgba(99, 102, 241, 0.15)",
-          },
-        },
-      }}
-    >
-      <LoadingOverlay visible={isLoading} />
-      <Group justify="space-between" wrap="nowrap">
-        <Group gap="md" style={{ flex: 1, minWidth: 0 }}>
+    <Table.Tr style={{ opacity: isLoading ? 0.5 : 1 }}>
+      <Table.Td>
+        <Group gap="md" wrap="nowrap">
           <Box
             style={{
-              width: 48,
-              height: 48,
-              borderRadius: "50%",
+              width: theme.other.sizes.avatar.sm,
+              height: theme.other.sizes.avatar.sm,
+              borderRadius: theme.other.borderRadius.full,
               background: `linear-gradient(135deg, ${avatarColor} 0%, ${avatarColor}dd 100%)`,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: `0 2px 8px ${avatarColor}40`,
+              boxShadow: theme.other.shadows.sm,
               flexShrink: 0,
             }}
           >
-            <Text size="lg" fw={700} c="white">
+            <Text size="xs" fw={theme.other.typography.fontWeight.bold} c="white">
               {initials}
             </Text>
           </Box>
-
-          <Box style={{ flex: 1, minWidth: 0 }}>
-            <Text fw={600} size="md" style={{ wordBreak: "break-all" }}>
-              {collaborator.name}
-            </Text>
-            <Group gap="xs" mt={4}>
-              {collaborator.permission === "Owner" ? (
-                <Badge
-                  leftSection={<IconCrown size={12} />}
-                  variant="light"
-                  color="indigo"
-                  size="sm"
-                >
-                  Owner
-                </Badge>
-              ) : (
-                <Badge variant="light" color="indigo" size="sm">
-                  Collaborator
-                </Badge>
-              )}
-            </Group>
-          </Box>
+          <Text fw={theme.other.typography.fontWeight.medium} size="sm" style={{ wordBreak: "break-all" }}>
+            {collaborator.name}
+          </Text>
         </Group>
-
-        <Group gap="sm" wrap="nowrap">
-          <Select
-            data={[
-              { value: "Owner", label: "Owner" },
-              { value: "Collaborator", label: "Collaborator" },
-            ]}
-            value={collaborator.permission}
-            onChange={handlePermissionChange}
-            disabled={isLoading}
-            style={{ width: 150 }}
-            styles={{
-              input: {
-                borderColor: "#667eea",
-              },
+      </Table.Td>
+      <Table.Td>
+        {collaborator.permission === "Owner" ? (
+          <Badge
+            leftSection={<IconCrown size={12} />}
+            variant="light"
+            style={{
+              backgroundColor: theme.other.brand.light,
+              color: theme.other.brand.primaryDark,
             }}
-          />
-
-          <Tooltip label="Remove Collaborator">
-            <ActionIcon
-              variant="light"
-              color="red"
-              size="lg"
-              onClick={handleDelete}
-              loading={isDeleting}
-              disabled={isLoading}
-            >
-              <IconTrash size={18} />
-            </ActionIcon>
-          </Tooltip>
-        </Group>
-      </Group>
-    </Card>
+            size="sm"
+          >
+            Owner
+          </Badge>
+        ) : (
+          <Badge 
+            variant="light" 
+            style={{
+              backgroundColor: theme.other.brand.light,
+              color: theme.other.brand.primaryDark,
+            }}
+            size="sm"
+          >
+            Collaborator
+          </Badge>
+        )}
+      </Table.Td>
+      <Table.Td>
+        <Select
+          data={[
+            { value: "Owner", label: "Owner" },
+            { value: "Collaborator", label: "Collaborator" },
+          ]}
+          value={collaborator.permission}
+          onChange={handlePermissionChange}
+          disabled={isLoading}
+          size="sm"
+          styles={{
+            input: {
+              borderColor: theme.other.borders.primary,
+              "&:focus": {
+                borderColor: theme.other.brand.primary,
+              },
+            },
+          }}
+        />
+      </Table.Td>
+      <Table.Td>
+        <Tooltip label="Remove Collaborator">
+          <ActionIcon
+            variant="light"
+            color="red"
+            size="md"
+            onClick={handleDelete}
+            loading={isDeleting}
+            disabled={isLoading}
+          >
+            <IconTrash size={theme.other.sizes.icon.md} />
+          </ActionIcon>
+        </Tooltip>
+      </Table.Td>
+    </Table.Tr>
   );
 }

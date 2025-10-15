@@ -4,17 +4,21 @@ import {
   UnstyledButton,
   Stack,
   ScrollArea,
-  Button,
+  useMantineTheme,
+  Collapse,
 } from "@mantine/core";
 import {
   IconPlus,
   IconBuilding,
   IconAppWindow,
+  IconChevronDown,
+  IconChevronUp,
 } from "@tabler/icons-react";
+import { useState } from "react";
 import { useNavigate } from "@remix-run/react";
 import { route } from "routes-gen";
 import { useGetAppListForOrg } from "../../AppList/hooks/useGetAppListForOrg";
-import { backgrounds, text, borders } from "~/theme";
+import { CTAButton } from "~/components/CTAButton";
 
 type Organization = {
   id: string;
@@ -36,12 +40,17 @@ function OrgWithApps({
   isActive,
   currentAppId,
   userEmail,
+  isExpanded,
+  onToggleExpand,
 }: {
   org: Organization;
   isActive: boolean;
   currentAppId?: string;
   userEmail: string;
+  isExpanded: boolean;
+  onToggleExpand: () => void;
 }) {
+  const theme = useMantineTheme();
   const navigate = useNavigate();
 
   const { data: apps = [], isLoading } = useGetAppListForOrg({
@@ -51,18 +60,18 @@ function OrgWithApps({
 
   return (
     <Box>
-      {/* Organization Header */}
       <UnstyledButton
         onClick={() => {
+          onToggleExpand();
           navigate(route("/dashboard/:org/apps", { org: org.id }));
         }}
         style={{
           width: "100%",
-          padding: "12px 16px",
-          borderRadius: "12px",
-          transition: "all 150ms ease",
+          padding: `${theme.other.spacing.md} ${theme.other.spacing.lg}`,
+          borderRadius: theme.other.borderRadius.md,
+          transition: theme.other.transitions.fast,
           background: isActive
-            ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)"
+            ? theme.other.brand.gradient
             : "transparent",
           border: "1px solid transparent",
         }}
@@ -70,23 +79,23 @@ function OrgWithApps({
           root: {
             "&:hover": {
               background: isActive
-                ? "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)"
-                : backgrounds.hover,
+                ? theme.other.brand.gradient
+                : theme.other.backgrounds.hover,
             },
           },
         }}
       >
-        <Box style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <Box style={{ display: "flex", alignItems: "center", gap: theme.other.spacing.md }}>
           <IconBuilding 
-            size={20} 
-            color={isActive ? "white" : text.secondary}
+            size={theme.other.sizes.icon.xl} 
+            color={isActive ? theme.other.text.white : theme.other.text.secondary}
             stroke={1.5}
           />
           <Box style={{ flex: 1, minWidth: 0 }}>
             <Text
-              fw={600}
+              fw={theme.other.typography.fontWeight.semibold}
               size="md"
-              c={isActive ? "white" : text.secondary}
+              c={isActive ? "white" : theme.other.text.secondary}
               style={{
                 overflow: "hidden",
                 textOverflow: "ellipsis",
@@ -96,89 +105,112 @@ function OrgWithApps({
               {org.orgName}
             </Text>
           </Box>
+          <Box
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleExpand();
+            }}
+            style={{
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              padding: theme.other.spacing.xxs,
+            }}
+          >
+            {isExpanded ? (
+              <IconChevronUp 
+                size={theme.other.sizes.icon.md} 
+                color={isActive ? theme.other.text.white : theme.other.text.secondary}
+              />
+            ) : (
+              <IconChevronDown 
+                size={theme.other.sizes.icon.md} 
+                color={isActive ? theme.other.text.white : theme.other.text.secondary}
+              />
+            )}
+          </Box>
         </Box>
       </UnstyledButton>
 
-      {/* Apps List - Always Visible */}
-      <Box style={{ paddingLeft: "20px", marginTop: "12px" }}>
-        {isLoading ? (
-          <Text size="xs" c="dimmed" p="xs">
-            Loading apps...
-          </Text>
-        ) : apps.length === 0 ? (
-          <Text size="xs" c="dimmed" p="xs">
-            No apps
-          </Text>
-        ) : (
-          <Stack gap="xs">
-            {apps.map((app) => {
-              const isAppActive = app.id === currentAppId;
+      <Collapse in={isExpanded}>
+        <Box style={{ paddingLeft: theme.other.spacing.lg, marginTop: theme.other.spacing.sm, marginBottom: theme.other.spacing.sm }}>
+          {isLoading ? (
+            <Text size="xs" c="dimmed" p="xs">
+              Loading apps...
+            </Text>
+          ) : apps.length === 0 ? (
+            <Text size="xs" c="dimmed" p="xs">
+              No apps
+            </Text>
+          ) : (
+            <Stack gap="xxs">
+              {apps.map((app) => {
+                const isAppActive = app.id === currentAppId;
 
-              return (
-                <UnstyledButton
-                  key={app.id}
-                  onClick={() => {
-                    navigate(
-                      route("/dashboard/:org/:app", {
-                        org: org.id,
-                        app: app.id,
-                      })
-                    );
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: "8px 12px",
-                    borderRadius: "8px",
-                    transition: "all 150ms ease",
-                    backgroundColor: isAppActive
-                      ? "#eef2ff"
-                      : "transparent",
-                    borderLeft: isAppActive
-                      ? `3px solid #6366f1`
-                      : "3px solid transparent",
-                  }}
-                  styles={{
-                    root: {
-                      "&:hover": {
-                        backgroundColor: isAppActive
-                          ? "#eef2ff"
-                          : backgrounds.hover,
-                      },
-                    },
-                  }}
-                >
-                  <Box
+                return (
+                  <UnstyledButton
+                    key={app.id}
+                    onClick={() => {
+                      navigate(
+                        route("/dashboard/:org/:app", {
+                          org: org.id,
+                          app: app.id,
+                        })
+                      );
+                    }}
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
+                      width: "100%",
+                      padding: `${theme.other.spacing.sm} ${theme.other.spacing.md}`,
+                      paddingBottom: theme.other.spacing.md,
+                      borderRadius: 0,
+                      transition: theme.other.transitions.fast,
+                      backgroundColor: isAppActive
+                        ? theme.other.brand.light
+                        : "transparent",
+                    }}
+                    styles={{
+                      root: {
+                        "&:hover": {
+                          backgroundColor: isAppActive
+                            ? theme.other.brand.light
+                            : theme.other.backgrounds.hover,
+                        },
+                      },
                     }}
                   >
-                    <IconAppWindow 
-                      size={16} 
-                      color={isAppActive ? "#6366f1" : text.secondary}
-                      stroke={1.5}
-                    />
-                    <Text
-                      fw={isAppActive ? 600 : 500}
-                      size="sm"
-                      c={isAppActive ? "#4f46e5" : text.secondary}
+                    <Box
                       style={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        flex: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: theme.other.spacing.sm,
                       }}
                     >
-                      {app.name}
-                    </Text>
-                  </Box>
-                </UnstyledButton>
-              );
-            })}
-          </Stack>
-        )}
-      </Box>
+                      <IconAppWindow 
+                        size={theme.other.sizes.icon.md} 
+                        color={isAppActive ? theme.other.brand.primary : theme.other.text.secondary}
+                        stroke={1.5}
+                      />
+                      <Text
+                        fw={isAppActive ? theme.other.typography.fontWeight.semibold : theme.other.typography.fontWeight.medium}
+                        size="sm"
+                        c={isAppActive ? theme.other.brand.primaryDark : theme.other.text.secondary}
+                        style={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          flex: 1,
+                        }}
+                      >
+                        {app.name}
+                      </Text>
+                    </Box>
+                  </UnstyledButton>
+                );
+              })}
+            </Stack>
+          )}
+        </Box>
+      </Collapse>
     </Box>
   );
 }
@@ -189,45 +221,45 @@ export function CombinedSidebar({
   currentAppId,
   userEmail,
 }: CombinedSidebarProps) {
+  const theme = useMantineTheme();
   const navigate = useNavigate();
+  const [expandedOrgId, setExpandedOrgId] = useState<string | null>(currentOrgId || null);
 
   return (
     <Box
       style={{
-        width: "280px",
+        width: theme.other.sizes.sidebar.width,
         height: "100%",
         position: "relative",
         display: "flex",
         flexDirection: "column",
-        background: backgrounds.tertiary,
-        borderRight: `1px solid ${borders.primary}`,
+        background: theme.other.backgrounds.tertiary,
+        borderRight: `1px solid ${theme.other.borders.primary}`,
       }}
     >
-      {/* Navigation Content */}
       <Box
         style={{
           flex: 1,
           display: "flex",
           flexDirection: "column",
-          paddingRight: "16px",
+          paddingRight: theme.other.spacing.lg,
         }}
       >
-        <Stack gap="xs" style={{ paddingLeft: "16px", paddingTop: "16px", flex: 1 }}>
-          <ScrollArea style={{ height: "calc(100vh - 160px)" }}>
+        <Stack gap="xs" style={{ paddingLeft: theme.other.spacing.lg, paddingTop: theme.other.spacing["3xl"], paddingBottom: theme.other.spacing.md, flex: 1 }}>
+          <ScrollArea style={{ height: "calc(100vh - 220px)" }}>
             <Text
-              size="xs"
-              fw={700}
-              c={text.disabled}
+              size="sm"
+              fw={theme.other.typography.fontWeight.semibold}
+              c={theme.other.text.disabled}
               style={{
-                letterSpacing: "1px",
-                marginTop: "8px",
-                marginBottom: "16px",
-                paddingLeft: "16px",
+                letterSpacing: theme.other.typography.letterSpacing.wider,
+                marginBottom: theme.other.spacing.md,
+                paddingLeft: theme.other.spacing.lg,
               }}
             >
               ORGANIZATIONS
             </Text>
-            <Stack gap="xs">
+            <Stack gap="md">
               {organizations.map((org) => {
                 const isActive = org.id === currentOrgId;
 
@@ -238,6 +270,10 @@ export function CombinedSidebar({
                     isActive={isActive}
                     currentAppId={currentAppId}
                     userEmail={userEmail}
+                    isExpanded={expandedOrgId === org.id}
+                    onToggleExpand={() => {
+                      setExpandedOrgId(expandedOrgId === org.id ? null : org.id);
+                    }}
                   />
                 );
               })}
@@ -245,34 +281,26 @@ export function CombinedSidebar({
           </ScrollArea>
         </Stack>
 
-        {/* Create Organization Button */}
         <Box
           style={{
-            paddingLeft: "16px",
-            paddingTop: "12px",
-            paddingBottom: "16px",
-            borderTop: `1px solid ${borders.primary}`,
+            paddingLeft: theme.other.spacing.lg,
+            paddingTop: theme.other.spacing.md,
+            paddingBottom: theme.other.spacing.lg,
+            borderTop: `1px solid ${theme.other.borders.primary}`,
           }}
         >
-          <Button
+          <CTAButton
             fullWidth
-            leftSection={<IconPlus size={18} />}
+            leftSection={<IconPlus size={theme.other.sizes.icon.lg} />}
             onClick={() => navigate(route("/dashboard/create/org"))}
-            variant="gradient"
-            gradient={{ from: "#6366f1", to: "#8b5cf6", deg: 135 }}
             styles={{
               root: {
-                boxShadow: "0 4px 12px rgba(99, 102, 241, 0.3)",
-                transition: "all 200ms ease",
-                "&:hover": {
-                  boxShadow: "0 6px 16px rgba(99, 102, 241, 0.4)",
-                  transform: "translateY(-1px)",
-                },
+                boxShadow: theme.other.shadows.md,
               },
             }}
           >
             Create Organization
-          </Button>
+          </CTAButton>
         </Box>
       </Box>
     </Box>

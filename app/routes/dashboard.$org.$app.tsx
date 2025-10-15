@@ -1,5 +1,5 @@
-import { Box, Button, Group, Tabs, rem } from "@mantine/core";
-import { IconRocket, IconKey, IconUsers, IconList } from "@tabler/icons-react";
+import { Box, Button, Group, Tabs, rem, useMantineTheme } from "@mantine/core";
+import { IconRocket, IconKey, IconUsers, IconList, IconUserPlus } from "@tabler/icons-react";
 import { CollabaratorList } from "~/components/Pages/components/CollaboratorList";
 import { DeploymentList } from "~/components/Pages/DeploymentList";
 import { useLoaderData, useParams, useNavigate } from "@remix-run/react";
@@ -8,27 +8,44 @@ import { authenticateLoaderRequest } from "~/utils/authenticate";
 import { useState } from "react";
 import { CreateDeploymentForm } from "~/components/Pages/components/CreateDeploymentForm";
 import { useGetDeploymentsForApp } from "~/components/Pages/DeploymentList/hooks/getDeploymentsForApp";
+import { CTAButton } from "~/components/CTAButton";
 
 export const loader = authenticateLoaderRequest();
 
 export default function AppDetails() {
+  const theme = useMantineTheme();
   const _user = useLoaderData<User>();
   const params = useParams();
   const navigate = useNavigate();
   const [createDeploymentOpen, setCreateDeploymentOpen] = useState(false);
+  const [addCollaboratorOpen, setAddCollaboratorOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string | null>("deployments");
 
   const { refetch: refetchDeployments } = useGetDeploymentsForApp();
 
-  const iconStyle = { width: rem(16), height: rem(16) };
+  const iconStyle = { width: rem(theme.other.sizes.icon.md), height: rem(theme.other.sizes.icon.md) };
 
   return (
     <Box>
-      <Group justify="space-between" mb="md">
+      <Group justify="space-between" mb="lg">
         <Tabs 
           value={activeTab} 
           onChange={setActiveTab}
-          color="indigo"
+          variant="pills"
+          styles={{
+            tab: {
+              borderRadius: theme.other.borderRadius.md,
+              padding: `${theme.other.spacing.sm} ${theme.other.spacing.lg}`,
+              transition: theme.other.transitions.fast,
+              "&[data-active]": {
+                background: theme.other.brand.gradient,
+                color: theme.other.text.white,
+              },
+              "&:hover": {
+                backgroundColor: theme.other.backgrounds.hover,
+              },
+            },
+          }}
         >
           <Tabs.List>
             <Tabs.Tab value="deployments" leftSection={<IconList style={iconStyle} />}>
@@ -43,47 +60,49 @@ export default function AppDetails() {
         {activeTab === "deployments" && (
           <Group gap="sm">
             <Button
-              leftSection={<IconKey size={18} />}
+              leftSection={<IconKey size={theme.other.sizes.icon.lg} />}
               onClick={() => setCreateDeploymentOpen(true)}
               variant="default"
               styles={{
                 root: {
-                  borderColor: "#e5e7eb",
+                  borderColor: theme.other.borders.primary,
                   "&:hover": {
-                    background: "#f9fafb",
-                    borderColor: "#6366f1",
+                    background: theme.other.backgrounds.subtle,
+                    borderColor: theme.other.brand.primary,
                   },
                 },
               }}
             >
               Create Deployment Key
             </Button>
-            <Button
-              leftSection={<IconRocket size={18} />}
+            <CTAButton
+              leftSection={<IconRocket size={theme.other.sizes.icon.lg} />}
               onClick={() => {
                 navigate(`/dashboard/${params.org}/${params.app}/create-release`);
               }}
-              variant="gradient"
-              gradient={{ from: "#6366f1", to: "#8b5cf6", deg: 135 }}
-              styles={{
-                root: {
-                  boxShadow: "0 4px 12px rgba(99, 102, 241, 0.3)",
-                  transition: "all 200ms ease",
-                  "&:hover": {
-                    boxShadow: "0 6px 16px rgba(99, 102, 241, 0.4)",
-                    transform: "translateY(-1px)",
-                  },
-                },
-              }}
             >
               Create Release
-            </Button>
+            </CTAButton>
           </Group>
+        )}
+        
+        {activeTab === "collaborators" && (
+          <CTAButton
+            leftSection={<IconUserPlus size={theme.other.sizes.icon.lg} />}
+            onClick={() => setAddCollaboratorOpen(true)}
+          >
+            Add Collaborator
+          </CTAButton>
         )}
       </Group>
 
       {activeTab === "deployments" && <DeploymentList />}
-      {activeTab === "collaborators" && <CollabaratorList />}
+      {activeTab === "collaborators" && (
+        <CollabaratorList 
+          addCollaboratorOpen={addCollaboratorOpen}
+          setAddCollaboratorOpen={setAddCollaboratorOpen}
+        />
+      )}
 
       {/* Create Deployment Modal */}
       <CreateDeploymentForm

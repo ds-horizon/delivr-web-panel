@@ -14,6 +14,7 @@ import {
   Divider,
   Paper,
   Title,
+  useMantineTheme,
 } from "@mantine/core";
 import {
   IconRocket,
@@ -66,6 +67,7 @@ function ReleaseCard({
   release: ReleaseListResponse;
   onClick: () => void;
 }) {
+  const theme = useMantineTheme();
   const isActive = release.status;
 
   return (
@@ -75,42 +77,41 @@ function ReleaseCard({
       radius="md"
       style={{
         cursor: "pointer",
-        transition: "all 200ms ease",
+        transition: theme.other.transitions.normal,
         background: isActive
-          ? "linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%)"
-          : "white",
-        borderLeft: isActive ? "4px solid #667eea" : "1px solid #e9ecef",
+          ? `linear-gradient(135deg, rgba(${parseInt(theme.other.brand.primary.slice(1, 3), 16)}, ${parseInt(theme.other.brand.primary.slice(3, 5), 16)}, ${parseInt(theme.other.brand.primary.slice(5, 7), 16)}, 0.03) 0%, rgba(${parseInt(theme.other.brand.secondary.slice(1, 3), 16)}, ${parseInt(theme.other.brand.secondary.slice(3, 5), 16)}, ${parseInt(theme.other.brand.secondary.slice(5, 7), 16)}, 0.03) 100%)`
+          : theme.other.backgrounds.primary,
+        borderLeft: isActive ? `4px solid ${theme.other.brand.primary}` : `1px solid ${theme.other.borders.secondary}`,
       }}
       styles={{
         root: {
           "&:hover": {
             transform: "translateY(-2px)",
-            boxShadow: "0 12px 32px rgba(102, 126, 234, 0.15)",
-            borderColor: "#667eea",
+            boxShadow: theme.other.shadows.lg,
+            borderColor: theme.other.brand.primary,
           },
         },
       }}
       onClick={onClick}
     >
       <Group justify="space-between" wrap="nowrap">
-        {/* Left: Icon + Version Info */}
         <Group gap="md" style={{ flex: 1 }}>
           <Box
             style={{
-              width: 40,
-              height: 40,
-              borderRadius: "8px",
+              width: theme.other.sizes.icon["4xl"],
+              height: theme.other.sizes.icon["4xl"],
+              borderRadius: theme.other.borderRadius.md,
               background: isActive
-                ? "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-                : "linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%)",
+                ? theme.other.brand.gradient
+                : `linear-gradient(135deg, ${theme.other.borders.secondary} 0%, ${theme.other.borders.light} 100%)`,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: isActive ? "0 4px 12px rgba(102, 126, 234, 0.3)" : "none",
+              boxShadow: isActive ? theme.other.shadows.md : "none",
               flexShrink: 0,
             }}
           >
-            <IconRocket size={20} color="white" />
+            <IconRocket size={theme.other.sizes.icon.xl} color={theme.other.text.white} />
           </Box>
           
           <Box style={{ flex: 1, minWidth: 0 }}>
@@ -149,10 +150,10 @@ function ReleaseCard({
         <Group gap="md" wrap="nowrap">
           <Box style={{ minWidth: 200 }}>
             <Group justify="space-between" mb={6}>
-              <Text size="xs" c="dimmed" fw={600}>
+              <Text size="xs" c="dimmed" fw={theme.other.typography.fontWeight.semibold}>
                 Rollout
               </Text>
-              <Text size="sm" fw={700} style={{ color: "#667eea" }}>
+              <Text size="sm" fw={theme.other.typography.fontWeight.bold} style={{ color: theme.other.brand.primary }}>
                 {release.rollout}%
               </Text>
             </Group>
@@ -162,10 +163,10 @@ function ReleaseCard({
               radius="xl"
               styles={{
                 root: {
-                  background: "#e9ecef",
+                  background: theme.other.borders.secondary,
                 },
                 section: {
-                  background: "linear-gradient(90deg, #667eea 0%, #764ba2 100%)",
+                  background: `linear-gradient(90deg, ${theme.other.brand.primary} 0%, ${theme.other.brand.secondary} 100%)`,
                 },
               }}
             />
@@ -186,6 +187,7 @@ function ReleaseCard({
 }
 
 export function ReleaseListForDeploymentTable() {
+  const theme = useMantineTheme();
   const params = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -193,6 +195,7 @@ export function ReleaseListForDeploymentTable() {
     useGetReleaseListForDeployment({
       deploymentName: searchParams.get("deployment") ?? "",
       appId: params.app ?? "",
+      tenant: params.org ?? "",
     });
 
   useEffect(() => {
@@ -215,7 +218,7 @@ export function ReleaseListForDeploymentTable() {
     return (
       <Card withBorder padding="xl" radius="md" mt="xl" style={{ textAlign: "center" }}>
         <Stack gap="md" align="center">
-          <IconAlertCircle size={48} color="#fa5252" />
+          <IconAlertCircle size={theme.other.sizes.avatar.md} color={theme.other.text.red} />
           <Title order={3} c="red">
             Something Went Wrong
           </Title>

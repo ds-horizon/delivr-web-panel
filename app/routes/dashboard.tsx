@@ -1,10 +1,4 @@
-import {
-  Flex,
-  Group,
-  Text,
-  Box,
-  Skeleton,
-} from "@mantine/core";
+import { Flex, Group, Text, Box, Skeleton, useMantineTheme } from "@mantine/core";
 import { IconRocket } from "@tabler/icons-react";
 import { Outlet, useLoaderData, useNavigate, useParams, useLocation } from "@remix-run/react";
 import { route } from "routes-gen";
@@ -18,15 +12,14 @@ import { useGetOrgList } from "~/components/Pages/components/OrgListNavbar/hooks
 export const loader = authenticateLoaderRequest();
 
 export default function Dashboard() {
+  const theme = useMantineTheme();
   const user = useLoaderData<User>();
   const navigate = useNavigate();
   const params = useParams();
   const location = useLocation();
   const { data: orgs = [], isLoading: orgsLoading } = useGetOrgList();
 
-  // Check if we're on the main dashboard page (organizations list)
   const isMainDashboard = location.pathname === "/dashboard";
-  // Show sidebar if we have orgs AND we're not on main dashboard
   const showSidebar = orgs.length > 0 && !isMainDashboard;
 
   return (
@@ -44,13 +37,12 @@ export default function Dashboard() {
         </Flex>
       ) : (
         <Flex h="100vh" direction="column">
-          {/* Common Header with Linear Gradient */}
           <Box
             style={{
-              background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+              background: theme.other.brand.gradient,
               borderBottom: "none",
-              paddingTop: "1rem",
-              paddingBottom: "1rem",
+              paddingTop: theme.other.spacing.lg,
+              paddingBottom: theme.other.spacing.lg,
             }}
           >
             <Flex align="center" justify="space-between" h="100%" px="lg">
@@ -59,14 +51,14 @@ export default function Dashboard() {
                 style={{ cursor: "pointer" }} 
                 onClick={() => navigate(route("/dashboard"))}
               >
-                <IconRocket size={32} color="white" stroke={2} />
+                <IconRocket size={theme.other.sizes.icon["3xl"]} color={theme.other.text.white} stroke={2} />
                 <Text 
                   size="xl" 
-                  fw={700} 
+                  fw={theme.other.typography.fontWeight.bold} 
                   c="white"
                   style={{
-                    fontSize: "24px",
-                    letterSpacing: "0.5px",
+                    fontSize: theme.other.typography.fontSize["2xl"],
+                    letterSpacing: theme.other.typography.letterSpacing.wide,
                   }}
                 >
                   Delivr
@@ -76,7 +68,6 @@ export default function Dashboard() {
             </Flex>
           </Box>
 
-          {/* Content Area - with or without sidebar */}
           <Flex style={{ flex: 1, overflow: "hidden" }}>
             {showSidebar && (
               <CombinedSidebar
@@ -86,7 +77,7 @@ export default function Dashboard() {
                 userEmail={user.user.email}
               />
             )}
-            <Box style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
+            <Box style={{ flex: 1, overflowY: "auto", padding: theme.other.spacing["2xl"] }}>
               <Outlet />
             </Box>
           </Flex>

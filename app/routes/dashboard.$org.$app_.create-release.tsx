@@ -19,6 +19,7 @@ import {
   Modal,
   Alert,
   Loader,
+  useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useState, useMemo } from "react";
@@ -46,11 +47,12 @@ interface ReleaseFormData {
 }
 
 export default function CreateReleasePage() {
+  const theme = useMantineTheme();
   const navigate = useNavigate();
   const params = useParams();
   const user = useLoaderData<User>();
   
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState<number>(0);
   const [directoryBlob, setDirectoryBlob] = useState<Blob | null>(null);
   const [directoryName, setDirectoryName] = useState<string>("");
   const [resetTrigger, setResetTrigger] = useState<number>(0);
@@ -198,7 +200,7 @@ export default function CreateReleasePage() {
 
       {/* Stepper */}
       <Card withBorder shadow="sm" p="xl">
-        <Stepper active={active} onStepClick={setActive} breakpoint="sm">
+        <Stepper active={active} onStepClick={(stepIndex: number) => setActive(stepIndex)}>
           {/* Step 1: Upload Directory */}
           <Stepper.Step label="Upload" description="Select your app bundle">
             <Box mt="xl">
@@ -215,8 +217,8 @@ export default function CreateReleasePage() {
                   padding="xl"
                   radius="md"
                   style={{
-                    background: "linear-gradient(135deg, #f8f9fa 0%, #fff 100%)",
-                    borderColor: "#e9ecef",
+                    background: `linear-gradient(135deg, ${theme.other.backgrounds.secondary} 0%, ${theme.other.backgrounds.primary} 100%)`,
+                    borderColor: theme.other.borders.secondary,
                   }}
                 >
                   <Stack gap="md" align="center" py="xl">
@@ -224,15 +226,15 @@ export default function CreateReleasePage() {
                       style={{
                         width: rem(80),
                         height: rem(80),
-                        borderRadius: "50%",
-                        background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                        borderRadius: theme.other.borderRadius.full,
+                        background: theme.other.brand.gradient,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        boxShadow: "0 8px 24px rgba(99, 102, 241, 0.3)",
+                        boxShadow: theme.other.shadows.lg,
                       }}
                     >
-                      <IconFolderOpen size={40} color="white" />
+                      <IconFolderOpen size={theme.other.sizes.icon["4xl"]} color={theme.other.text.white} />
                     </Box>
                     
                     <Stack gap="xs" align="center">
@@ -253,10 +255,10 @@ export default function CreateReleasePage() {
                       withBorder
                       p="md"
                       radius="md"
-                      style={{ width: "100%", background: "#f8f9fa" }}
+                      style={{ width: "100%", background: theme.other.backgrounds.secondary }}
                     >
                       <Group gap="xs" wrap="nowrap">
-                        <IconUpload size={16} style={{ color: "#6366f1", flexShrink: 0 }} />
+                        <IconUpload size={theme.other.sizes.icon.md} style={{ color: theme.other.brand.primary, flexShrink: 0 }} />
                         <Text size="xs" c="dimmed">
                           Supported: All file types • We'll create a ZIP archive automatically
                         </Text>
@@ -316,9 +318,9 @@ export default function CreateReleasePage() {
                     </Text>
                     <Text
                       size="xl"
-                      fw={700}
+                      fw={theme.other.typography.fontWeight.bold}
                       style={{
-                        color: "#6366f1",
+                        color: theme.other.brand.primary,
                       }}
                     >
                       {form.values.rollout}%
@@ -340,12 +342,12 @@ export default function CreateReleasePage() {
                       ]}
                       styles={{
                         track: {
-                          background: "linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%)",
+                          background: `linear-gradient(90deg, ${theme.other.brand.primary} 0%, ${theme.other.brand.secondary} 100%)`,
                         },
                         thumb: {
                           borderWidth: 2,
-                          borderColor: "#6366f1",
-                          backgroundColor: "white",
+                          borderColor: theme.other.brand.primary,
+                          backgroundColor: theme.other.backgrounds.primary,
                         },
                       }}
                     />
@@ -384,7 +386,7 @@ export default function CreateReleasePage() {
             <Button 
               onClick={nextStep}
               variant="gradient"
-              gradient={{ from: "#6366f1", to: "#8b5cf6", deg: 135 }}
+              gradient={{ from: theme.other.brand.primary, to: theme.other.brand.secondary, deg: 135 }}
             >
               Next Step
             </Button>
@@ -399,7 +401,7 @@ export default function CreateReleasePage() {
                 }
               }}
               variant="gradient"
-              gradient={{ from: "#6366f1", to: "#8b5cf6", deg: 135 }}
+              gradient={{ from: theme.other.brand.primary, to: theme.other.brand.secondary, deg: 135 }}
             >
               Review Release
             </Button>
@@ -413,7 +415,7 @@ export default function CreateReleasePage() {
         onClose={() => !isUploading && setReviewModalOpened(false)}
         title={
           <Group gap="xs">
-            <IconEye size={24} style={{ color: "#6366f1" }} />
+            <IconEye size={theme.other.sizes.icon["2xl"]} style={{ color: theme.other.brand.primary }} />
             <Title order={3}>Review Your Release</Title>
           </Group>
         }
@@ -442,9 +444,9 @@ export default function CreateReleasePage() {
                 gap: "16px",
               }}
             >
-              <Loader size="lg" color="#6366f1" />
+              <Loader size="lg" color={theme.other.brand.primary} />
               <Stack gap="xs" align="center">
-                <Text fw={600} size="lg">
+                <Text fw={theme.other.typography.fontWeight.semibold} size="lg">
                   Creating Release...
                 </Text>
                 <Text size="sm" c="dimmed">
@@ -457,7 +459,7 @@ export default function CreateReleasePage() {
             Please review all the details before creating the release. Once created, this cannot be undone.
           </Text>
 
-          <Card withBorder p="lg" style={{ background: "#f8f9fa" }}>
+          <Card withBorder p="lg" style={{ background: theme.other.backgrounds.secondary }}>
             <Stack gap="md">
               <Box>
                 <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
@@ -491,8 +493,8 @@ export default function CreateReleasePage() {
                 </Text>
                 <Stack gap="xs" mt="xs">
                   <Group justify="space-between">
-                    <Text size="sm" fw={500}>Rollout:</Text>
-                    <Text size="sm" fw={700} style={{ color: "#6366f1" }}>
+                    <Text size="sm" fw={theme.other.typography.fontWeight.medium}>Rollout:</Text>
+                    <Text size="sm" fw={theme.other.typography.fontWeight.bold} style={{ color: theme.other.brand.primary }}>
                       {form.values.rollout}%
                     </Text>
                   </Group>
@@ -534,11 +536,11 @@ export default function CreateReleasePage() {
             </Button>
             <Button
               leftSection={!isUploading && <IconCheck size={18} />}
-              onClick={handleSubmit}
+              onClick={() => handleSubmit()}
               loading={isUploading}
               disabled={isUploading}
               variant="gradient"
-              gradient={{ from: "#6366f1", to: "#8b5cf6", deg: 135 }}
+              gradient={{ from: theme.other.brand.primary, to: theme.other.brand.secondary, deg: 135 }}
             >
               {isUploading ? "Creating..." : "Create Release"}
             </Button>

@@ -18,15 +18,18 @@ import {
   rem,
   Alert,
   Divider,
+  useMantineTheme,
 } from "@mantine/core";
 import { ReleaseListResponse } from "../ReleaseListForDeploymentTable/data/getReleaseListForDeployment";
 import { useNavigate, useParams, useSearchParams } from "@remix-run/react";
 import { IconHelpOctagon, IconEdit, IconInfoCircle, IconSparkles } from "@tabler/icons-react";
 import { useUpdateReleaseDataForDeployment } from "./hooks/useUpdateReleaseDataForDeployment";
+import { CTAButton } from "~/components/CTAButton";
 
 type ReleaseEditProps = { data: ReleaseListResponse; refetch: () => void };
 
 export function ReleaseEditFormModal({ data, refetch }: ReleaseEditProps) {
+  const theme = useMantineTheme();
   const params = useParams();
   const { mutate, isLoading } = useUpdateReleaseDataForDeployment();
   const [serachParams, setSearchParams] = useSearchParams();
@@ -88,16 +91,16 @@ export function ReleaseEditFormModal({ data, refetch }: ReleaseEditProps) {
         <Group gap="xs">
           <Box
             style={{
-              width: rem(36),
-              height: rem(36),
-              borderRadius: "8px",
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              width: rem(theme.other.sizes.icon["4xl"]),
+              height: rem(theme.other.sizes.icon["4xl"]),
+              borderRadius: theme.other.borderRadius.md,
+              background: theme.other.brand.gradient,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <IconEdit size={20} color="white" />
+            <IconEdit size={theme.other.sizes.icon.xl} color={theme.other.text.white} />
           </Box>
           <Title order={3}>Edit Release</Title>
         </Group>
@@ -108,9 +111,20 @@ export function ReleaseEditFormModal({ data, refetch }: ReleaseEditProps) {
       <Stack gap="lg">
         <Alert 
           icon={<IconInfoCircle size={18} />} 
-          color="violet"
           variant="light"
           radius="md"
+          styles={{
+            root: {
+              backgroundColor: theme.other.brand.light,
+              borderColor: theme.other.brand.primary,
+            },
+            icon: {
+              color: theme.other.brand.primary,
+            },
+            message: {
+              color: theme.other.text.primary,
+            },
+          }}
         >
           Update release configuration and rollout settings for version <Text component="span" fw={600}>{data.label}</Text>
         </Alert>
@@ -141,7 +155,7 @@ export function ReleaseEditFormModal({ data, refetch }: ReleaseEditProps) {
             styles={{
               input: {
                 "&:focus": {
-                  borderColor: "#667eea",
+                  borderColor: theme.other.brand.primary,
                 },
               },
             }}
@@ -156,7 +170,7 @@ export function ReleaseEditFormModal({ data, refetch }: ReleaseEditProps) {
             styles={{
               input: {
                 "&:focus": {
-                  borderColor: "#667eea",
+                  borderColor: theme.other.brand.primary,
                 },
               },
             }}
@@ -173,17 +187,21 @@ export function ReleaseEditFormModal({ data, refetch }: ReleaseEditProps) {
                 </Text>
                 <Tooltip 
                   label="Rollout can only be increased, not decreased" 
-                  color="violet"
                   withArrow
+                  styles={{
+                    tooltip: {
+                      backgroundColor: theme.other.brand.primary,
+                    },
+                  }}
                 >
-                  <IconHelpOctagon size={16} style={{ color: "#667eea" }} />
+                  <IconHelpOctagon size={theme.other.sizes.icon.md} style={{ color: theme.other.brand.primary }} />
                 </Tooltip>
               </Group>
               <Text
                 size="xl"
-                fw={700}
+                fw={theme.other.typography.fontWeight.bold}
                 style={{
-                  color: "#667eea",
+                  color: theme.other.brand.primary,
                 }}
               >
                 {form.getValues().rollout}%
@@ -203,12 +221,12 @@ export function ReleaseEditFormModal({ data, refetch }: ReleaseEditProps) {
               ]}
               styles={{
                 track: {
-                  background: "linear-gradient(90deg, #667eea 0%, #764ba2 100%)",
+                  background: `linear-gradient(90deg, ${theme.other.brand.primary} 0%, ${theme.other.brand.secondary} 100%)`,
                 },
                 thumb: {
                   borderWidth: 2,
-                  borderColor: "#667eea",
-                  backgroundColor: "white",
+                  borderColor: theme.other.brand.primary,
+                  backgroundColor: theme.other.backgrounds.primary,
                 },
                 markLabel: {
                   fontSize: rem(12),
@@ -238,7 +256,11 @@ export function ReleaseEditFormModal({ data, refetch }: ReleaseEditProps) {
                 }
                 checked={form.getValues().status}
                 {...form.getInputProps("status")}
-                color="violet"
+                styles={{
+                  track: {
+                    backgroundColor: form.getValues().status ? theme.other.brand.primary : undefined,
+                  },
+                }}
                 size="md"
               />
             </Paper>
@@ -257,7 +279,11 @@ export function ReleaseEditFormModal({ data, refetch }: ReleaseEditProps) {
                 }
                 checked={form.getValues().mandatory}
                 {...form.getInputProps("mandatory")}
-                color="violet"
+                styles={{
+                  track: {
+                    backgroundColor: form.getValues().mandatory ? theme.other.brand.primary : undefined,
+                  },
+                }}
                 size="md"
               />
             </Paper>
@@ -274,25 +300,14 @@ export function ReleaseEditFormModal({ data, refetch }: ReleaseEditProps) {
           >
             Cancel
           </Button>
-          <Button
-            leftSection={<IconSparkles size={18} />}
+          <CTAButton
+            leftSection={<IconSparkles size={theme.other.sizes.icon.lg} />}
             onClick={onSubmit}
             disabled={!!Object.keys(form.errors).length}
             loading={isLoading}
-            variant="gradient"
-            gradient={{ from: "#667eea", to: "#764ba2", deg: 135 }}
-            styles={{
-              root: {
-                transition: "all 200ms ease",
-                "&:hover": {
-                  transform: "translateY(-2px)",
-                  boxShadow: "0 8px 20px rgba(102, 126, 234, 0.35)",
-                },
-              },
-            }}
           >
             Save Changes
-          </Button>
+          </CTAButton>
         </Group>
       </Stack>
     </Modal>

@@ -1,8 +1,9 @@
-import { Button, Center, TextInput, Box, Modal } from "@mantine/core";
+import { Center, TextInput, Box, Modal, useMantineTheme } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
 import { useParams } from "@remix-run/react";
 import { useAddCollabarator } from "./hooks/useAddCollabarator";
+import { CTAButton } from "~/components/CTAButton";
 
 export type AddCollboratorFormProps = {
   open: boolean;
@@ -10,6 +11,7 @@ export type AddCollboratorFormProps = {
 };
 
 export function AddCollboratorForm({ open, onClose }: AddCollboratorFormProps) {
+  const theme = useMantineTheme();
   const params = useParams();
   const { mutate, isLoading } = useAddCollabarator();
   const form = useForm<{ name: string }>({
@@ -27,7 +29,7 @@ export function AddCollboratorForm({ open, onClose }: AddCollboratorFormProps) {
   console.log('AddCollaboratorForm params:', { app: params.app, org: params.org });
 
   return (
-    <Modal opened={open} onClose={onClose} title={"Add Collborator"}>
+    <Modal opened={open} onClose={onClose} title={"Add Collborator"} centered>
       <Center>
         <Box w={"300px"}>
           <TextInput
@@ -37,12 +39,17 @@ export function AddCollboratorForm({ open, onClose }: AddCollboratorFormProps) {
             {...form.getInputProps("name")}
             mt={"md"}
             disabled={isLoading}
+            styles={{
+              input: {
+                "&:focus": {
+                  borderColor: theme.other.brand.primary,
+                },
+              },
+            }}
           />
-          <Button
-            color="blue"
+          <CTAButton
             fullWidth
             mt="md"
-            radius="md"
             disabled={!!Object.keys(form.errors).length && !isLoading}
             loading={isLoading}
             onClick={() => {
@@ -67,7 +74,7 @@ export function AddCollboratorForm({ open, onClose }: AddCollboratorFormProps) {
             }}
           >
             Add Collaborator
-          </Button>
+          </CTAButton>
         </Box>
       </Center>
     </Modal>
