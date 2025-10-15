@@ -15,7 +15,7 @@ import { User } from "~/.server/services/Auth/Auth.interface";
 import { useGetAppListForOrg } from "../AppList/hooks/useGetAppListForOrg";
 import { AppListRow } from "./components/AppListRow";
 import { useGetOrgList } from "../OrgListNavbar/hooks/useGetOrgList";
-import { OrgSwitcher } from "./components/OrgSwitcher";
+import { text } from "~/theme";
 
 type AppListPageProps = {
   user: User;
@@ -30,99 +30,58 @@ export function AppListPage({ user }: AppListPageProps) {
     userEmail: user.user.email,
   });
 
-  const { data: orgs = [], isLoading: orgsLoading } = useGetOrgList();
+  const { data: orgs = [] } = useGetOrgList();
   const currentOrg = orgs.find((org) => org.id === params.org);
 
-  if (isLoading || orgsLoading) {
+  if (isLoading) {
     return (
-      <Flex gap="xl">
-        <Skeleton width={280} height="calc(100vh - 120px)" />
-        <Box style={{ flex: 1 }}>
-          <Group justify="space-between" align="center" mb="xl">
-            <Skeleton height={40} width={250} />
-            <Skeleton height={40} width={200} />
-          </Group>
-          <Flex gap="lg" wrap="wrap">
-            {Array(6)
-              .fill(0)
-              .map((_, index) => (
-                <Skeleton key={index} width={250} height={250} radius="md" />
-              ))}
-          </Flex>
-        </Box>
-      </Flex>
+      <Box>
+        <Group justify="space-between" align="center" mb="xl">
+          <Skeleton height={40} width={250} />
+          <Skeleton height={40} width={200} />
+        </Group>
+        <Flex gap="lg" wrap="wrap">
+          {Array(6)
+            .fill(0)
+            .map((_, index) => (
+              <Skeleton key={index} width={250} height={250} radius="md" />
+            ))}
+        </Flex>
+      </Box>
     );
   }
 
   if (isError) {
     return (
-      <Flex gap="xl">
-        <OrgSwitcher organizations={orgs} currentOrgId={params.org} />
-        <Box style={{ flex: 1 }}>
-          <Group justify="space-between" align="center" mb="xl">
-            <Group gap="xs">
-              <Title order={2} c="gray.9" fw={600}>
-                {currentOrg?.orgName || "Organization"}
-              </Title>
-              <IconChevronRight size={24} color="gray" />
-              <Title order={2} c="gray.9" fw={600}>
-                Applications
-              </Title>
-            </Group>
+      <Box>
+        <Group justify="space-between" align="center" mb="xl">
+          <Group gap="xs" align="center">
+            <Title order={4} style={{ color: text.secondary }} fw={500}>
+              {currentOrg?.orgName || "Organization"}
+            </Title>
+            <IconChevronRight size={18} color={text.secondary} />
+            <Title order={4} style={{ color: text.secondary }} fw={500}>
+              Applications
+            </Title>
           </Group>
-          <Text c="red" ta="center" p="xl">
-            Something went wrong while loading apps!
-          </Text>
-        </Box>
-      </Flex>
+        </Group>
+        <Text c="red" ta="center" p="xl">
+          Something went wrong while loading apps!
+        </Text>
+      </Box>
     );
   }
 
   if (!data || data.length === 0) {
     return (
-      <Flex gap="xl">
-        <OrgSwitcher organizations={orgs} currentOrgId={params.org} />
-        <Box style={{ flex: 1 }}>
-          <Group justify="space-between" align="center" mb="xl">
-            <Group gap="xs">
-              <Title order={2} c="gray.9" fw={600}>
-                {currentOrg?.orgName || "Organization"}
-              </Title>
-              <IconChevronRight size={24} color="gray" />
-              <Title order={2} c="gray.9" fw={600}>
-                Applications
-              </Title>
-            </Group>
-            <Button
-              leftSection={<IconPlus size={18} />}
-              onClick={() => navigate(route("/dashboard/create/app"))}
-              variant="gradient"
-              gradient={{ from: "#667eea", to: "#764ba2", deg: 135 }}
-            >
-              Create App
-            </Button>
-          </Group>
-          <Paper withBorder p="xl" radius="md">
-            <Text c="dimmed" ta="center">
-              No apps found. Create your first app to get started!
-            </Text>
-          </Paper>
-        </Box>
-      </Flex>
-    );
-  }
-
-  return (
-    <Flex gap="xl">
-      <OrgSwitcher organizations={orgs} currentOrgId={params.org} />
-      <Box style={{ flex: 1 }}>
+      <Box>
         <Group justify="space-between" align="center" mb="xl">
-          <Group gap="xs">
-            <Title order={2} c="gray.9" fw={600}>
+          <Group gap="xs" align="center">
+            <Title order={4} style={{ color: text.secondary }} fw={500}>
               {currentOrg?.orgName || "Organization"}
             </Title>
-            <IconChevronRight size={24} color="gray" />
-            <Title order={2} c="gray.9" fw={600}>
+            <IconChevronRight size={18} color={text.secondary} />
+            <Title order={4} style={{ color: text.secondary }} fw={500}>
               Applications
             </Title>
           </Group>
@@ -130,36 +89,85 @@ export function AppListPage({ user }: AppListPageProps) {
             leftSection={<IconPlus size={18} />}
             onClick={() => navigate(route("/dashboard/create/app"))}
             variant="gradient"
-            gradient={{ from: "#667eea", to: "#764ba2", deg: 135 }}
+            gradient={{ from: "#6366f1", to: "#8b5cf6", deg: 135 }}
+            styles={{
+              root: {
+                boxShadow: "0 4px 12px rgba(99, 102, 241, 0.3)",
+                transition: "all 200ms ease",
+                "&:hover": {
+                  boxShadow: "0 6px 16px rgba(99, 102, 241, 0.4)",
+                  transform: "translateY(-1px)",
+                },
+              },
+            }}
           >
             Create App
           </Button>
         </Group>
-
-        <Flex gap="lg" wrap="wrap">
-          {data.map((app) => (
-            <AppListRow
-              key={app.id}
-              app={app}
-              onNavigate={() => {
-                navigate(
-                  route("/dashboard/:org/:app", {
-                    org: params.org ?? "",
-                    app: app.id,
-                  })
-                );
-              }}
-              onDelete={() => {
-                navigate(
-                  route("/dashboard/delete") +
-                    `?type=app&app=${app.id}&tenant=${params.org}`
-                );
-              }}
-            />
-          ))}
-        </Flex>
+        <Paper withBorder p="xl" radius="md">
+          <Text c="dimmed" ta="center">
+            No apps found. Create your first app to get started!
+          </Text>
+        </Paper>
       </Box>
-    </Flex>
+    );
+  }
+
+  return (
+    <Box>
+      <Group justify="space-between" align="center" mb="xl">
+        <Group gap="xs" align="center">
+          <Title order={4} style={{ color: text.secondary }} fw={500}>
+            {currentOrg?.orgName || "Organization"}
+          </Title>
+          <IconChevronRight size={18} color={text.secondary} />
+          <Title order={4} style={{ color: text.secondary }} fw={500}>
+            Applications
+          </Title>
+        </Group>
+        <Button
+          leftSection={<IconPlus size={18} />}
+          onClick={() => navigate(route("/dashboard/create/app"))}
+          variant="gradient"
+          gradient={{ from: "#6366f1", to: "#8b5cf6", deg: 135 }}
+          styles={{
+            root: {
+              boxShadow: "0 4px 12px rgba(99, 102, 241, 0.3)",
+              transition: "all 200ms ease",
+              "&:hover": {
+                boxShadow: "0 6px 16px rgba(99, 102, 241, 0.4)",
+                transform: "translateY(-1px)",
+              },
+            },
+          }}
+        >
+          Create App
+        </Button>
+      </Group>
+
+      <Flex gap="lg" wrap="wrap">
+        {data.map((app) => (
+          <AppListRow
+            key={app.id}
+            app={app}
+            onNavigate={() => {
+              navigate(
+                route("/dashboard/:org/:app", {
+                  org: params.org ?? "",
+                  app: app.id,
+                })
+              );
+            }}
+            onDelete={() => {
+              navigate(
+                route("/dashboard/delete") +
+                  `?type=app&app=${app.id}&tenant=${params.org}`
+              );
+            }}
+          />
+        ))}
+      </Flex>
+    </Box>
   );
 }
 

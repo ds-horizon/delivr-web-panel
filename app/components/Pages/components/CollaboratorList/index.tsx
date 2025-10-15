@@ -3,7 +3,6 @@ import {
   Card,
   Stack,
   Group,
-  Avatar,
   Text,
   Button,
   Select,
@@ -12,7 +11,6 @@ import {
   ActionIcon,
   Tooltip,
   Box,
-  Flex,
   LoadingOverlay,
 } from "@mantine/core";
 import { IconTrash, IconUserPlus, IconCrown, IconUser } from "@tabler/icons-react";
@@ -33,9 +31,9 @@ const getInitials = (name: string) => {
   return name.substring(0, 2).toUpperCase();
 };
 
-// Helper to generate avatar color
+// Helper to generate avatar color - using indigo/primary theme
 const getAvatarColor = (name: string) => {
-  const colors = ["#667eea", "#764ba2", "#f093fb", "#4facfe", "#43e97b", "#fa709a"];
+  const colors = ["#6366f1", "#8b5cf6", "#4f46e5", "#7c3aed", "#5b21b6"];
   const hash = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
   return colors[hash % colors.length];
 };
@@ -72,7 +70,7 @@ export function CollabaratorList() {
             leftSection={<IconUserPlus size={18} />}
             onClick={() => setOpen(true)}
             variant="gradient"
-            gradient={{ from: "#667eea", to: "#764ba2", deg: 135 }}
+            gradient={{ from: "#6366f1", to: "#8b5cf6", deg: 135 }}
           >
             Add Collaborator
           </Button>
@@ -90,7 +88,7 @@ export function CollabaratorList() {
           leftSection={<IconUserPlus size={18} />}
           onClick={() => setOpen(true)}
           variant="gradient"
-          gradient={{ from: "#667eea", to: "#764ba2", deg: 135 }}
+          gradient={{ from: "#6366f1", to: "#8b5cf6", deg: 135 }}
         >
           Add Collaborator
         </Button>
@@ -197,7 +195,7 @@ function CollaboratorCard({
       styles={{
         root: {
           "&:hover": {
-            boxShadow: "0 4px 16px rgba(103, 126, 234, 0.15)",
+            boxShadow: "0 4px 16px rgba(99, 102, 241, 0.15)",
           },
         },
       }}
@@ -232,13 +230,13 @@ function CollaboratorCard({
                 <Badge
                   leftSection={<IconCrown size={12} />}
                   variant="light"
-                  color="yellow"
+                  color="indigo"
                   size="sm"
                 >
                   Owner
                 </Badge>
               ) : (
-                <Badge variant="light" color="blue" size="sm">
+                <Badge variant="light" color="indigo" size="sm">
                   Collaborator
                 </Badge>
               )}

@@ -1,11 +1,8 @@
-import { rem, Tabs, Flex, Box, Skeleton, Button, Group, Title } from "@mantine/core";
-import { IconPhoto, IconSettings, IconRocket, IconKey } from "@tabler/icons-react";
+import { Box, Button, Group, Tabs, rem } from "@mantine/core";
+import { IconRocket, IconKey, IconUsers, IconList } from "@tabler/icons-react";
 import { CollabaratorList } from "~/components/Pages/components/CollaboratorList";
 import { DeploymentList } from "~/components/Pages/DeploymentList";
-import { CombinedSidebar } from "~/components/Pages/components/AppDetailPage/components/CombinedSidebar";
-import { useGetOrgList } from "~/components/Pages/components/OrgListNavbar/hooks/useGetOrgList";
 import { useLoaderData, useParams, useNavigate } from "@remix-run/react";
-import { route } from "routes-gen";
 import { User } from "~/.server/services/Auth/Auth.interface";
 import { authenticateLoaderRequest } from "~/utils/authenticate";
 import { useState } from "react";
@@ -15,93 +12,78 @@ import { useGetDeploymentsForApp } from "~/components/Pages/DeploymentList/hooks
 export const loader = authenticateLoaderRequest();
 
 export default function AppDetails() {
-  const iconStyle = { width: rem(12), height: rem(12) };
-  const user = useLoaderData<User>();
+  const _user = useLoaderData<User>();
   const params = useParams();
   const navigate = useNavigate();
-  const [showCollaborators, setShowCollaborators] = useState(false);
   const [createDeploymentOpen, setCreateDeploymentOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<string | null>("deployments");
 
-  const { data: orgs = [], isLoading: orgsLoading } = useGetOrgList();
   const { refetch: refetchDeployments } = useGetDeploymentsForApp();
 
-  if (orgsLoading) {
-    return (
-      <Flex gap="xl">
-        <Skeleton width={280} height="calc(100vh - 120px)" />
-        <Box style={{ flex: 1 }}>
-          <Skeleton height={40} width="100%" mb="md" />
-          <Skeleton height={400} width="100%" />
-        </Box>
-      </Flex>
-    );
-  }
+  const iconStyle = { width: rem(16), height: rem(16) };
 
   return (
-    <Flex gap="xl">
-      <CombinedSidebar
-        organizations={orgs}
-        currentOrgId={params.org}
-        currentAppId={params.app}
-        userEmail={user.user.email}
-        onCollaboratorsClick={() => setShowCollaborators(!showCollaborators)}
-        showCollaborators={showCollaborators}
-      />
-      <Box style={{ flex: 1 }}>
-        {showCollaborators ? (
-          <>
-            <Group justify="space-between" mb="xl">
-              <Title order={2}>Collaborators</Title>
-            </Group>
-            <CollabaratorList />
-          </>
-        ) : (
-          <>
-            <Group justify="space-between" mb="md">
-              <Title order={2}>Releases</Title>
-              <Group gap="sm">
-                <Button
-                  leftSection={<IconKey size={18} />}
-                  onClick={() => setCreateDeploymentOpen(true)}
-                  variant="light"
-                  color="violet"
-                  styles={{
-                    root: {
-                      transition: "all 200ms ease",
-                      "&:hover": {
-                        transform: "translateY(-2px)",
-                        boxShadow: "0 8px 20px rgba(102, 126, 234, 0.25)",
-                      },
-                    },
-                  }}
-                >
-                  Create Deployment Key
-                </Button>
-                <Button
-                  leftSection={<IconRocket size={18} />}
-                  onClick={() => {
-                    navigate(`/dashboard/${params.org}/${params.app}/create-release`);
-                  }}
-                  variant="gradient"
-                  gradient={{ from: "#667eea", to: "#764ba2", deg: 135 }}
-                  styles={{
-                    root: {
-                      transition: "all 200ms ease",
-                      "&:hover": {
-                        transform: "translateY(-2px)",
-                        boxShadow: "0 8px 20px rgba(102, 126, 234, 0.35)",
-                      },
-                    },
-                  }}
-                >
-                  Create Release
-                </Button>
-              </Group>
-            </Group>
-            <DeploymentList />
-          </>
+    <Box>
+      <Group justify="space-between" mb="md">
+        <Tabs 
+          value={activeTab} 
+          onChange={setActiveTab}
+          color="indigo"
+        >
+          <Tabs.List>
+            <Tabs.Tab value="deployments" leftSection={<IconList style={iconStyle} />}>
+              Releases
+            </Tabs.Tab>
+            <Tabs.Tab value="collaborators" leftSection={<IconUsers style={iconStyle} />}>
+              Collaborators
+            </Tabs.Tab>
+          </Tabs.List>
+        </Tabs>
+        
+        {activeTab === "deployments" && (
+          <Group gap="sm">
+            <Button
+              leftSection={<IconKey size={18} />}
+              onClick={() => setCreateDeploymentOpen(true)}
+              variant="default"
+              styles={{
+                root: {
+                  borderColor: "#e5e7eb",
+                  "&:hover": {
+                    background: "#f9fafb",
+                    borderColor: "#6366f1",
+                  },
+                },
+              }}
+            >
+              Create Deployment Key
+            </Button>
+            <Button
+              leftSection={<IconRocket size={18} />}
+              onClick={() => {
+                navigate(`/dashboard/${params.org}/${params.app}/create-release`);
+              }}
+              variant="gradient"
+              gradient={{ from: "#6366f1", to: "#8b5cf6", deg: 135 }}
+              styles={{
+                root: {
+                  boxShadow: "0 4px 12px rgba(99, 102, 241, 0.3)",
+                  transition: "all 200ms ease",
+                  "&:hover": {
+                    boxShadow: "0 6px 16px rgba(99, 102, 241, 0.4)",
+                    transform: "translateY(-1px)",
+                  },
+                },
+              }}
+            >
+              Create Release
+            </Button>
+          </Group>
         )}
-      </Box>
+      </Group>
+
+      {activeTab === "deployments" && <DeploymentList />}
+      {activeTab === "collaborators" && <CollabaratorList />}
 
       {/* Create Deployment Modal */}
       <CreateDeploymentForm
@@ -111,6 +93,6 @@ export default function AppDetails() {
           refetchDeployments();
         }}
       />
-    </Flex>
+    </Box>
   );
 }

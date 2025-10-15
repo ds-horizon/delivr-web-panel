@@ -2,13 +2,14 @@ import {
   Card,
   Text,
   ActionIcon,
-  Tooltip,
+  Badge,
+  Menu,
   Box,
   Group,
   Stack,
-  Badge,
 } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
+import { IconTrash, IconDots, IconExternalLink, IconBuilding } from "@tabler/icons-react";
+import { brand, backgrounds, text, borders, shadows } from "~/theme";
 
 type Organization = {
   id: string;
@@ -22,120 +23,161 @@ type OrgCardProps = {
   onDelete: () => void;
 };
 
-// Generate consistent color based on org name
-const getOrgColor = (orgName: string) => {
-  const colors = [
-    { bg: "#667eea", light: "#f0f0ff" },
-    { bg: "#764ba2", light: "#f5f0ff" },
-    { bg: "#f093fb", light: "#fff0fb" },
-    { bg: "#4facfe", light: "#f0f8ff" },
-    { bg: "#43e97b", light: "#f0fff5" },
-    { bg: "#fa709a", light: "#fff0f5" },
-    { bg: "#feca57", light: "#fff8e1" },
-    { bg: "#48dbfb", light: "#e6f9ff" },
-  ];
-  
-  const hash = orgName.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  return colors[hash % colors.length];
-};
-
-// Generate initials from org name
-const getInitials = (orgName: string) => {
-  const words = orgName.trim().split(" ");
-  if (words.length === 1) {
-    return orgName.substring(0, 2).toUpperCase();
-  }
-  return (words[0][0] + words[1][0]).toUpperCase();
-};
-
 export function OrgCard({ org, onNavigate, onDelete }: OrgCardProps) {
-  const colors = getOrgColor(org.orgName);
-  const initials = getInitials(org.orgName);
-
   return (
     <Card
-      shadow="sm"
-      padding="md"
-      radius="md"
       withBorder
+      padding="xl"
+      radius="lg"
       style={{
         cursor: "pointer",
-        transition: "all 200ms ease",
-        width: "250px",
-        height: "250px",
+        transition: "all 250ms ease",
+        height: "100%",
+        borderColor: borders.primary,
+        backgroundColor: backgrounds.primary,
+        position: "relative",
+        overflow: "visible",
       }}
       styles={{
         root: {
           "&:hover": {
-            transform: "translateY(-4px)",
-            boxShadow: "0 12px 32px rgba(102, 126, 234, 0.3)",
+            borderColor: borders.brand,
+            boxShadow: shadows.lg,
+            transform: "translateY(-8px)",
           },
         },
       }}
       onClick={onNavigate}
     >
-      <Stack gap="md" h="100%">
-        {/* Header with badge and delete button */}
-        <Group justify="flex-end" wrap="nowrap" gap="xs">
-          <Badge
-            variant="light"
-            color={org.isAdmin ? "violet" : "gray"}
-            size="sm"
-            radius="md"
-          >
-            {org.isAdmin ? "Owner" : "Member"}
-          </Badge>
-          {org.isAdmin && (
-            <Tooltip label="Delete Organization" position="left">
+      {/* Gradient Header Section */}
+      <Card.Section 
+        h={80} 
+        style={{ 
+          background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+        }} 
+      />
+
+      {/* Icon Container - Overlapping Header */}
+      <Box 
+        style={{ 
+          display: "flex", 
+          justifyContent: "center",
+          marginTop: "-40px",
+          marginBottom: "16px",
+        }}
+      >
+        <Box
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: "20px",
+            background: backgrounds.primary,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            border: `4px solid ${backgrounds.primary}`,
+            boxShadow: shadows.md,
+          }}
+        >
+          <IconBuilding 
+            size={40} 
+            color={brand.primary}
+            stroke={1.5}
+          />
+        </Box>
+      </Box>
+
+      {/* Badge and Menu positioned at top right */}
+      <Group
+        justify="space-between"
+        wrap="nowrap"
+        style={{
+          position: "absolute",
+          top: "12px",
+          right: "12px",
+          left: "12px",
+        }}
+      >
+        <Badge
+          variant="light"
+          size="xs"
+          radius="sm"
+          style={{
+            textTransform: "uppercase",
+            fontSize: "10px",
+            fontWeight: 600,
+            letterSpacing: "0.5px",
+            backgroundColor: "rgba(255, 255, 255, 0.95)",
+            color: brand.primaryDark,
+          }}
+        >
+          {org.isAdmin ? "Owner" : "Member"}
+        </Badge>
+        {org.isAdmin && (
+          <Menu shadow="md" width={180} position="bottom-end">
+            <Menu.Target>
               <ActionIcon
                 variant="subtle"
-                color="red"
+                color="white"
                 size="sm"
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                }}
+              >
+                <IconDots size={16} />
+              </ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item
+                leftSection={<IconExternalLink size={14} />}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onNavigate();
+                }}
+              >
+                Open Organization
+              </Menu.Item>
+              <Menu.Divider />
+              <Menu.Item
+                color="red"
+                leftSection={<IconTrash size={14} />}
                 onClick={(e) => {
                   e.stopPropagation();
                   onDelete();
                 }}
               >
-                <IconTrash size={16} />
-              </ActionIcon>
-            </Tooltip>
-          )}
-        </Group>
+                Delete Organization
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        )}
+      </Group>
 
-        {/* Icon/Avatar */}
-        <Box style={{ display: "flex", justifyContent: "center" }}>
-          <Box
-            style={{
-              width: 64,
-              height: 64,
-              borderRadius: "12px",
-              background: `linear-gradient(135deg, ${colors.bg} 0%, ${colors.bg}dd 100%)`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: `0 4px 12px ${colors.bg}40`,
-            }}
-          >
-            <Text
-              size="lg"
-              fw={700}
-              c="white"
-              style={{
-                fontSize: "22px",
-                letterSpacing: "1px",
-              }}
-            >
-              {initials}
-            </Text>
-          </Box>
-        </Box>
-
+      <Stack gap="sm" align="center">
         {/* Org Name */}
-        <Box style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Text fw={600} size="lg" ta="center" lineClamp={2}>
-            {org.orgName}
-          </Text>
-        </Box>
+        <Text 
+          ta="center" 
+          size="xl" 
+          fw={600} 
+          lineClamp={2}
+          style={{
+            color: text.primary,
+            minHeight: "32px",
+          }}
+        >
+          {org.orgName}
+        </Text>
+
+        {/* Role subtitle */}
+        <Text 
+          ta="center" 
+          size="sm" 
+          c="dimmed"
+          fw={500}
+        >
+          {org.isAdmin ? "You own this organization" : "You are a member"}
+        </Text>
       </Stack>
     </Card>
   );

@@ -7,6 +7,7 @@ import {
 import { Form, useNavigate } from "@remix-run/react";
 import { User } from "~/.server/services/Auth/Auth.interface";
 import { route } from "routes-gen";
+import { text } from "~/theme";
 
 export type HeaderUserButtonProps = {
   user: User;
@@ -23,7 +24,14 @@ export function HeaderUserButton({ user }: HeaderUserButtonProps) {
             name={user.user.name} 
             radius="xl" 
             size="md"
-            style={{ cursor: "pointer" }}
+            style={{ 
+              cursor: "pointer",
+              backgroundColor: "white",
+              color: text.brand,
+              border: "2px solid rgba(255, 255, 255, 0.3)",
+              fontWeight: 700,
+              fontSize: "14px",
+            }}
           />
         </UnstyledButton>
       </Menu.Target>

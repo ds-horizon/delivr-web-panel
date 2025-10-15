@@ -46,7 +46,7 @@ export const CollboratorRow = ({
       </Table.Td>
       <Table.Td>
         <Group gap="sm">
-          <Avatar size={26} radius={26} name={data.name} />
+          <Avatar size={26} radius={26} name={data.name} color="indigo" />
           <Text size="sm" fw={500}>
             {data.name}
           </Text>

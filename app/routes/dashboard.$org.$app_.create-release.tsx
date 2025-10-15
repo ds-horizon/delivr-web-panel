@@ -29,8 +29,6 @@ import { User } from "~/.server/services/Auth/Auth.interface";
 import { authenticateLoaderRequest } from "~/utils/authenticate";
 import { useGetDeploymentsForApp } from "~/components/Pages/DeploymentList/hooks/getDeploymentsForApp";
 import { useCreateRelease } from "~/components/Pages/components/ReleaseForm/hooks/useCreateRelease";
-import { useGetOrgList } from "~/components/Pages/components/OrgListNavbar/hooks/useGetOrgList";
-import { CombinedSidebar } from "~/components/Pages/components/AppDetailPage/components/CombinedSidebar";
 import {
   DirectoryUpload,
 } from "~/components/Pages/components/ReleaseForm/components";
@@ -59,7 +57,6 @@ export default function CreateReleasePage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [reviewModalOpened, setReviewModalOpened] = useState(false);
 
-  const { data: orgs = [], isLoading: orgsLoading } = useGetOrgList();
   const { data: deployments, isLoading: deploymentsLoading } = useGetDeploymentsForApp();
   const { mutate: createRelease, isLoading: isUploading } = useCreateRelease();
 
@@ -185,38 +182,19 @@ export default function CreateReleasePage() {
     );
   });
 
-  if (orgsLoading) {
-    return (
-      <Flex gap="xl">
-        <Skeleton width={280} height="calc(100vh - 120px)" />
-        <Box style={{ flex: 1 }}>
-          <Skeleton height={40} width="100%" mb="md" />
-          <Skeleton height={600} width="100%" />
-        </Box>
-      </Flex>
-    );
-  }
-
   return (
-    <Flex gap="xl">
-      <CombinedSidebar
-        organizations={orgs}
-        currentOrgId={params.org}
-        currentAppId={params.app}
-        userEmail={user.user.email}
-      />
-      <Box style={{ flex: 1 }}>
-        {/* Header */}
-        <Group mb="xl">
-          <Button
-            variant="subtle"
-            leftSection={<IconArrowLeft size={18} />}
-            onClick={() => navigate(-1)}
-          >
-            Back
-          </Button>
-          <Title order={2}>Create New Release</Title>
-        </Group>
+    <Box>
+      {/* Header */}
+      <Group mb="xl">
+        <Button
+          variant="subtle"
+          leftSection={<IconArrowLeft size={18} />}
+          onClick={() => navigate(-1)}
+        >
+          Back
+        </Button>
+        <Title order={2}>Create New Release</Title>
+      </Group>
 
       {/* Stepper */}
       <Card withBorder shadow="sm" p="xl">
@@ -247,11 +225,11 @@ export default function CreateReleasePage() {
                         width: rem(80),
                         height: rem(80),
                         borderRadius: "50%",
-                        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                        background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        boxShadow: "0 8px 24px rgba(102, 126, 234, 0.3)",
+                        boxShadow: "0 8px 24px rgba(99, 102, 241, 0.3)",
                       }}
                     >
                       <IconFolderOpen size={40} color="white" />
@@ -278,7 +256,7 @@ export default function CreateReleasePage() {
                       style={{ width: "100%", background: "#f8f9fa" }}
                     >
                       <Group gap="xs" wrap="nowrap">
-                        <IconUpload size={16} style={{ color: "#667eea", flexShrink: 0 }} />
+                        <IconUpload size={16} style={{ color: "#6366f1", flexShrink: 0 }} />
                         <Text size="xs" c="dimmed">
                           Supported: All file types • We'll create a ZIP archive automatically
                         </Text>
@@ -340,7 +318,7 @@ export default function CreateReleasePage() {
                       size="xl"
                       fw={700}
                       style={{
-                        color: "#667eea",
+                        color: "#6366f1",
                       }}
                     >
                       {form.values.rollout}%
@@ -362,11 +340,11 @@ export default function CreateReleasePage() {
                       ]}
                       styles={{
                         track: {
-                          background: "linear-gradient(90deg, #667eea 0%, #764ba2 100%)",
+                          background: "linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%)",
                         },
                         thumb: {
                           borderWidth: 2,
-                          borderColor: "#667eea",
+                          borderColor: "#6366f1",
                           backgroundColor: "white",
                         },
                       }}
@@ -406,7 +384,7 @@ export default function CreateReleasePage() {
             <Button 
               onClick={nextStep}
               variant="gradient"
-              gradient={{ from: "#667eea", to: "#764ba2", deg: 135 }}
+              gradient={{ from: "#6366f1", to: "#8b5cf6", deg: 135 }}
             >
               Next Step
             </Button>
@@ -421,7 +399,7 @@ export default function CreateReleasePage() {
                 }
               }}
               variant="gradient"
-              gradient={{ from: "#667eea", to: "#764ba2", deg: 135 }}
+              gradient={{ from: "#6366f1", to: "#8b5cf6", deg: 135 }}
             >
               Review Release
             </Button>
@@ -435,7 +413,7 @@ export default function CreateReleasePage() {
         onClose={() => !isUploading && setReviewModalOpened(false)}
         title={
           <Group gap="xs">
-            <IconEye size={24} style={{ color: "#667eea" }} />
+            <IconEye size={24} style={{ color: "#6366f1" }} />
             <Title order={3}>Review Your Release</Title>
           </Group>
         }
@@ -464,7 +442,7 @@ export default function CreateReleasePage() {
                 gap: "16px",
               }}
             >
-              <Loader size="lg" color="#667eea" />
+              <Loader size="lg" color="#6366f1" />
               <Stack gap="xs" align="center">
                 <Text fw={600} size="lg">
                   Creating Release...
@@ -514,7 +492,7 @@ export default function CreateReleasePage() {
                 <Stack gap="xs" mt="xs">
                   <Group justify="space-between">
                     <Text size="sm" fw={500}>Rollout:</Text>
-                    <Text size="sm" fw={700} style={{ color: "#667eea" }}>
+                    <Text size="sm" fw={700} style={{ color: "#6366f1" }}>
                       {form.values.rollout}%
                     </Text>
                   </Group>
@@ -560,14 +538,13 @@ export default function CreateReleasePage() {
               loading={isUploading}
               disabled={isUploading}
               variant="gradient"
-              gradient={{ from: "#667eea", to: "#764ba2", deg: 135 }}
+              gradient={{ from: "#6366f1", to: "#8b5cf6", deg: 135 }}
             >
               {isUploading ? "Creating..." : "Create Release"}
             </Button>
           </Group>
         </Stack>
       </Modal>
-      </Box>
-    </Flex>
+    </Box>
   );
 }

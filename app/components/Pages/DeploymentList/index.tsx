@@ -96,7 +96,7 @@ export const DeploymentList = () => {
         {/* Search Bar */}
         <div ref={searchContainerRef} style={{ position: 'relative' }}>
           <TextInput
-            placeholder="Search deployments by name or key..."
+            placeholder="Search deployment keys by name..."
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.currentTarget.value)}
             onFocus={() => setSearchFocused(true)}
@@ -121,7 +121,7 @@ export const DeploymentList = () => {
               }}
             >
               <Text size="sm" c="dimmed" mb="xs">
-                {searchQuery ? `Search Results (${displayDeployments.length})` : `All Deployments (${displayDeployments.length})`}
+                {searchQuery ? `Search Results (${displayDeployments.length})` : `Deployment Keys (${displayDeployments.length})`}
               </Text>
               <ScrollArea h={Math.min(displayDeployments.length * 60, 300)} offsetScrollbars>
                 {displayDeployments.map((deployment) => (
