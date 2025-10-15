@@ -70,12 +70,28 @@ export function OrgsPage() {
   return (
     <Container size="xl" py="xl">
       <Stack gap="xl">
-        <Box style={{ textAlign: "center", marginTop: theme.other.spacing["4xl"], marginBottom: theme.other.spacing.xl }}>
+        <Box style={{ textAlign: "center", marginTop: theme.other.spacing["3xl"], marginBottom: theme.other.spacing.lg }}>
+          <Badge
+            size="lg"
+            radius="md"
+            variant="light"
+            mb="md"
+            style={{
+              backgroundColor: theme.other.brand.light,
+              color: theme.other.brand.primaryDark,
+              fontSize: theme.other.typography.fontSize.sm,
+              fontWeight: theme.other.typography.fontWeight.semibold,
+              letterSpacing: theme.other.typography.letterSpacing.wider,
+              padding: `${theme.other.spacing.sm} ${theme.other.spacing.xl}`,
+            }}
+          >
+            OTA AIR UPDATES
+          </Badge>
           <Title 
             order={1} 
             size="h1"
             fw={theme.other.typography.fontWeight.bold}
-            mb="md"
+            mb="sm"
             style={{
               background: theme.other.brand.gradient,
               WebkitBackgroundClip: "text",
@@ -86,7 +102,7 @@ export function OrgsPage() {
             Your Organizations
           </Title>
           <Text size="lg" c="dimmed" mb="xl" maw={600} mx="auto">
-            Select an organization to view its applications and manage deployments
+            Manage over-the-air updates for your applications across all organizations
           </Text>
           <CTAButton
             size="md"
@@ -137,7 +153,33 @@ export function OrgsPage() {
         </Box>
 
         {/* Coming Soon Section */}
-        <Box style={{ marginTop: theme.other.spacing["6xl"] }}>
+        <Box 
+          style={{ 
+            marginTop: theme.other.spacing["5xl"],
+            padding: theme.other.spacing["3xl"],
+            borderRadius: theme.other.borderRadius.xl,
+            background: `linear-gradient(135deg, ${theme.other.backgrounds.secondary} 0%, ${theme.other.backgrounds.tertiary} 100%)`,
+            border: `2px dashed ${theme.other.borders.primary}`,
+          }}
+        >
+          <Badge
+            size="xl"
+            radius="md"
+            variant="gradient"
+            gradient={{ from: theme.other.brand.primary, to: theme.other.brand.secondary, deg: 135 }}
+            mb="lg"
+            style={{
+              fontSize: theme.other.typography.fontSize.base,
+              fontWeight: theme.other.typography.fontWeight.bold,
+              letterSpacing: theme.other.typography.letterSpacing.wider,
+              padding: `${theme.other.spacing.md} ${theme.other.spacing["2xl"]}`,
+              display: "block",
+              margin: "0 auto",
+              width: "fit-content",
+            }}
+          >
+            COMING SOON
+          </Badge>
           <Title 
             order={2} 
             size="h2"
@@ -145,13 +187,13 @@ export function OrgsPage() {
             mb="md"
             ta="center"
             style={{
-              color: theme.other.text.secondary,
+              color: theme.other.text.primary,
             }}
           >
-            Coming Soon
+            Expand Your Deployment Capabilities
           </Title>
-          <Text size="md" c="dimmed" mb="xl" maw={600} mx="auto" ta="center">
-            Exciting new features are on the way to enhance your deployment experience
+          <Text size="lg" c={theme.other.text.secondary} mb="xl" maw={700} mx="auto" ta="center" fw={theme.other.typography.fontWeight.medium}>
+            Exciting new features are on the way to enhance your deployment experience with advanced build automation and release orchestration
           </Text>
 
           <SimpleGrid 
@@ -168,11 +210,11 @@ export function OrgsPage() {
               padding={0}
               radius="lg"
               style={{
-                borderColor: theme.other.borders.primary,
+                borderColor: theme.other.borders.brand,
                 backgroundColor: theme.other.backgrounds.primary,
                 overflow: "hidden",
-                opacity: 0.7,
                 position: "relative",
+                boxShadow: theme.other.shadows.md,
               }}
             >
               <Box
@@ -274,11 +316,11 @@ export function OrgsPage() {
               padding={0}
               radius="lg"
               style={{
-                borderColor: theme.other.borders.primary,
+                borderColor: theme.other.borders.brand,
                 backgroundColor: theme.other.backgrounds.primary,
                 overflow: "hidden",
-                opacity: 0.7,
                 position: "relative",
+                boxShadow: theme.other.shadows.md,
               }}
             >
               <Box
