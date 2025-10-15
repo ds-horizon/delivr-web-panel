@@ -233,7 +233,7 @@ export function ReleaseEditFormModal({ data, refetch }: ReleaseEditProps) {
                 },
               }}
             />
-            <Text size="xs" c="dimmed" mt="xs">
+            <Text size="xs" c="dimmed" mt="20px" >
               Current rollout: {data.rollout}% → Can increase to 100%
             </Text>
           </Box>

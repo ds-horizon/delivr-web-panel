@@ -200,7 +200,15 @@ export default function CreateReleasePage() {
 
       {/* Stepper */}
       <Card withBorder shadow="sm" p="xl">
-        <Stepper active={active} onStepClick={(stepIndex: number) => setActive(stepIndex)}>
+        <Stepper 
+          active={active} 
+          onStepClick={(stepIndex: number) => {
+            // Only allow going to previous steps, not forward
+            if (stepIndex < active) {
+              setActive(stepIndex);
+            }
+          }}
+        >
           {/* Step 1: Upload Directory */}
           <Stepper.Step label="Upload" description="Select your app bundle">
             <Box mt="xl">
