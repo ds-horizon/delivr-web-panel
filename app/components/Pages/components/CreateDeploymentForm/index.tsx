@@ -131,6 +131,8 @@ export function CreateDeploymentForm({ open, onClose }: CreateTokenFormProps) {
                     { ...form.getValues(), appId: params.app ?? "", tenant: params.org ?? "" },
                     {
                       onSuccess: () => {
+                        // Close modal immediately after successful creation
+                        handleClose();
                       },
                     }
                   );
