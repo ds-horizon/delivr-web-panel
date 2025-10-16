@@ -19,6 +19,7 @@ import {
   Modal,
   Alert,
   Loader,
+  ActionIcon,
   useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
@@ -189,14 +190,14 @@ export default function CreateReleasePage() {
   return (
     <Box>
       {/* Header */}
-      <Group mb="xl">
-        <Button
+      <Group mb="xl" gap="md">
+        <ActionIcon
           variant="subtle"
-          leftSection={<IconArrowLeft size={18} />}
+          size="lg"
           onClick={() => navigate(-1)}
         >
-          Back
-        </Button>
+          <IconArrowLeft size={20} />
+        </ActionIcon>
         <Title order={2}>Create New Release</Title>
       </Group>
 
