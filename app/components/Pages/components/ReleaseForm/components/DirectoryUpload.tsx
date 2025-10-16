@@ -338,7 +338,7 @@ export function DirectoryUpload({ onDirectorySelect, onCancel, resetTrigger, dis
           </div>
         )}
         
-        {error && directoryUploadState === 'idle' && (
+        {error && (directoryUploadState === 'idle' || !directoryInfo) && (
           <Text size="xs" c="red" mt={5}>
             {error}
           </Text>

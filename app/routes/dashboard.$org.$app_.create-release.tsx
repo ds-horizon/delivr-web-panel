@@ -127,7 +127,9 @@ export default function CreateReleasePage() {
     // Validate current step
     if (active === 0) {
       const directoryError = form.validateField("directory");
-      if (directoryError.hasError) return;
+      if (directoryError.hasError || !directoryBlob || !directoryName) {
+        return;
+      }
     } else if (active === 1) {
       const versionError = form.validateField("appVersion");
       const deploymentError = form.validateField("deploymentName");
@@ -290,6 +292,7 @@ export default function CreateReleasePage() {
                       <DirectoryUpload
                         onDirectorySelect={handleDirectoryProcess}
                         resetTrigger={resetTrigger}
+                        error={form.errors.directory as string | undefined}
                       />
                     </Box>
                   </Stack>
