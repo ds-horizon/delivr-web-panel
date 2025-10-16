@@ -15,7 +15,7 @@ import {
   IconChevronDown,
   IconChevronUp,
 } from "@tabler/icons-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "@remix-run/react";
 import { route } from "routes-gen";
 import { useGetAppListForOrg } from "../../AppList/hooks/useGetAppListForOrg";
@@ -228,6 +228,13 @@ export function CombinedSidebar({
   const navigate = useNavigate();
   const [expandedOrgId, setExpandedOrgId] = useState<string | null>(currentOrgId || null);
   const [createOrgOpen, setCreateOrgOpen] = useState(false);
+
+  // Auto-expand the organization that contains the current app
+  useEffect(() => {
+    if (currentOrgId) {
+      setExpandedOrgId(currentOrgId);
+    }
+  }, [currentOrgId, currentAppId]);
 
   return (
     <Box
