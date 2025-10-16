@@ -167,7 +167,8 @@ export const DeploymentList = () => {
                         </Tooltip>
                       )}
                     </CopyButton>
-                    <Tooltip label="Delete Deployment" withArrow position="top">
+                    {/* Temporarily hidden - Delete Deployment functionality */}
+                    {/* <Tooltip label="Delete Deployment" withArrow position="top">
                       <ActionIcon
                         color="red"
                         variant="light"
@@ -179,7 +180,7 @@ export const DeploymentList = () => {
                       >
                         <IconTrash style={{ width: rem(18) }} />
                       </ActionIcon>
-                    </Tooltip>
+                    </Tooltip> */}
                   </Group>
                 </Group>
               </Card>
