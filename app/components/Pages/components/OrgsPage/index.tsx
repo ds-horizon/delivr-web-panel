@@ -109,7 +109,7 @@ export function OrgsPage() {
               textTransform: "uppercase",
             }}
           >
-            OTA Air Updates
+            Over The Air Updates
           </Badge>
           
           <Group justify="space-between" align="center" mb="xs">

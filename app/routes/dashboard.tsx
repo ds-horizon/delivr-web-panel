@@ -6,6 +6,8 @@ import type { User } from "~/.server/services/Auth/Auth.interface";
 import { SimpleTermsGuard } from "~/components/TermsAndConditions/SimpleTermsGuard";
 import { authenticateLoaderRequest } from "~/utils/authenticate";
 import { HeaderUserButton } from "~/components/UserButton/HeaderUserButton";
+import { ActionIcon, Tooltip } from "@mantine/core";
+import { IconHelp } from "@tabler/icons-react";
 import { CombinedSidebar } from "~/components/Pages/components/AppDetailPage/components/CombinedSidebar";
 import { useGetOrgList } from "~/components/Pages/components/OrgListNavbar/hooks/useGetOrgList";
 
@@ -64,7 +66,32 @@ export default function Dashboard() {
                   Delivr
                 </Text>
               </Group>
-              <HeaderUserButton user={user} />
+              <Group gap="lg" align="center">
+                <Tooltip label="Access Documentation & Guides" position="bottom">
+                  <Text
+                    size="md"
+                    fw={600}
+                    onClick={() => window.open('https://dota.dreamsportslabs.com/', '_blank')}
+                    style={{ 
+                      color: theme.other.text.white,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      letterSpacing: '0.5px'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.opacity = '0.85';
+                      e.currentTarget.style.textDecoration = 'underline';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.opacity = '1';
+                      e.currentTarget.style.textDecoration = 'none';
+                    }}
+                  >
+                    Get Started
+                  </Text>
+                </Tooltip>
+                <HeaderUserButton user={user} />
+              </Group>
             </Flex>
           </Box>
 
