@@ -220,25 +220,16 @@ export function DirectoryUpload({ onDirectorySelect, onCancel, resetTrigger, dis
 
   return (
     <Stack gap="sm">
-      <Alert icon={<IconInfoCircle />} color="blue" variant="light">
-        <Text size="sm">
-          <strong>Directory Upload:</strong> Select a directory containing your bundle files and assets.
-          <br /><br />
-          <strong>For single bundle files:</strong> Create a directory containing just your bundle file 
-          (e.g., create a folder with <code>index.android.bundle</code> inside).
+      <Alert icon={<IconInfoCircle />} color="blue" variant="light" styles={{ message: { fontSize: '13px' } }}>
+        <Text size="xs">
+          <strong>Tip:</strong> For single bundle files, create a directory containing just your bundle file (e.g., a folder with <code>index.android.bundle</code> inside).
         </Text>
       </Alert>
       
       <div>
-        <Text size="sm" fw={500} mb={5}>
-          Bundle Directory <Text component="span" c="red">*</Text>
-        </Text>
-        <Text size="xs" c="dimmed" mb={10}>
-          Select a directory containing your bundle file and any assets (required)
-        </Text>
         
-        {/* Directory Upload States */}
-        {directoryUploadState === 'idle' && (
+        {/* Directory Upload States - Only show button if nothing is selected */}
+        {(directoryUploadState === 'idle' && !directoryInfo) && (
           <div style={{ position: 'relative' }}>
             <input
               ref={directoryInputRef}

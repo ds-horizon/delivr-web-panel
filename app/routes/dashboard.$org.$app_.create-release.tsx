@@ -229,49 +229,69 @@ export default function CreateReleasePage() {
                     borderColor: theme.other.borders.secondary,
                   }}
                 >
-                  <Stack gap="md" align="center" py="xl">
-                    <Box
-                      style={{
-                        width: rem(80),
-                        height: rem(80),
-                        borderRadius: theme.other.borderRadius.full,
-                        background: theme.other.brand.gradient,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxShadow: theme.other.shadows.lg,
-                      }}
-                    >
-                      <IconFolderOpen size={theme.other.sizes.icon["4xl"]} color={theme.other.text.white} />
-                    </Box>
-                    
-                    <Stack gap="xs" align="center">
-                      <Text size="lg" fw={600}>
-                        Drop your directory here or click to browse
-                      </Text>
-                      <Text size="sm" c="dimmed" ta="center">
-                        Select a folder containing your app bundle files
-                      </Text>
-                    </Stack>
+                  <Stack gap="lg" align="center" py="md">
+                    {directoryBlob && directoryName ? (
+                      // Show bundle selected state
+                      <>
+                        <Box
+                          style={{
+                            width: rem(64),
+                            height: rem(64),
+                            borderRadius: theme.other.borderRadius.full,
+                            background: theme.other.brand.gradient,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            boxShadow: theme.other.shadows.md,
+                          }}
+                        >
+                          <IconCheck size={theme.other.sizes.icon["3xl"]} color={theme.other.text.white} />
+                        </Box>
+                        
+                        <Stack gap="xs" align="center">
+                          <Text size="lg" fw={600} c={theme.other.brand.primary}>
+                            Bundle Selected
+                          </Text>
+                          <Text size="sm" c="dimmed" ta="center" fw={500}>
+                            {directoryName}
+                          </Text>
+                        </Stack>
+                      </>
+                    ) : (
+                      // Show upload prompt
+                      <>
+                        <Box
+                          style={{
+                            width: rem(64),
+                            height: rem(64),
+                            borderRadius: theme.other.borderRadius.full,
+                            background: theme.other.brand.gradient,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            boxShadow: theme.other.shadows.md,
+                          }}
+                        >
+                          <IconFolderOpen size={theme.other.sizes.icon["3xl"]} color={theme.other.text.white} />
+                        </Box>
+                        
+                        <Stack gap="xs" align="center">
+                          <Text size="lg" fw={600}>
+                            Select Bundle Directory
+                          </Text>
+                          <Text size="sm" c="dimmed" ta="center">
+                            Click the button below to browse and select your bundle folder
+                          </Text>
+                        </Stack>
+                      </>
+                    )}
 
-                    <DirectoryUpload
-                      onDirectorySelect={handleDirectoryProcess}
-                      resetTrigger={resetTrigger}
-                    />
-                    
-                    <Paper
-                      withBorder
-                      p="md"
-                      radius="md"
-                      style={{ width: "100%", background: theme.other.backgrounds.secondary }}
-                    >
-                      <Group gap="xs" wrap="nowrap">
-                        <IconUpload size={theme.other.sizes.icon.md} style={{ color: theme.other.brand.primary, flexShrink: 0 }} />
-                        <Text size="xs" c="dimmed">
-                          Supported: All file types • We'll create a ZIP archive automatically
-                        </Text>
-                      </Group>
-                    </Paper>
+                    <Box style={{ width: "100%" }}>
+                      <DirectoryUpload
+                        onDirectorySelect={handleDirectoryProcess}
+                        resetTrigger={resetTrigger}
+                      />
+                    </Box>
                   </Stack>
                 </Card>
               </Stack>
