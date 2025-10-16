@@ -265,7 +265,8 @@ export function ReleaseEditFormModal({ data, refetch }: ReleaseEditProps) {
               />
             </Paper>
 
-            <Paper withBorder p="md" radius="md">
+            {/* Temporarily hidden - Mandatory Update option */}
+            {/* <Paper withBorder p="md" radius="md">
               <Switch
                 label={
                   <Stack gap={4}>
@@ -286,7 +287,7 @@ export function ReleaseEditFormModal({ data, refetch }: ReleaseEditProps) {
                 }}
                 size="md"
               />
-            </Paper>
+            </Paper> */}
           </Group>
         </Stack>
 
