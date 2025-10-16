@@ -20,6 +20,13 @@ import { CTAButton } from "~/components/CTAButton";
 import { useState } from "react";
 import { CreateAppForm } from "../CreateApp";
 import { ACTION_EVENTS, actions } from "~/utils/event-emitter";
+import { Button } from "@mantine/core";
+import { useDeleteAppForOrg } from "../DeleteAction/hooks/useDeleteAppForOrg";
+
+type DeleteAppState = {
+  id: string;
+  name: string;
+} | null;
 
 type AppListPageProps = {
   user: User;
@@ -30,6 +37,8 @@ export function AppListPage({ user }: AppListPageProps) {
   const params = useParams();
   const navigate = useNavigate();
   const [createAppOpen, setCreateAppOpen] = useState(false);
+  const [deleteAppState, setDeleteAppState] = useState<DeleteAppState>(null);
+  const { mutate: deleteApp, isLoading: isDeleting } = useDeleteAppForOrg();
 
   const { data, isLoading, isError, refetch } = useGetAppListForOrg({
     orgId: params.org ?? "",
@@ -153,10 +162,7 @@ export function AppListPage({ user }: AppListPageProps) {
               );
             }}
             onDelete={() => {
-              navigate(
-                route("/dashboard/delete") +
-                  `?type=app&app=${app.id}&tenant=${params.org}`
-              );
+              setDeleteAppState({ id: app.id, name: app.name });
             }}
           />
         ))}
@@ -176,6 +182,50 @@ export function AppListPage({ user }: AppListPageProps) {
           }}
         />
       </Modal>
+
+      {/* Delete App Modal */}
+      {deleteAppState && (
+        <Modal
+          opened={true}
+          onClose={() => setDeleteAppState(null)}
+          title="Delete App"
+          centered
+        >
+          <Text>
+            Are you sure you want to delete this app ({deleteAppState.name})?
+          </Text>
+          <Group justify="flex-end" mt="lg">
+            <Button
+              variant="default"
+              onClick={() => setDeleteAppState(null)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              color="red"
+              loading={isDeleting}
+              onClick={() => {
+                deleteApp(
+                  {
+                    tenant: params.org ?? "",
+                    appId: deleteAppState.id,
+                  },
+                  {
+                    onSuccess: () => {
+                      actions.trigger(ACTION_EVENTS.REFETCH_ORGS);
+                      setDeleteAppState(null);
+                      refetch();
+                    },
+                  }
+                );
+              }}
+            >
+              Delete
+            </Button>
+          </Group>
+        </Modal>
+      )}
     </Box>
   );
 }
