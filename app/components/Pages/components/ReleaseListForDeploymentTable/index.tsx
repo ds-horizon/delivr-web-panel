@@ -237,7 +237,7 @@ export function ReleaseListForDeploymentTable() {
             No Releases Yet
           </Title>
           <Text c="dimmed">
-            This deployment doesn't have any releases. Create your first release to get started!
+          This deployment key doesn’t have any releases. Create your first release to get started!
           </Text>
         </Stack>
       </Card>
