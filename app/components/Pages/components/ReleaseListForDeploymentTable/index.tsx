@@ -119,7 +119,7 @@ function ReleaseCard({
               <Text size="lg" fw={700} style={{ lineHeight: 1.2 }}>
                 {release.label}
               </Text>
-              {isActive && (
+              {isActive ? (
                 <Badge
                   variant="light"
                   color="green"
@@ -127,6 +127,14 @@ function ReleaseCard({
                   leftSection={<IconCheck size={10} />}
                 >
                   Active
+                </Badge>
+              ) : (
+                <Badge
+                  variant="light"
+                  color="gray"
+                  size="sm"
+                >
+                  Inactive
                 </Badge>
               )}
               {release.mandatory && (
@@ -237,16 +245,22 @@ export function ReleaseListForDeploymentTable() {
             No Releases Yet
           </Title>
           <Text c="dimmed">
-          This deployment key doesn’t have any releases. Create your first release to get started!
+            This deployment Key doesn't have any releases. Create your first release to get started!
           </Text>
         </Stack>
       </Card>
     );
   }
 
+  // Sort releases by release time - latest first
+  const sortedReleases = [...data].sort((a, b) => {
+    // Sort by releasedAt in descending order (latest first)
+    return (b.releasedAt || 0) - (a.releasedAt || 0);
+  });
+
   return (
     <Stack gap="md" mt="xl">
-      {data.map((release) => (
+      {sortedReleases.map((release) => (
         <ReleaseCard
           key={release.id}
           release={release}
