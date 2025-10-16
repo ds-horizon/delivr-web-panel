@@ -316,7 +316,7 @@ export default function ReleaseDetailPage() {
               </Title>
               <Grid gutter="lg">
                 <Grid.Col span={4}>
-                  <Box style={{ textAlign: "center" }}>
+                  <Stack align="center" gap="md">
                     <RingProgress
                       size={180}
                       thickness={16}
@@ -332,17 +332,19 @@ export default function ReleaseDetailPage() {
                         </Stack>
                       }
                     />
-                    <Text size="sm" fw={500} mt="md">
-                      Active Adoption Rate
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      {data.activeDevices?.toLocaleString()} of {data.totalActive?.toLocaleString()} devices
-                    </Text>
-                  </Box>
+                    <Stack gap={4} align="center">
+                      <Text size="sm" fw={500}>
+                        Active Adoption Rate
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        {data.activeDevices?.toLocaleString()} of {data.totalActive?.toLocaleString()} devices
+                      </Text>
+                    </Stack>
+                  </Stack>
                 </Grid.Col>
 
                 <Grid.Col span={4}>
-                  <Box style={{ textAlign: "center" }}>
+                  <Stack align="center" gap="md">
                     <RingProgress
                       size={180}
                       thickness={16}
@@ -358,17 +360,19 @@ export default function ReleaseDetailPage() {
                         </Stack>
                       }
                     />
-                    <Text size="sm" fw={500} mt="md">
-                      Installation Success
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      {data.installed?.toLocaleString()} successful, {0} failed
-                    </Text>
-                  </Box>
+                    <Stack gap={4} align="center">
+                      <Text size="sm" fw={500}>
+                        Installation Success
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        {data.installed?.toLocaleString()} successful, {0} failed
+                      </Text>
+                    </Stack>
+                  </Stack>
                 </Grid.Col>
 
                 <Grid.Col span={4}>
-                  <Box style={{ textAlign: "center" }}>
+                  <Stack align="center" gap="md">
                     <RingProgress
                       size={180}
                       thickness={16}
@@ -384,13 +388,15 @@ export default function ReleaseDetailPage() {
                         </Stack>
                       }
                     />
-                    <Text size="sm" fw={500} mt="md">
-                      Rollback Rate
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      {data.rollbacks?.toLocaleString()} rollbacks from {data.installed?.toLocaleString()} installs
-                    </Text>
-                  </Box>
+                    <Stack gap={4} align="center">
+                      <Text size="sm" fw={500}>
+                        Rollback Rate
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        {data.rollbacks?.toLocaleString()} rollbacks from {data.installed?.toLocaleString()} installs
+                      </Text>
+                    </Stack>
+                  </Stack>
                 </Grid.Col>
               </Grid>
             </Card>
