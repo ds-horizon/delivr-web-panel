@@ -10,13 +10,18 @@ import {
 import { useGetOrgList } from "../OrgListNavbar/hooks/useGetOrgList";
 import { useCreateApp } from "./hooks/useCreateApp";
 import { useEffect, useState } from "react";
-import { useNavigate } from "@remix-run/react";
+import { useNavigate, useParams } from "@remix-run/react";
 import { route } from "routes-gen";
 import { ACTION_EVENTS, actions } from "~/utils/event-emitter";
 
-export function CreateAppForm() {
+type CreateAppFormProps = {
+  onSuccess?: () => void;
+};
+
+export function CreateAppForm({ onSuccess }: CreateAppFormProps = {}) {
   const { mutate, isLoading } = useCreateApp();
   const navigation = useNavigate();
+  const params = useParams();
   const orgs = useGetOrgList();
   const [org, setOrg] = useState({
     value: "",
@@ -49,11 +54,20 @@ export function CreateAppForm() {
   const shouldShowLoader = orgs.isLoading || orgs.isFetching;
 
   useEffect(() => {
-    setOrg({
-      value: orgs.data?.[0]?.orgName ?? "Select Org",
-      error: "",
-    });
-  }, [orgs.data]);
+    // If we have an org in params, use it (coming from app list page)
+    const currentOrg = orgs.data?.find((o) => o.id === params.org);
+    if (currentOrg) {
+      setOrg({
+        value: currentOrg.orgName,
+        error: "",
+      });
+    } else {
+      setOrg({
+        value: orgs.data?.[0]?.orgName ?? "Select Org",
+        error: "",
+      });
+    }
+  }, [orgs.data, params.org]);
 
   return (
     <>
@@ -113,7 +127,11 @@ export function CreateAppForm() {
                 onSuccess: () => {
                   actions.trigger(ACTION_EVENTS.REFETCH_ORGS);
                   form.reset();
-                  navigation(route("/dashboard"));
+                  if (onSuccess) {
+                    onSuccess();
+                  } else {
+                    navigation(route("/dashboard"));
+                  }
                 },
               }
             );

@@ -7,6 +7,7 @@ import {
   Box,
   Flex,
   useMantineTheme,
+  Modal,
 } from "@mantine/core";
 import { IconPlus, IconChevronRight } from "@tabler/icons-react";
 import { useNavigate, useParams } from "@remix-run/react";
@@ -16,6 +17,9 @@ import { useGetAppListForOrg } from "../AppList/hooks/useGetAppListForOrg";
 import { AppListRow } from "./components/AppListRow";
 import { useGetOrgList } from "../OrgListNavbar/hooks/useGetOrgList";
 import { CTAButton } from "~/components/CTAButton";
+import { useState } from "react";
+import { CreateAppForm } from "../CreateApp";
+import { ACTION_EVENTS, actions } from "~/utils/event-emitter";
 
 type AppListPageProps = {
   user: User;
@@ -25,8 +29,9 @@ export function AppListPage({ user }: AppListPageProps) {
   const theme = useMantineTheme();
   const params = useParams();
   const navigate = useNavigate();
+  const [createAppOpen, setCreateAppOpen] = useState(false);
 
-  const { data, isLoading, isError } = useGetAppListForOrg({
+  const { data, isLoading, isError, refetch } = useGetAppListForOrg({
     orgId: params.org ?? "",
     userEmail: user.user.email,
   });
@@ -128,7 +133,7 @@ export function AppListPage({ user }: AppListPageProps) {
         
         <CTAButton
           leftSection={<IconPlus size={theme.other.sizes.icon.lg} />}
-          onClick={() => navigate(route("/dashboard/create/app"))}
+          onClick={() => setCreateAppOpen(true)}
         >
           Create App
         </CTAButton>
@@ -156,6 +161,21 @@ export function AppListPage({ user }: AppListPageProps) {
           />
         ))}
       </Flex>
+
+      {/* Create App Modal */}
+      <Modal
+        opened={createAppOpen}
+        onClose={() => setCreateAppOpen(false)}
+        title="Create App"
+        centered
+      >
+        <CreateAppForm
+          onSuccess={() => {
+            setCreateAppOpen(false);
+            refetch();
+          }}
+        />
+      </Modal>
     </Box>
   );
 }
