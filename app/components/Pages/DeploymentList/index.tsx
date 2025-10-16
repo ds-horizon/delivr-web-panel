@@ -84,7 +84,7 @@ export const DeploymentList = () => {
             <Group justify="space-between" align="flex-start" wrap="nowrap">
               {/* Left: Selector */}
               <Select
-                label="Deployment Key"
+                label="Select Deployment Key"
                 placeholder="Choose a deployment..."
                 data={deploymentOptions}
                 value={searchParams.get("deployment")}

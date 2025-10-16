@@ -90,7 +90,7 @@ export default function CreateReleasePage() {
         }
         return null;
       },
-      deploymentName: (value) => (!value ? "Please select a deployment" : null),
+      deploymentName: (value) => (!value ? "Please select a deployment Key" : null),
       rollout: (value) => {
         if (value < 1 || value > 100) {
           return "Rollout must be between 1 and 100";
@@ -292,7 +292,7 @@ export default function CreateReleasePage() {
                 />
                 
                 <Select
-                  label="Deployment"
+                  label="Select Deployment Key"
                   placeholder="Select deployment target"
                   required
                   data={deploymentOptions}
@@ -489,7 +489,7 @@ export default function CreateReleasePage() {
                     <Text size="sm" c="dimmed">{form.values.appVersion || "Not set"}</Text>
                   </Group>
                   <Group justify="space-between">
-                    <Text size="sm" fw={500}>Deployment:</Text>
+                    <Text size="sm" fw={500}>Deployment Key:</Text>
                     <Text size="sm" c="dimmed">{form.values.deploymentName || "Not selected"}</Text>
                   </Group>
                 </Stack>
