@@ -365,12 +365,13 @@ export default function CreateReleasePage() {
                   </Text>
                 </Stack>
 
-                <Switch
+                {/* Temporarily hidden - Mandatory Update option */}
+                {/* <Switch
                   label="Mandatory Update"
                   description="Users must install this update to continue"
                   key={form.key("mandatory")}
                   {...form.getInputProps("mandatory", { type: "checkbox" })}
-                />
+                /> */}
 
                 <Switch
                   label="Disabled"
@@ -506,12 +507,13 @@ export default function CreateReleasePage() {
                       {form.values.rollout}%
                     </Text>
                   </Group>
-                  <Group justify="space-between">
+                  {/* Temporarily hidden - Mandatory Update */}
+                  {/* <Group justify="space-between">
                     <Text size="sm" fw={500}>Mandatory Update:</Text>
                     <Text size="sm" c={form.values.mandatory ? "red" : "dimmed"} fw={form.values.mandatory ? 600 : 400}>
                       {form.values.mandatory ? "Yes" : "No"}
                     </Text>
-                  </Group>
+                  </Group> */}
                   <Group justify="space-between">
                     <Text size="sm" fw={500}>Disabled:</Text>
                     <Text size="sm" c={form.values.disabled ? "orange" : "dimmed"} fw={form.values.disabled ? 600 : 400}>
