@@ -37,14 +37,20 @@ export function CreateAppForm({ onSuccess }: CreateAppFormProps = {}) {
 
     validate: {
       appName: (value) => {
-        return value.length ? null : "App Name  Can't be Empty";
+        if (!value || value.trim().length === 0) {
+          return "App name is required";
+        }
+        if (value.trim().length < 3) {
+          return "App name must be at least 3 characters";
+        }
+        return null;
       },
     },
   });
 
   const onOrgChange = (value: string) => {
     if (!value?.length) {
-      setOrg({ value: "", error: "Owner Can't be Empty" });
+      setOrg({ value: "", error: "Organization is required" });
       return;
     }
 
@@ -84,9 +90,9 @@ export function CreateAppForm({ onSuccess }: CreateAppFormProps = {}) {
       <Skeleton visible={shouldShowLoader} mt={"md"}>
         <Autocomplete
           mt="md"
-          label="Select an Owner"
+          label="Select Organization"
           withAsterisk
-          placeholder="Pick an owner"
+          placeholder="Choose an organization"
           onChange={onOrgChange}
           disabled={isLoading}
           value={org.value}
@@ -108,9 +114,21 @@ export function CreateAppForm({ onSuccess }: CreateAppFormProps = {}) {
       <Group justify="flex-end" mt="md">
         <Button
           onClick={() => {
+            // Validate form
             if (form.validate().hasErrors) {
               return;
             }
+            
+            // Validate organization
+            if (!org.value || org.value.trim().length === 0) {
+              setOrg({ value: org.value, error: "Organization is required" });
+              return;
+            }
+            
+            if (org.error) {
+              return;
+            }
+            
             let owner = { orgId: "", orgName: org.value };
             const _org = orgs.data?.filter(
               (item) => item.orgName === org.value
@@ -137,7 +155,7 @@ export function CreateAppForm({ onSuccess }: CreateAppFormProps = {}) {
             );
           }}
           disabled={
-            !!Object.keys(form.errors).length || isLoading || !!org.error.length
+            !!Object.keys(form.errors).length || isLoading || !!org.error.length || !org.value.trim()
           }
           loading={isLoading}
         >
