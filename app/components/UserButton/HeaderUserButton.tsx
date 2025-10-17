@@ -1,4 +1,4 @@
-import { UnstyledButton, Avatar, Menu, rem, Modal, Text, Flex, Button } from "@mantine/core";
+import { UnstyledButton, Avatar, Menu, rem, Modal, Text, Flex, Button, Tooltip } from "@mantine/core";
 import {
   IconLogout,
   IconSettings,
@@ -20,7 +20,7 @@ export function HeaderUserButton({ user }: HeaderUserButtonProps) {
   
   return (
     <>
-      <Menu shadow="md" width={200} position="bottom-end">
+      <Menu shadow="md" width={240} position="bottom-end">
         <Menu.Target>
           <UnstyledButton>
             <Avatar 
@@ -39,12 +39,33 @@ export function HeaderUserButton({ user }: HeaderUserButtonProps) {
           </UnstyledButton>
         </Menu.Target>
 
-        <Menu.Dropdown>
-          <Menu.Label>{user.user.name}</Menu.Label>
-          <Menu.Label style={{ fontWeight: 400, fontSize: '0.75rem' }}>
+      <Menu.Dropdown>
+        <Menu.Label 
+          style={{ 
+            overflow: 'hidden', 
+            textOverflow: 'ellipsis', 
+            whiteSpace: 'nowrap',
+            fontSize: '0.9rem',
+            fontWeight: 600
+          }}
+        >
+          {user.user.name}
+        </Menu.Label>
+        <Tooltip label={user.user.email} position="bottom" withArrow openDelay={500}>
+          <Menu.Label 
+            style={{ 
+              fontWeight: 400, 
+              fontSize: '0.85rem',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              cursor: 'default'
+            }}
+          >
             {user.user.email}
           </Menu.Label>
-          <Menu.Divider />
+        </Tooltip>
+        <Menu.Divider />
           <Menu.Item
             leftSection={
               <IconSettings style={{ width: rem(14), height: rem(14) }} />
