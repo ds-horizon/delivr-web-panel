@@ -1,4 +1,4 @@
-import { Center, TextInput, Box, Modal, useMantineTheme } from "@mantine/core";
+import { TextInput, Stack, Modal, useMantineTheme } from "@mantine/core";
 import { useForm } from "@mantine/form";
 
 import { useParams } from "@remix-run/react";
@@ -16,11 +16,19 @@ export function AddCollboratorForm({ open, onClose }: AddCollboratorFormProps) {
   const { mutate, isLoading } = useAddCollabarator();
   const form = useForm<{ name: string }>({
     mode: "uncontrolled",
-    initialValues: { name: "collborator@email.com" },
+    initialValues: { name: "" },
     validateInputOnChange: true,
     validate: {
       name: (value) => {
-        return value.length ? null : "Email  Can't be Empty";
+        if (!value || value.trim().length === 0) {
+          return "Email is required";
+        }
+        // Email validation regex
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value.trim())) {
+          return "Please enter a valid email address";
+        }
+        return null;
       },
     },
   });
@@ -29,54 +37,64 @@ export function AddCollboratorForm({ open, onClose }: AddCollboratorFormProps) {
   console.log('AddCollaboratorForm params:', { app: params.app, org: params.org });
 
   return (
-    <Modal opened={open} onClose={onClose} title={"Add Collborator"} centered>
-      <Center>
-        <Box w={"300px"}>
-          <TextInput
-            label="Enter Email"
-            placeholder="collborator@email.com"
-            key={form.key("name")}
-            {...form.getInputProps("name")}
-            mt={"md"}
-            disabled={isLoading}
-            styles={{
-              input: {
-                "&:focus": {
-                  borderColor: theme.other.brand.primary,
-                },
+    <Modal 
+      opened={open} 
+      onClose={onClose} 
+      title="Add Collaborator" 
+      centered
+      size="md"
+    >
+      <Stack gap="lg">
+        <TextInput
+          label="Enter Email"
+          placeholder="collaborator@email.com"
+          key={form.key("name")}
+          {...form.getInputProps("name")}
+          disabled={isLoading}
+          required
+          withAsterisk
+          size="md"
+          styles={{
+            input: {
+              "&:focus": {
+                borderColor: theme.other.brand.primary,
               },
-            }}
-          />
-          <CTAButton
-            fullWidth
-            mt="md"
-            disabled={!!Object.keys(form.errors).length && !isLoading}
-            loading={isLoading}
-            onClick={() => {
-              console.log('Submitting with:', {
-                appId: params.app,
-                tenant: params.org,
+            },
+          }}
+        />
+        <CTAButton
+          fullWidth
+          size="md"
+          disabled={!!Object.keys(form.errors).length || isLoading}
+          loading={isLoading}
+          onClick={() => {
+            // Validate before submitting
+            if (form.validate().hasErrors) {
+              return;
+            }
+            console.log('Submitting with:', {
+              appId: params.app,
+              tenant: params.org,
+              email: form.getValues().name,
+            });
+            mutate(
+              {
+                appId: params.app ?? "",
+                tenant: params.org ?? "",
                 email: form.getValues().name,
-              });
-              mutate(
-                {
-                  appId: params.app ?? "",
-                  tenant: params.org ?? "",
-                  email: form.getValues().name,
+              },
+              {
+                onSuccess: () => {
+                  onClose();
+                  form.reset();
                 },
-                {
-                  onSuccess: () => {
-                    onClose();
-                    form.reset();
-                  },
-                }
-              );
-            }}
-          >
-            Add Collaborator
-          </CTAButton>
-        </Box>
-      </Center>
+              }
+            );
+          }}
+        >
+          Add Collaborator
+        </CTAButton>
+      </Stack>
     </Modal>
   );
 }
