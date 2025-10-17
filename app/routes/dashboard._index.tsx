@@ -1,5 +1,5 @@
-import { Intro } from "~/components/Pages/Intro";
+import { OrgsPage } from "~/components/Pages/components/OrgsPage";
 
-export default function IntroPage() {
-  return <Intro />;
+export default function DashboardIndex() {
+  return <OrgsPage />;
 }

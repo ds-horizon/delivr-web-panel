@@ -1,75 +1,115 @@
-import {
-  AppShell,
-  Burger,
-  Button,
-  Code,
-  Flex,
-  Group,
-  Image,
-  rem,
-} from "@mantine/core";
-import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import { Outlet, useLoaderData, useNavigate } from "@remix-run/react";
-import { useMemo } from "react";
+import { Flex, Group, Text, Box, Skeleton, useMantineTheme } from "@mantine/core";
+import { IconRocket } from "@tabler/icons-react";
+import { Outlet, useLoaderData, useNavigate, useParams, useLocation } from "@remix-run/react";
 import { route } from "routes-gen";
 import type { User } from "~/.server/services/Auth/Auth.interface";
-import { Logo } from "~/components/Logo";
-import { NavbarNested } from "~/components/NavbarNested";
 import { SimpleTermsGuard } from "~/components/TermsAndConditions/SimpleTermsGuard";
 import { authenticateLoaderRequest } from "~/utils/authenticate";
-import cpIcon from './../assets/images/second.png';
+import { HeaderUserButton } from "~/components/UserButton/HeaderUserButton";
+import { ActionIcon, Tooltip } from "@mantine/core";
+import { IconHelp } from "@tabler/icons-react";
+import { CombinedSidebar } from "~/components/Pages/components/AppDetailPage/components/CombinedSidebar";
+import { useGetOrgList } from "~/components/Pages/components/OrgListNavbar/hooks/useGetOrgList";
 
 export const loader = authenticateLoaderRequest();
 
 export default function Dashboard() {
+  const theme = useMantineTheme();
   const user = useLoaderData<User>();
   const navigate = useNavigate();
-  const [opened, { toggle }] = useDisclosure();
+  const params = useParams();
+  const location = useLocation();
+  const { data: orgs = [], isLoading: orgsLoading } = useGetOrgList();
 
-  const openCreateApp = () => {
-    navigate(route("/dashboard/create/app"));
-  };
-  useHotkeys([["C", openCreateApp]]);
+  const isMainDashboard = location.pathname === "/dashboard";
+  const showSidebar = orgs.length > 0 && !isMainDashboard;
 
   return (
-    <AppShell
-      header={{ height: 60 }}
-      navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: !opened } }}
-      padding="md"
-    >
-      <AppShell.Header>
-        <Flex align={"center"} mt="sm">
-          <Group h="100%" px="md" w={"100%"}>
-            <Burger
-              opened={opened}
-              onClick={toggle}
-              hiddenFrom="sm"
-              size="sm"
-            />
-            <Group justify="space-between">
-              <Image src={cpIcon} alt="CodePush" fit="contain" height={44}/>
-              <Logo style={{ width: rem(80) }} />
-              {/* <Code fw={700}>v{config.version}</Code> */}
-            </Group>
-          </Group>
-          <Group mr="sm">
-            <Button
-              onClick={openCreateApp}
-              rightSection={<Code fw={700}>C</Code>}
-            >
-              App
-            </Button>
-          </Group>
+    <SimpleTermsGuard>
+      {orgsLoading ? (
+        <Flex h="100vh" direction="column">
+          <Skeleton height={60} width="100%" />
+          <Flex style={{ flex: 1 }}>
+            <Skeleton width={280} height="100%" />
+            <Box style={{ flex: 1 }} p="md">
+              <Skeleton height={40} width="100%" mb="md" />
+              <Skeleton height={400} width="100%" />
+            </Box>
+          </Flex>
         </Flex>
-      </AppShell.Header>
-      <AppShell.Navbar style={{ overflow: "hidden" }}>
-        <NavbarNested user={user} />
-      </AppShell.Navbar>
-      <AppShell.Main>
-        <SimpleTermsGuard>
-          <Outlet />
-        </SimpleTermsGuard>
-      </AppShell.Main>
-    </AppShell>
+      ) : (
+        <Flex h="100vh" direction="column">
+          <Box
+            style={{
+              background: theme.other.brand.gradient,
+              borderBottom: "none",
+              paddingTop: theme.other.spacing.lg,
+              paddingBottom: theme.other.spacing.lg,
+            }}
+          >
+            <Flex align="center" justify="space-between" h="100%" px="lg">
+              <Group 
+                gap="sm" 
+                style={{ cursor: "pointer" }} 
+                onClick={() => navigate(route("/dashboard"))}
+              >
+                <IconRocket size={theme.other.sizes.icon["3xl"]} color={theme.other.text.white} stroke={2} />
+                <Text 
+                  size="xl" 
+                  fw={theme.other.typography.fontWeight.bold} 
+                  c="white"
+                  style={{
+                    fontSize: theme.other.typography.fontSize["2xl"],
+                    letterSpacing: theme.other.typography.letterSpacing.wide,
+                  }}
+                >
+                  Delivr
+                </Text>
+              </Group>
+              <Group gap="lg" align="center">
+                <Tooltip label="Access Documentation & Guides" position="bottom">
+                  <Text
+                    size="md"
+                    fw={600}
+                    onClick={() => window.open('https://dota.dreamsportslabs.com/', '_blank')}
+                    style={{ 
+                      color: theme.other.text.white,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      letterSpacing: '0.5px'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.opacity = '0.85';
+                      e.currentTarget.style.textDecoration = 'underline';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.opacity = '1';
+                      e.currentTarget.style.textDecoration = 'none';
+                    }}
+                  >
+                    Get Started
+                  </Text>
+                </Tooltip>
+                <HeaderUserButton user={user} />
+              </Group>
+            </Flex>
+          </Box>
+
+          <Flex style={{ flex: 1, overflow: "hidden" }}>
+            {showSidebar && (
+              <CombinedSidebar
+                organizations={orgs}
+                currentOrgId={params.org}
+                currentAppId={params.app}
+                userEmail={user.user.email}
+              />
+            )}
+            <Box style={{ flex: 1, overflowY: "auto", padding: theme.other.spacing["2xl"] }}>
+              <Outlet />
+            </Box>
+          </Flex>
+        </Flex>
+      )}
+    </SimpleTermsGuard>
   );
 }

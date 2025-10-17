@@ -53,20 +53,6 @@ class Codepush {
   });
 
   async getUser(token: string): Promise<User> {
-    if (!env.DOTA_SERVER_URL.length) {
-      return Promise.resolve({
-        authenticated: true,
-        user: {
-          createdTime: Date.now(),
-          name: "Dummy User",
-          email: "dummy_user@dream11.com",
-          id: "id_1",
-          createdAt: "2024-10-30T08:41:07.000Z",
-          updatedAt: "2024-10-30T08:41:07.000Z",
-        },
-      });
-    }
-
     const { data } = await this.__client.get<
       null,
       { status: number; data: User }
@@ -349,25 +335,6 @@ class Codepush {
   }
 
   async createRelease(data: CreateReleaseRequest) {
-    if (!env.DOTA_SERVER_URL.length) {
-      // Development mode - return mock response
-      const mockResponse: CreateReleaseResponse = {
-        package: {
-          label: `v${Date.now()}`,
-          appVersion: data.packageInfo.appVersion,
-          description: data.packageInfo.description || "",
-          packageHash: "mock-hash-" + Date.now(),
-          blobUrl: "mock-blob-url",
-          size: data.packageFile.size,
-          rollout: data.packageInfo.rollout || 100,
-          isMandatory: data.packageInfo.isMandatory || false,
-          isDisabled: data.packageInfo.isDisabled || false,
-          uploadTime: Date.now(),
-        },
-      };
-      return { data: mockResponse, status: 201 };
-    }
-
     // Create multipart form data for CodePush server
     const formData = new FormData();
     formData.append("package", data.packageFile);
@@ -388,7 +355,7 @@ class Codepush {
       );
 
       return { data: response.data, status: response.status };
-    } catch (error) {
+    } catch (error: any) {
       // Handle axios errors to preserve original status codes and messages
       if (error.response) {
         // Server responded with error status (4xx, 5xx)

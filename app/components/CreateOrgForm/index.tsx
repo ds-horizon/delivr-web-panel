@@ -1,8 +1,10 @@
-import { Card, Button, Center, TextInput, Box } from "@mantine/core";
+import { Card, Center, TextInput, Box, useMantineTheme } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconSitemap } from "@tabler/icons-react";
+import { CTAButton } from "~/components/CTAButton";
 
 export function CreateOrgForm() {
+  const theme = useMantineTheme();
   const form = useForm<{ name: string }>({
     mode: "uncontrolled",
     initialValues: { name: "Enter Name" },
@@ -25,20 +27,25 @@ export function CreateOrgForm() {
 
           <TextInput
             label="Enter Organization Name"
-            placeholder="Orgainization Name"
+            placeholder="Organization Name"
             key={form.key("name")}
             {...form.getInputProps("name")}
+            styles={{
+              input: {
+                "&:focus": {
+                  borderColor: theme.other.brand.primary,
+                },
+              },
+            }}
           />
 
-          <Button
-            color="blue"
+          <CTAButton
             fullWidth
             mt="md"
-            radius="md"
             disabled={!!Object.keys(form.errors).length}
           >
             Create Organization
-          </Button>
+          </CTAButton>
         </Card>
       </Box>
     </Center>

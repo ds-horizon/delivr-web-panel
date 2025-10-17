@@ -8,14 +8,19 @@ import {
   List,
   ThemeIcon,
   rem,
+  Modal,
 } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 import image from "./image.svg";
 import classes from "./index.module.css";
+import { useState } from "react";
 import { useNavigate } from "@remix-run/react";
 import { route } from "routes-gen";
+import { CreateOrgModal } from "../components/OrgsPage/components/CreateOrgModal";
+import { ACTION_EVENTS, actions } from "~/utils/event-emitter";
 
 export function Intro() {
+  const [createOrgOpen, setCreateOrgOpen] = useState(false);
   const navigate = useNavigate();
   return (
     <Container size="md">
@@ -23,10 +28,10 @@ export function Intro() {
         <div className={classes.content}>
           <Title className={classes.title}>
             Welcome to the{" "}
-            <span className={classes.highlight}>DOTA</span> Dashboard <br />{" "}
+            <span className={classes.highlight}>Delivr</span> Dashboard <br />{" "}
           </Title>
           <Text c="dimmed" mt="md">
-            Instantly update your mobile apps with ease – DOTA
+            Instantly update your mobile apps with ease – Delivr
             lets you deploy real-time updates for React Native with support for
             code, images, and assets to keep your app agile and up-to-date in
             any scenario.
@@ -64,27 +69,31 @@ export function Intro() {
               radius="xl"
               size="md"
               className={classes.control}
-              onClick={() => {
-                navigate(route("/dashboard/create/app"));
-              }}
-            >
-              Create App
-            </Button>
-            {/* <Button
-              variant="default"
-              radius="xl"
-              size="md"
-              className={classes.control}
-              onClick={() => {
-                navigate(route("/dashboard/create/org"));
-              }}
+              onClick={() => setCreateOrgOpen(true)}
             >
               Create Organization
-            </Button> */}
+            </Button>
           </Group>
         </div>
         <Image src={image} className={classes.image} />
       </div>
+
+      {/* Create Organization Modal */}
+      <Modal
+        opened={createOrgOpen}
+        onClose={() => setCreateOrgOpen(false)}
+        title="Create Organization"
+        centered
+      >
+        <CreateOrgModal
+          onSuccess={() => {
+            actions.trigger(ACTION_EVENTS.REFETCH_ORGS);
+            setCreateOrgOpen(false);
+            // Navigate to dashboard to show the new organization
+            navigate(route("/dashboard"));
+          }}
+        />
+      </Modal>
     </Container>
   );
 }

@@ -98,6 +98,7 @@ type Package = {
   failed: number | null;
   installed: number | null;
   totalActive: number | null;
+  isBundlePatchingEnabled?: boolean;
 };
 
 export type UpdatePackageRequest = {

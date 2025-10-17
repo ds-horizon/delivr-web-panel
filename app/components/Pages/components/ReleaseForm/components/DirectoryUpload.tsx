@@ -28,9 +28,11 @@ interface DirectoryUploadProps {
   resetTrigger?: number; // Increment this to trigger a reset
   disabled?: boolean;
   error?: string;
+  hasSelectedDirectory?: boolean; // Whether parent has a directory selected
+  selectedDirectoryName?: string; // Name of the selected directory from parent
 }
 
-export function DirectoryUpload({ onDirectorySelect, onCancel, resetTrigger, disabled = false, error }: DirectoryUploadProps) {
+export function DirectoryUpload({ onDirectorySelect, onCancel, resetTrigger, disabled = false, error, hasSelectedDirectory = false, selectedDirectoryName = "" }: DirectoryUploadProps) {
   const directoryInputRef = useRef<HTMLInputElement>(null);
   const cancelledRef = useRef<boolean>(false);
   
@@ -220,25 +222,16 @@ export function DirectoryUpload({ onDirectorySelect, onCancel, resetTrigger, dis
 
   return (
     <Stack gap="sm">
-      <Alert icon={<IconInfoCircle />} color="blue" variant="light">
-        <Text size="sm">
-          <strong>Directory Upload:</strong> Select a directory containing your bundle files and assets.
-          <br /><br />
-          <strong>For single bundle files:</strong> Create a directory containing just your bundle file 
-          (e.g., create a folder with <code>index.android.bundle</code> inside).
+      <Alert icon={<IconInfoCircle />} color="blue" variant="light" styles={{ message: { fontSize: '13px' } }}>
+        <Text size="xs">
+          <strong>Tip:</strong> For single bundle files, create a directory containing just your bundle file (e.g., a folder with <code>index.android.bundle</code> inside).
         </Text>
       </Alert>
       
       <div>
-        <Text size="sm" fw={500} mb={5}>
-          Bundle Directory <Text component="span" c="red">*</Text>
-        </Text>
-        <Text size="xs" c="dimmed" mb={10}>
-          Select a directory containing your bundle file and any assets (required)
-        </Text>
         
-        {/* Directory Upload States */}
-        {directoryUploadState === 'idle' && (
+        {/* Directory Upload States - Only show button if nothing is selected */}
+        {(directoryUploadState === 'idle' && !directoryInfo && !hasSelectedDirectory) && (
           <div style={{ position: 'relative' }}>
             <input
               ref={directoryInputRef}
@@ -268,6 +261,30 @@ export function DirectoryUpload({ onDirectorySelect, onCancel, resetTrigger, dis
             >
               Choose Directory...
             </Button>
+          </div>
+        )}
+
+        {/* Show consistent completed UI when parent has selected directory but component is idle */}
+        {(directoryUploadState === 'idle' && !directoryInfo && hasSelectedDirectory) && (
+          <div>
+            <Group justify="space-between" align="center">
+              <Group gap="sm">
+                <IconCheck style={{ width: rem(20), height: rem(20), color: 'var(--mantine-color-green-6)' }} />
+                <div>
+                  <Text size="sm" fw={500}>{selectedDirectoryName}</Text>
+                </div>
+              </Group>
+              <Group gap="xs">
+                <ActionIcon
+                  variant="subtle"
+                  color="red"
+                  onClick={handleCancelDirectory}
+                  title="Remove directory"
+                >
+                  <IconX style={{ width: rem(16), height: rem(16) }} />
+                </ActionIcon>
+              </Group>
+            </Group>
           </div>
         )}
 
@@ -347,7 +364,7 @@ export function DirectoryUpload({ onDirectorySelect, onCancel, resetTrigger, dis
           </div>
         )}
         
-        {error && directoryUploadState === 'idle' && (
+        {error && (directoryUploadState === 'idle' || !directoryInfo) && (
           <Text size="xs" c="red" mt={5}>
             {error}
           </Text>

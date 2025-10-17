@@ -24,17 +24,22 @@ module.exports = {
   // Base config
   extends: ["eslint:recommended"],
 
+  plugins: ["local-rules"],
+
   overrides: [
     // React
     {
       files: ["**/*.{js,jsx,ts,tsx}"],
-      plugins: ["react", "jsx-a11y"],
+      plugins: ["react", "jsx-a11y", "local-rules"],
       extends: [
         "plugin:react/recommended",
         "plugin:react/jsx-runtime",
         "plugin:react-hooks/recommended",
         "plugin:jsx-a11y/recommended",
       ],
+      rules: {
+        "local-rules/no-hardcoded-styles": "error",
+      },
       settings: {
         react: {
           version: "detect",

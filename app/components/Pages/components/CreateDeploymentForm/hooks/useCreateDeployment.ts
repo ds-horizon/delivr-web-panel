@@ -5,6 +5,13 @@ import { handleApiError } from "~/utils/handleApiError";
 
 export const useCreateDeployment = () => {
   return useMutation(createDeployment, {
+    onSuccess: () => {
+      notifications.show({
+        color: "green",
+        title: "Success",
+        message: "Deployment key created successfully!",
+      });
+    },
     onError: (e) => {
       notifications.show({
         color: "red",
