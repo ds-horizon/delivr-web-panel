@@ -6,11 +6,16 @@ A modern web interface for the DOTA (DevOps Toolkit Application) platform, enabl
 
 ### Prerequisites
 - Node.js 18.18.0 (exact version required)
-- pnpm 10.17.0+
+- Corepack (for package manager version management)
+- pnpm 10.17.0+ (managed by corepack)
 
 ### Installation & Development
 
 ```bash
+# Install and enable corepack (required for proper pnpm version management)
+npm install -g corepack
+corepack enable
+
 # Install pnpm (if not already installed)
 npm install -g pnpm
 
@@ -135,6 +140,33 @@ Your workflow: Code → Build → Upload to Delivr → Deploy
 
 
 Each deployment key represents a different update channel for your app.
+
+### 🔧 Advanced Features
+
+#### **Deployment Control Options**
+- **🔒 Mandatory Updates**: Force users to install critical updates before app usage
+- **⏸️ Disabled Updates**: Temporarily pause deployments without rollback
+- **📊 Gradual Rollouts**: Control release percentage to manage risk (e.g., 10% → 50% → 100%)
+- **🎯 Conditional Releases**: Target specific app versions, OS versions, or user segments
+
+#### **Versioning**
+- **📦 Binary Compatibility**: Updates only work with compatible native app versions
+- **📱 Multi-Version Support**: Different updates for different base app versions
+- **🔗 Version Targeting**: Deploy specific updates to specific app version ranges
+
+
+#### **Patching**
+- **🔄 Delta Patching**: Efficient downloads by sending only diff between two bundles
+- **🏷️ Patch-Tagged Releases**: When you see "patch" tagged releases in dashboard, it means a bundle diff patch was sent
+- **⚠️ CLI-Only Patches**: Patch releases can only be created via CLI, not web dashboard
+- **🛡️ Automatic Fallbacks**: Revert to previous version if update fails
+
+
+#### **Analytics & Monitoring**
+- **📈 Adoption Metrics**: Real-time install rates and user adoption tracking
+- **🚨 Error Reporting**: Monitor update failures and crash rates
+- **⏱️ Performance Data**: Download times and success rates by region
+- **📊 Version Distribution**: See which versions your users are running
 
 ### 💡 Key Benefits
 
