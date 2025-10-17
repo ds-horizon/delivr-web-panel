@@ -172,6 +172,7 @@ export default function CreateReleasePage() {
       isDisabled: values.disabled,
       isMandatory: values.mandatory,
       rollout: values.rollout,
+      isBundlePatchingEnabled: false,
     }));
 
     createRelease(

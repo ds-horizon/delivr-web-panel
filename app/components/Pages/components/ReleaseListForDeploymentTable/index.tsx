@@ -147,6 +147,15 @@ function ReleaseCard({
                   Mandatory
                 </Badge>
               )}
+              {!release.isBundlePatchingEnabled && (
+                <Badge
+                  variant="light"
+                  color="blue"
+                  size="sm"
+                >
+                  PatchBundle
+                </Badge>
+              )}
             </Group>
             <Text size="xs" c="dimmed" mt={4}>
               Target: {release.targetVersions} • {formatRelativeTime(release.releasedAt)}

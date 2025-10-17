@@ -156,6 +156,15 @@ export default function ReleaseDetailPage() {
                   Mandatory
                 </Badge>
               )}
+              {data.isBundlePatchingEnabled && (
+                <Badge
+                  variant="light"
+                  color="blue"
+                  size="lg"
+                >
+                  PatchBundle
+                </Badge>
+              )}
             </Group>
             <Text size="sm" c="dimmed" mt={4}>
               {data.description || "No description provided"}

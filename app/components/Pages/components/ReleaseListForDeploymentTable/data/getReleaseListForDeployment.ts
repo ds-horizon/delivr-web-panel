@@ -22,6 +22,7 @@ export type ReleaseListResponse = {
   releasedAt: number;
   description: string;
   releasedBy: string;
+  isBundlePatchingEnabled?: boolean;
 };
 
 // const data: ReleaseListResponse[] = [
@@ -448,6 +449,7 @@ export const getReleaseListForDeployment = async (
       releasedAt: item.uploadTime,
       description: item.description,
       releasedBy: item.releasedBy,
+      isBundlePatchingEnabled: item.isBundlePatchingEnabled || false,
     };
   });
 };
