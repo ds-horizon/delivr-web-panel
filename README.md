@@ -25,6 +25,9 @@ cp .env.example .env
 ### Environment Configuration
 
 Create a `.env` file in the root directory with the following variables:
+**Required Configuration:**
+- **GOOGLE_CLIENT_ID/SECRET**: From Google Cloud Console OAuth setup
+- **DELIVR_BACKEND_URL**: URL of your local Delivr Backend server
 
 ```bash
 
@@ -37,10 +40,7 @@ DELIVR_BACKEND_URL=http://localhost:3010
 
 ```
 
-**Required Configuration:**
-- **SESSION_SECRET**: Generate with `openssl rand -base64 32`
-- **GOOGLE_CLIENT_ID/SECRET**: From Google Cloud Console OAuth setup
-- **DELIVR_BACKEND_URL**: URL of your local Delivr Backend server
+
 
 ### Backend Setup
 Before running the dashboard, you'll need the Delivr Backend running locally.
