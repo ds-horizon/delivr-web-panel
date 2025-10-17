@@ -8,9 +8,10 @@ import { CTAButton } from "~/components/CTAButton";
 export type AddCollboratorFormProps = {
   open: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 };
 
-export function AddCollboratorForm({ open, onClose }: AddCollboratorFormProps) {
+export function AddCollboratorForm({ open, onClose, onSuccess }: AddCollboratorFormProps) {
   const theme = useMantineTheme();
   const params = useParams();
   const { mutate, isLoading } = useAddCollabarator();
@@ -87,6 +88,9 @@ export function AddCollboratorForm({ open, onClose }: AddCollboratorFormProps) {
                 onSuccess: () => {
                   onClose();
                   form.reset();
+                  if (onSuccess) {
+                    onSuccess();
+                  }
                 },
               }
             );

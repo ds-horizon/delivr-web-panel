@@ -96,7 +96,11 @@ export function CollabaratorList({
 
   return (
     <>
-      <AddCollboratorForm open={open} onClose={() => setOpen(false)} />
+      <AddCollboratorForm 
+        open={open} 
+        onClose={() => setOpen(false)} 
+        onSuccess={refetch}
+      />
 
       <Card withBorder radius="md" padding={0} style={{ overflow: "hidden" }}>
         <Table horizontalSpacing="lg" verticalSpacing="md" highlightOnHover>
