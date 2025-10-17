@@ -147,7 +147,7 @@ function ReleaseCard({
                   Mandatory
                 </Badge>
               )}
-              {!release.isBundlePatchingEnabled && (
+              {release.isBundlePatchingEnabled && (
                 <Badge
                   variant="light"
                   color="blue"
