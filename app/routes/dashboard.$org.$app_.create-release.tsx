@@ -122,6 +122,14 @@ export default function CreateReleasePage() {
     setDirectoryBlob(blob);
     setDirectoryName(name);
     form.setFieldValue("directory", { name } as File);
+    form.clearFieldError("directory");
+  };
+
+  const handleDirectoryCancel = () => {
+    setDirectoryBlob(null);
+    setDirectoryName("");
+    form.setFieldValue("directory", null);
+    form.clearFieldError("directory");
   };
 
   const nextStep = () => {
@@ -292,6 +300,7 @@ export default function CreateReleasePage() {
                     <Box style={{ width: "100%" }}>
                       <DirectoryUpload
                         onDirectorySelect={handleDirectoryProcess}
+                        onCancel={handleDirectoryCancel}
                         resetTrigger={resetTrigger}
                         error={form.errors.directory as string | undefined}
                       />
