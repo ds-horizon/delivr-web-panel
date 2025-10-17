@@ -28,9 +28,10 @@ interface DirectoryUploadProps {
   resetTrigger?: number; // Increment this to trigger a reset
   disabled?: boolean;
   error?: string;
+  hasSelectedDirectory?: boolean; // Whether parent has a directory selected
 }
 
-export function DirectoryUpload({ onDirectorySelect, onCancel, resetTrigger, disabled = false, error }: DirectoryUploadProps) {
+export function DirectoryUpload({ onDirectorySelect, onCancel, resetTrigger, disabled = false, error, hasSelectedDirectory = false }: DirectoryUploadProps) {
   const directoryInputRef = useRef<HTMLInputElement>(null);
   const cancelledRef = useRef<boolean>(false);
   
@@ -229,7 +230,7 @@ export function DirectoryUpload({ onDirectorySelect, onCancel, resetTrigger, dis
       <div>
         
         {/* Directory Upload States - Only show button if nothing is selected */}
-        {(directoryUploadState === 'idle' && !directoryInfo) && (
+        {(directoryUploadState === 'idle' && !directoryInfo && !hasSelectedDirectory) && (
           <div style={{ position: 'relative' }}>
             <input
               ref={directoryInputRef}

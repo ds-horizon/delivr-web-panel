@@ -303,6 +303,7 @@ export default function CreateReleasePage() {
                         onCancel={handleDirectoryCancel}
                         resetTrigger={resetTrigger}
                         error={form.errors.directory as string | undefined}
+                        hasSelectedDirectory={!!directoryBlob && !!directoryName}
                       />
                     </Box>
                   </Stack>
