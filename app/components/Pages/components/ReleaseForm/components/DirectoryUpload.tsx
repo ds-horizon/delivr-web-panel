@@ -29,9 +29,10 @@ interface DirectoryUploadProps {
   disabled?: boolean;
   error?: string;
   hasSelectedDirectory?: boolean; // Whether parent has a directory selected
+  selectedDirectoryName?: string; // Name of the selected directory from parent
 }
 
-export function DirectoryUpload({ onDirectorySelect, onCancel, resetTrigger, disabled = false, error, hasSelectedDirectory = false }: DirectoryUploadProps) {
+export function DirectoryUpload({ onDirectorySelect, onCancel, resetTrigger, disabled = false, error, hasSelectedDirectory = false, selectedDirectoryName = "" }: DirectoryUploadProps) {
   const directoryInputRef = useRef<HTMLInputElement>(null);
   const cancelledRef = useRef<boolean>(false);
   
@@ -260,6 +261,30 @@ export function DirectoryUpload({ onDirectorySelect, onCancel, resetTrigger, dis
             >
               Choose Directory...
             </Button>
+          </div>
+        )}
+
+        {/* Show consistent completed UI when parent has selected directory but component is idle */}
+        {(directoryUploadState === 'idle' && !directoryInfo && hasSelectedDirectory) && (
+          <div>
+            <Group justify="space-between" align="center">
+              <Group gap="sm">
+                <IconCheck style={{ width: rem(20), height: rem(20), color: 'var(--mantine-color-green-6)' }} />
+                <div>
+                  <Text size="sm" fw={500}>{selectedDirectoryName}</Text>
+                </div>
+              </Group>
+              <Group gap="xs">
+                <ActionIcon
+                  variant="subtle"
+                  color="red"
+                  onClick={handleCancelDirectory}
+                  title="Remove directory"
+                >
+                  <IconX style={{ width: rem(16), height: rem(16) }} />
+                </ActionIcon>
+              </Group>
+            </Group>
           </div>
         )}
 

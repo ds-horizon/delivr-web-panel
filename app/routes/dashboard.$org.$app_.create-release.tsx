@@ -304,6 +304,7 @@ export default function CreateReleasePage() {
                         resetTrigger={resetTrigger}
                         error={form.errors.directory as string | undefined}
                         hasSelectedDirectory={!!directoryBlob && !!directoryName}
+                        selectedDirectoryName={directoryName}
                       />
                     </Box>
                   </Stack>
