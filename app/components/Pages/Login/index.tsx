@@ -1,4 +1,4 @@
-import { Paper, Group, Center, Stack, Text } from "@mantine/core";
+import { Center, Group, Paper, Stack, Text } from "@mantine/core";
 import { GoogleButton } from "~/components/GoogleButton";
 
 type LoginProps = {
@@ -17,7 +17,7 @@ export function LoginForm({ onClickLogin }: LoginProps) {
       >
         <Stack align="center">
           <Text size="xl" fw={700}>
-            Welcome to DOTA Dashboard
+            Welcome to Delivr
           </Text>
           <Text size="sm">Instantly manage your app updates with ease.</Text>
           <Group grow mb="md" mt="md">

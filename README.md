@@ -1,6 +1,6 @@
 # Delivr Dashboard
 
-A modern web interface for the DOTA (DevOps Toolkit Application) platform, enabling seamless application deployment and release management.
+A modern web interface for the Mobile DevOps platform, enabling seamless application deployment and release management.
 
 ## 🚀 Quick Setup
 
@@ -50,7 +50,7 @@ DELIVR_BACKEND_URL=http://localhost:3010
 ### Backend Setup
 Before running the dashboard, you'll need the Delivr Backend running locally.
 
-📖 **[Backend Setup Guide](https://github.com/your-org/delivr-backend/blob/main/README.md)** - Follow the server documentation to run the backend locally.
+📖 **[Backend Setup Guide]()** - Follow the server documentation to run the backend locally. <!-- TODO: Backend Doc Link-->
 
 ### Start Development
 
@@ -98,7 +98,7 @@ pnpm gen:routes && pnpm gen:config
 #### Step 1: Install Delivr SDK in Your Mobile App
 
 Integrate the SDK into your app to enable over-the-air updates. 
-// sdk docs link
+<!-- TODO: SDK Doc Link-->
 
 #### Step 2: Set Up Your Dashboard Account
 - Sign in with your Google account
@@ -115,7 +115,7 @@ Integrate the SDK into your app to enable over-the-air updates.
 #### Step 4: Deploy Updates
 You can send CodePush updates in two ways:
 - **Web Dashboard**: Upload and deploy directly through this interface
-- **Delivr CLI**: Deploy from your terminal/CI pipeline // CI docs link
+- **Delivr CLI**: Deploy from your terminal/CI pipeline <!-- TODO: CLI Doc Link-->
 
 The dashboard shows **all deployments** regardless of how they were sent.
 
@@ -128,7 +128,7 @@ Your workflow: Code → Build → Upload to Delivr → Deploy
 1. **Make Changes**: Update your React Native code (JS/assets only)
 2. **Choose Deployment Method**:
    - **Web Dashboard**: Upload bundle directly through the UI
-   - **CLI**: Use  command from your build pipeline // Ci docs link
+   - **CLI**: Use  command from your build pipeline <!-- TODO: CLI Doc Link-->
 3. **Target Deployment**: Select which deployment key to push to
 4. **Monitor**: Track and update adoption and rollout progress in the dashboard
 
@@ -136,9 +136,6 @@ Your workflow: Code → Build → Upload to Delivr → Deploy
 #### 🔧 **Managing Multiple Deployment Keys**
 - **Staging Deployment**: For internal testing and QA
 - **Production Deployment**: Live updates to end users
-
-
-
 Each deployment key represents a different update channel for your app.
 
 ### 🔧 Advanced Features
