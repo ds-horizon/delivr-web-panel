@@ -106,6 +106,26 @@ Integrate the SDK into your app to enable over-the-air updates.
 - Create your first app inside the organization
 - Generate deployment keys for your app
 
+#### Step 2a: Generate API Tokens (Optional)
+API tokens are used to authenticate API calls from the CLI or CI/CD pipelines.
+
+**To generate an API token:**
+1. Navigate to the **Tokens** page from the dashboard sidebar
+2. Click **"Create Token"** button
+3. Enter a descriptive name for your token (e.g., "CI Pipeline Token", "CLI Access")
+4. Select the access level:
+   - **All**: Full read and write access
+   - **Write**: Create and update deployments
+   - **Read**: View deployments and app information only
+5. Click **"Create Token"** - your token will be generated
+6. **Important**: Copy the token immediately and store it securely (you won't be able to see it again)
+7. Use this token in your CLI or API calls for authentication
+
+**Managing Tokens:**
+- View all your tokens in the Tokens page
+- Delete tokens you no longer need by selecting them and clicking "Delete"
+- Create multiple tokens for different purposes (CI/CD, local development, team members)
+
 #### Step 3: Configure Your App with Deployment Keys
 - Copy the deployment keys from the dashboard
 - **Important**: Burn these keys into your mobile app code
@@ -189,6 +209,9 @@ A: Deploy a previous working version using the same deployment key. Users will r
 
 **Q: How do deployment keys work with app store releases?**  
 A: Deployment keys must be "burnt" (hardcoded) into your app during development. When you release to app stores, those keys are embedded. Later CodePush updates use those same keys to identify your app.
+
+**Q: What's the difference between API tokens and deployment keys?**  
+A: **Deployment Keys** are embedded in your mobile app to receive CodePush updates. **API Tokens** are used to authenticate CLI commands and API calls when deploying updates. Think of it this way: deployment keys identify your app, while API tokens authenticate you as a developer.
 
 ## 🏗️ System Architecture
 
