@@ -210,9 +210,6 @@ A: Deploy a previous working version using the same deployment key. Users will r
 **Q: How do deployment keys work with app store releases?**  
 A: Deployment keys must be "burnt" (hardcoded) into your app during development. When you release to app stores, those keys are embedded. Later CodePush updates use those same keys to identify your app.
 
-**Q: What's the difference between API tokens and deployment keys?**  
-A: **Deployment Keys** are embedded in your mobile app to receive CodePush updates. **API Tokens** are used to authenticate CLI commands and API calls when deploying updates. Think of it this way: deployment keys identify your app, while API tokens authenticate you as a developer.
-
 ## 🏗️ System Architecture
 
 ### Complete Delivr CodePush Ecosystem
