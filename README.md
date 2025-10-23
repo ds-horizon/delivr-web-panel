@@ -1,6 +1,6 @@
 # Delivr Dashboard
 
-A modern web interface for the Mobile DevOps platform, enabling seamless application deployment and release management.
+A modern web interface for the mobile dev-ops platform, enabling seamless application build, deployment and release management.
 
 ## 🚀 Quick Setup
 
@@ -50,7 +50,7 @@ DELIVR_BACKEND_URL=http://localhost:3010
 ### Backend Setup
 Before running the dashboard, you'll need the Delivr Backend running locally.
 
-📖 **[Backend Setup Guide]()** - Follow the server documentation to run the backend locally. <!-- TODO: Backend Doc Link-->
+📖 **TODO - [Backend Setup Guide](https://github.com/your-org/delivr-backend/blob/main/README.md)** - Follow the server documentation to run the backend locally.
 
 ### Start Development
 
