@@ -10,7 +10,7 @@ enum EnvArgs {
   AWS_S3_BUCKET = "AWS_S3_BUCKET",
   aws_secret_access_key = "aws_secret_access_key",
   aws_access_key_id = "aws_access_key_id",
-  DOTA_SERVER_URL = "DOTA_SERVER_URL",
+  DELIVR_BACKEND_URL = "DELIVR_BACKEND_URL",
 }
 
 type TEnv = Record<EnvArgs, string>;
@@ -27,7 +27,7 @@ const initialValue: TEnv = {
   [EnvArgs.AWS_S3_BUCKET]: "",
   [EnvArgs.aws_secret_access_key]: "",
   [EnvArgs.aws_access_key_id]: "",
-  [EnvArgs.DOTA_SERVER_URL]: "",
+  [EnvArgs.DELIVR_BACKEND_URL]: "",
 };
 
 const makeConfig = (): TEnv => {

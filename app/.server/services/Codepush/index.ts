@@ -48,7 +48,7 @@ import {
 
 class Codepush {
   private __client = axios.create({
-    baseURL: env.DOTA_SERVER_URL,
+    baseURL: env.DELIVR_BACKEND_URL,
     timeout: 10000,
   });
 
