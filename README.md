@@ -97,8 +97,8 @@ pnpm gen:routes && pnpm gen:config
 
 #### Step 1: Install Delivr SDK in Your Mobile App
 
-Integrate the SDK into your app to enable over-the-air updates. 
-<!-- TODO: SDK Doc Link-->
+Integrate the SDK into your app to enable over-the-air updates.
+[DOTA SDK Doc](https://github.com/ds-horizon/delivr-sdk-ota?tab=readme-ov-file#getting-started)
 
 #### Step 2: Set Up Your Dashboard Account
 - Sign in with your Google account
@@ -245,5 +245,3 @@ A: Deployment keys must be "burnt" (hardcoded) into your app during development.
 - **Developer Flexibility**: Multiple deployment methods (manual, automated, CI/CD)
 
 ---
-
-**Need Help?** 📚 Visit [DOTA Documentation](https://dota.dreamsportslabs.com/) for detailed guides and API references.
