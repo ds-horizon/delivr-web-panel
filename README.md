@@ -50,7 +50,7 @@ DELIVR_BACKEND_URL=http://localhost:3010
 ### Backend Setup
 Before running the dashboard, you'll need the Delivr Backend running locally.
 
-📖 **TODO - [Backend Setup Guide](https://github.com/your-org/delivr-backend/blob/main/README.md)** - Follow the server documentation to run the backend locally.
+📖 **[Backend Repo](https://github.com/ds-horizon/delivr-server-ota)** - Follow the server repo to run the backend locally.
 
 ### Start Development
 
@@ -135,7 +135,7 @@ API tokens are used to authenticate API calls from the CLI or CI/CD pipelines.
 #### Step 4: Deploy Updates
 You can send DOTA updates in two ways:
 - **Web Dashboard**: Upload and deploy directly through this interface
-- **Delivr CLI**: Deploy from your terminal/CI pipeline <!-- TODO: CLI Doc Link-->
+- **Delivr CLI**: Deploy from your terminal/CI pipeline [Cli-Release Management](https://github.com/ds-horizon/delivr-cli?tab=readme-ov-file#release-management)
 
 The dashboard shows **all deployments** regardless of how they were sent.
 
@@ -148,7 +148,7 @@ Your workflow: Code → Build → Upload to Delivr → Deploy
 1. **Make Changes**: Update your React Native code (JS/assets only)
 2. **Choose Deployment Method**:
    - **Web Dashboard**: Upload bundle directly through the UI
-   - **CLI**: Use  command from your build pipeline <!-- TODO: CLI Doc Link-->
+   - **CLI**: Use command from your build pipeline [Cli Documentation](https://github.com/ds-horizon/delivr-cli)
 3. **Target Deployment**: Select which deployment key to push to
 4. **Monitor**: Track and update adoption and rollout progress in the dashboard
 
