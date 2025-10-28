@@ -130,10 +130,10 @@ API tokens are used to authenticate API calls from the CLI or CI/CD pipelines.
 - Copy the deployment keys from the dashboard
 - **Important**: Burn these keys into your mobile app code
 - Release your app to App Store/Play Store with the embedded keys
-- Now you're ready to send CodePush updates!
+- Now you're ready to send DOTA updates!
 
 #### Step 4: Deploy Updates
-You can send CodePush updates in two ways:
+You can send DOTA updates in two ways:
 - **Web Dashboard**: Upload and deploy directly through this interface
 - **Delivr CLI**: Deploy from your terminal/CI pipeline <!-- TODO: CLI Doc Link-->
 
@@ -141,7 +141,7 @@ The dashboard shows **all deployments** regardless of how they were sent.
 
 ### 📋 Common Workflows
 
-#### 🔄 **Deploying a New CodePush Update**
+#### 🔄 **Deploying a New DOTA Update**
 ```
 Your workflow: Code → Build → Upload to Delivr → Deploy
 ```
@@ -196,31 +196,31 @@ Each deployment key represents a different update channel for your app.
 ### ❓ Common Questions
 
 **Q: What are deployment keys?**  
-A: Secure tokens linked to your app that identify where CodePush updates should be delivered. You generate them in the dashboard, burn them into your app code, and use them to target deployments.
+A: Secure tokens linked to your app that identify where DOTA updates should be delivered. You generate them in the dashboard, burn them into your app code, and use them to target deployments.
 
 **Q: Do I need to update my app in the store every time?**  
-A: No! Once you've released your app to the store with Delivr SDK and deployment keys, you can send JavaScript/asset updates instantly via CodePush without store approval.
+A: No! Once you've released your app to the store with Delivr SDK and deployment keys, you can send JavaScript/asset updates instantly via DOTA without store approval.
 
 **Q: Can I deploy from both dashboard and CLI?**  
 A: Yes! The web dashboard shows all deployments whether they came from the UI or CLI. Use whatever fits your workflow better.
 
 **Q: What happens if I need to rollback?**  
-A: Deploy a previous working version using the same deployment key. Users will receive the rollback update just like any other CodePush.
+A: Deploy a previous working version using the same deployment key. Users will receive the rollback update just like any other DOTA update.
 
 **Q: How do deployment keys work with app store releases?**  
-A: Deployment keys must be "burnt" (hardcoded) into your app during development. When you release to app stores, those keys are embedded. Later CodePush updates use those same keys to identify your app.
+A: Deployment keys must be "burnt" (hardcoded) into your app during development. When you release to app stores, those keys are embedded. Later, DOTA updates use those same keys to identify your app.
 
 ## 🏗️ System Architecture
 
-### Complete Delivr CodePush Ecosystem
+### Complete DOTA Ecosystem
 
 
 
-### How CodePush Works End-to-End
+### How DOTA Works End-to-End
 
 #### 🔄 **Update Delivery Flow**
 1. **App Release**: React Native app with Delivr SDK published to app stores
-2. **CodePush Creation**: Developer creates update via Web Dashboard or CLI
+2. **DOTA Creation**: Developer creates update via Web Dashboard or CLI
 3. **Bundle Storage**: Update bundle stored in Delivr infrastructure
 4. **Update Check**: Mobile app periodically checks for updates via Delivr Backend
 5. **Download & Apply**: App downloads and applies JavaScript/asset updates instantly
@@ -234,7 +234,7 @@ A: Deployment keys must be "burnt" (hardcoded) into your app during development.
 #### 🌐 **Infrastructure Components**
 - **Delivr Backend**: Core API server managing apps, deployments, and update delivery
 - **CDN**: Global content delivery network for fast bundle downloads
-- **Bundle Storage**: Secure storage for all CodePush update packages
+- **Bundle Storage**: Secure storage for all DOTA update packages
 - **Authentication**: OAuth-based secure access control across all components
 
 ### Key Benefits of This Architecture
