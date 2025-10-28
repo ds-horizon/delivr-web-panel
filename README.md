@@ -135,6 +135,30 @@ API tokens are used to authenticate API calls from the CLI or CI/CD pipelines.
 #### Step 4: Deploy Updates
 You can send DOTA updates in two ways:
 - **Web Dashboard**: Upload and deploy directly through this interface
+
+Deploying via Web Dashboard:
+
+1. **Click "Create Release"**
+   
+   ![Create Release Button](docs/screenshots/create-release.png)
+
+2. **Step 1** - Upload Your Application Bundle
+   
+   ![Upload Bundle](docs/screenshots/create-release-step-1.png)
+
+3. **Step 2** - App version and deployment details
+   
+   ![Monitor Deployment](docs/screenshots/create-release-step-2.png)
+
+4. **Step 3** - Rollout and flags config
+   
+   ![Monitor Deployment](docs/screenshots/create-release-step-3.png)
+
+5. **Review Changes** - Review detail card
+   
+   ![Monitor Deployment](docs/screenshots/create-release-review-changes.png)
+
+
 - **Delivr CLI**: Deploy from your terminal/CI pipeline [Cli-Release Management](https://github.com/ds-horizon/delivr-cli?tab=readme-ov-file#release-management)
 
 The dashboard shows **all deployments** regardless of how they were sent.
