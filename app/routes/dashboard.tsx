@@ -10,6 +10,8 @@ import { ActionIcon, Tooltip } from "@mantine/core";
 import { IconHelp } from "@tabler/icons-react";
 import { CombinedSidebar } from "~/components/Pages/components/AppDetailPage/components/CombinedSidebar";
 import { useGetOrgList } from "~/components/Pages/components/OrgListNavbar/hooks/useGetOrgList";
+import { useEffect } from "react";
+import { ACTION_EVENTS, actions } from "~/utils/event-emitter";
 
 export const loader = authenticateLoaderRequest();
 
@@ -19,7 +21,12 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const params = useParams();
   const location = useLocation();
-  const { data: orgs = [], isLoading: orgsLoading } = useGetOrgList();
+  const { data: orgs = [], isLoading: orgsLoading, refetch: refetchOrgs } = useGetOrgList();
+
+  // Listen for organization refetch events
+  useEffect(() => {
+    actions.add(ACTION_EVENTS.REFETCH_ORGS, refetchOrgs);
+  }, [refetchOrgs]);
 
   const isMainDashboard = location.pathname === "/dashboard";
   const showSidebar = orgs.length > 0 && !isMainDashboard;
