@@ -50,7 +50,7 @@ DELIVR_BACKEND_URL=http://localhost:3010
 ### Backend Setup
 Before running the dashboard, you'll need the Delivr Backend running locally.
 
-📖 **TODO - [Backend Setup Guide](https://github.com/your-org/delivr-backend/blob/main/README.md)** - Follow the server documentation to run the backend locally.
+📖 **[Backend Repo](https://github.com/ds-horizon/delivr-server-ota)** - Follow the server repo to run the backend locally.
 
 ### Start Development
 
@@ -97,8 +97,8 @@ pnpm gen:routes && pnpm gen:config
 
 #### Step 1: Install Delivr SDK in Your Mobile App
 
-Integrate the SDK into your app to enable over-the-air updates. 
-<!-- TODO: SDK Doc Link-->
+Integrate the SDK into your app to enable over-the-air updates.
+[DOTA SDK Doc](https://github.com/ds-horizon/delivr-sdk-ota?tab=readme-ov-file#getting-started)
 
 #### Step 2: Set Up Your Dashboard Account
 - Sign in with your Google account
@@ -130,25 +130,49 @@ API tokens are used to authenticate API calls from the CLI or CI/CD pipelines.
 - Copy the deployment keys from the dashboard
 - **Important**: Burn these keys into your mobile app code
 - Release your app to App Store/Play Store with the embedded keys
-- Now you're ready to send CodePush updates!
+- Now you're ready to send DOTA updates!
 
 #### Step 4: Deploy Updates
-You can send CodePush updates in two ways:
+You can send DOTA updates in two ways:
 - **Web Dashboard**: Upload and deploy directly through this interface
-- **Delivr CLI**: Deploy from your terminal/CI pipeline <!-- TODO: CLI Doc Link-->
+
+Deploying via Web Dashboard:
+
+1. **Click "Create Release"**
+   
+   ![Create Release Button](docs/screenshots/create-release.png)
+
+2. **Step 1** - Upload Your Application Bundle
+   
+   ![Upload Bundle](docs/screenshots/create-release-step-1.png)
+
+3. **Step 2** - App version and deployment details
+   
+   ![Monitor Deployment](docs/screenshots/create-release-step-2.png)
+
+4. **Step 3** - Rollout and flags config
+   
+   ![Monitor Deployment](docs/screenshots/create-release-step-3.png)
+
+5. **Review Changes** - Review detail card
+   
+   ![Monitor Deployment](docs/screenshots/create-release-review-changes.png)
+
+
+- **Delivr CLI**: Deploy from your terminal/CI pipeline [Cli-Release Management](https://github.com/ds-horizon/delivr-cli?tab=readme-ov-file#release-management)
 
 The dashboard shows **all deployments** regardless of how they were sent.
 
 ### 📋 Common Workflows
 
-#### 🔄 **Deploying a New CodePush Update**
+#### 🔄 **Deploying a New DOTA Update**
 ```
 Your workflow: Code → Build → Upload to Delivr → Deploy
 ```
 1. **Make Changes**: Update your React Native code (JS/assets only)
 2. **Choose Deployment Method**:
    - **Web Dashboard**: Upload bundle directly through the UI
-   - **CLI**: Use  command from your build pipeline <!-- TODO: CLI Doc Link-->
+   - **CLI**: Use command from your build pipeline [Cli Documentation](https://github.com/ds-horizon/delivr-cli)
 3. **Target Deployment**: Select which deployment key to push to
 4. **Monitor**: Track and update adoption and rollout progress in the dashboard
 
@@ -196,31 +220,31 @@ Each deployment key represents a different update channel for your app.
 ### ❓ Common Questions
 
 **Q: What are deployment keys?**  
-A: Secure tokens linked to your app that identify where CodePush updates should be delivered. You generate them in the dashboard, burn them into your app code, and use them to target deployments.
+A: Secure tokens linked to your app that identify where DOTA updates should be delivered. You generate them in the dashboard, burn them into your app code, and use them to target deployments.
 
 **Q: Do I need to update my app in the store every time?**  
-A: No! Once you've released your app to the store with Delivr SDK and deployment keys, you can send JavaScript/asset updates instantly via CodePush without store approval.
+A: No! Once you've released your app to the store with Delivr SDK and deployment keys, you can send JavaScript/asset updates instantly via DOTA without store approval.
 
 **Q: Can I deploy from both dashboard and CLI?**  
 A: Yes! The web dashboard shows all deployments whether they came from the UI or CLI. Use whatever fits your workflow better.
 
 **Q: What happens if I need to rollback?**  
-A: Deploy a previous working version using the same deployment key. Users will receive the rollback update just like any other CodePush.
+A: Deploy a previous working version using the same deployment key. Users will receive the rollback update just like any other DOTA update.
 
 **Q: How do deployment keys work with app store releases?**  
-A: Deployment keys must be "burnt" (hardcoded) into your app during development. When you release to app stores, those keys are embedded. Later CodePush updates use those same keys to identify your app.
+A: Deployment keys must be "burnt" (hardcoded) into your app during development. When you release to app stores, those keys are embedded. Later, DOTA updates use those same keys to identify your app.
 
 ## 🏗️ System Architecture
 
-### Complete Delivr CodePush Ecosystem
+### Complete DOTA Ecosystem
 
 
 
-### How CodePush Works End-to-End
+### How DOTA Works End-to-End
 
 #### 🔄 **Update Delivery Flow**
 1. **App Release**: React Native app with Delivr SDK published to app stores
-2. **CodePush Creation**: Developer creates update via Web Dashboard or CLI
+2. **DOTA Creation**: Developer creates update via Web Dashboard or CLI
 3. **Bundle Storage**: Update bundle stored in Delivr infrastructure
 4. **Update Check**: Mobile app periodically checks for updates via Delivr Backend
 5. **Download & Apply**: App downloads and applies JavaScript/asset updates instantly
@@ -234,7 +258,7 @@ A: Deployment keys must be "burnt" (hardcoded) into your app during development.
 #### 🌐 **Infrastructure Components**
 - **Delivr Backend**: Core API server managing apps, deployments, and update delivery
 - **CDN**: Global content delivery network for fast bundle downloads
-- **Bundle Storage**: Secure storage for all CodePush update packages
+- **Bundle Storage**: Secure storage for all DOTA update packages
 - **Authentication**: OAuth-based secure access control across all components
 
 ### Key Benefits of This Architecture
@@ -245,5 +269,3 @@ A: Deployment keys must be "burnt" (hardcoded) into your app during development.
 - **Developer Flexibility**: Multiple deployment methods (manual, automated, CI/CD)
 
 ---
-
-**Need Help?** 📚 Visit [DOTA Documentation](https://dota.dreamsportslabs.com/) for detailed guides and API references.
