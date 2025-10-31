@@ -4,7 +4,8 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [
-    process.env.NODE_ENV === "test"
+    // Only skip Remix plugin during vitest runs, not dev server
+    process.env.VITEST
       ? null
       : remix({
           future: {

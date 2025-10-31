@@ -1,0 +1,31 @@
+{
+  "testUser": {
+    "email": "test@delivr.com",
+    "name": "Test User",
+    "picture": "https://via.placeholder.com/150",
+    "role": "owner"
+  },
+  "adminUser": {
+    "email": "admin@delivr.com",
+    "name": "Admin User",
+    "picture": "https://via.placeholder.com/150",
+    "role": "admin"
+  },
+  "developerUser": {
+    "email": "developer@delivr.com",
+    "name": "Developer User",
+    "picture": "https://via.placeholder.com/150",
+    "role": "developer"
+  },
+  "collaboratorUser": {
+    "email": "collab@delivr.com",
+    "name": "Collaborator User",
+    "picture": "https://via.placeholder.com/150",
+    "role": "collaborator"
+  }
+}
+
+
+
+
+

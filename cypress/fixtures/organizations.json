@@ -1,0 +1,33 @@
+{
+  "organizations": [
+    {
+      "id": "org-001",
+      "name": "Test Organization 1",
+      "slug": "test-org-1",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "ownerId": "user-001"
+    },
+    {
+      "id": "org-002",
+      "name": "Test Organization 2",
+      "slug": "test-org-2",
+      "createdAt": "2024-01-02T00:00:00.000Z",
+      "updatedAt": "2024-01-02T00:00:00.000Z",
+      "ownerId": "user-001"
+    },
+    {
+      "id": "org-003",
+      "name": "Demo Organization",
+      "slug": "demo-org",
+      "createdAt": "2024-01-03T00:00:00.000Z",
+      "updatedAt": "2024-01-03T00:00:00.000Z",
+      "ownerId": "user-001"
+    }
+  ]
+}
+
+
+
+
+

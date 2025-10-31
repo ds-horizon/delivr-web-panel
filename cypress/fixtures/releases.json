@@ -1,0 +1,60 @@
+{
+  "releases": [
+    {
+      "id": "release-001",
+      "label": "v1.0.0",
+      "description": "Initial release with basic features",
+      "appVersion": "1.0.0",
+      "isMandatory": false,
+      "isDisabled": false,
+      "rollout": 100,
+      "deploymentId": "deployment-001",
+      "packageHash": "abc123def456",
+      "blobUrl": "https://storage.example.com/releases/v1.0.0.zip",
+      "size": 1024000,
+      "uploadTime": "2024-01-01T00:00:00.000Z",
+      "releaseMethod": "Upload",
+      "originalLabel": "v1.0.0",
+      "originalDeployment": "Production"
+    },
+    {
+      "id": "release-002",
+      "label": "v1.1.0",
+      "description": "Bug fixes and performance improvements",
+      "appVersion": "1.1.0",
+      "isMandatory": true,
+      "isDisabled": false,
+      "rollout": 50,
+      "deploymentId": "deployment-001",
+      "packageHash": "def456ghi789",
+      "blobUrl": "https://storage.example.com/releases/v1.1.0.zip",
+      "size": 1124000,
+      "uploadTime": "2024-01-10T00:00:00.000Z",
+      "releaseMethod": "Upload",
+      "originalLabel": "v1.1.0",
+      "originalDeployment": "Production"
+    },
+    {
+      "id": "release-003",
+      "label": "v2.0.0",
+      "description": "Major update with new features",
+      "appVersion": "2.0.0",
+      "isMandatory": false,
+      "isDisabled": false,
+      "rollout": 25,
+      "deploymentId": "deployment-002",
+      "packageHash": "ghi789jkl012",
+      "blobUrl": "https://storage.example.com/releases/v2.0.0.zip",
+      "size": 1524000,
+      "uploadTime": "2024-01-20T00:00:00.000Z",
+      "releaseMethod": "Upload",
+      "originalLabel": "v2.0.0",
+      "originalDeployment": "Staging"
+    }
+  ]
+}
+
+
+
+
+

@@ -1,12 +1,23 @@
 node_modules
-
-/.cache
-/build
+.DS_Store
+dist
+dist-ssr
+*.local
 .env
+.cache
+build
+.vscode
+.idea
 
-app/routes.d.ts
+# Cypress
+cypress/videos
+cypress/screenshots
+cypress/downloads
+cypress.env.json
+cypress/results
 
-
+# Test reports
 coverage
-
-app/config.json
+.nyc_output
+test-results
+playwright-report

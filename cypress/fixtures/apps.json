@@ -1,0 +1,36 @@
+{
+  "apps": [
+    {
+      "id": "app-001",
+      "name": "MyTestApp",
+      "platform": "React-Native",
+      "os": "iOS",
+      "organizationId": "org-001",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "app-002",
+      "name": "AndroidTestApp",
+      "platform": "React-Native",
+      "os": "Android",
+      "organizationId": "org-001",
+      "createdAt": "2024-01-02T00:00:00.000Z",
+      "updatedAt": "2024-01-02T00:00:00.000Z"
+    },
+    {
+      "id": "app-003",
+      "name": "DemoApp",
+      "platform": "React-Native",
+      "os": "iOS",
+      "organizationId": "org-002",
+      "createdAt": "2024-01-03T00:00:00.000Z",
+      "updatedAt": "2024-01-03T00:00:00.000Z"
+    }
+  ]
+}
+
+
+
+
+

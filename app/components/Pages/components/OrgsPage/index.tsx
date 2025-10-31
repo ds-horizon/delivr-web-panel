@@ -121,6 +121,7 @@ export function OrgsPage() {
               Organizations
             </Title>
             <CTAButton
+              data-testid="create-org-btn"
               leftSection={<IconPlus size={theme.other.sizes.icon.lg} />}
               onClick={() => setCreateOrgOpen(true)}
             >

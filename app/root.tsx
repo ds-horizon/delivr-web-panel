@@ -3,8 +3,7 @@ import "@mantine/spotlight/styles.css";
 import "@mantine/notifications/styles.css";
 
 import { QueryClient, QueryClientProvider } from "react-query";
-
-const queryClient = new QueryClient();
+import { useState } from "react";
 
 import {
   Links,
@@ -15,12 +14,14 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 
-import "./tailwind.css";
+import tailwindStyles from "./tailwind.css?url";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { mantineTheme } from "~/theme";
 
 export const links: LinksFunction = () => [
+  // Tailwind CSS - loaded via links() for proper SSR hydration
+  { rel: "stylesheet", href: tailwindStyles },
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",
@@ -34,6 +35,23 @@ export const links: LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  // Create a new QueryClient instance for each request to avoid state leaking
+  // Using useState with lazy initializer ensures it's created once per component instance
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            // With SSR, we usually want to set some default staleTime
+            // above 0 to avoid refetching immediately on the client
+            staleTime: 60 * 1000,
+            retry: false,
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
+
   return (
     <html lang="en" data-mantine-color-scheme="light">
       <head>
@@ -41,11 +59,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
-        <ColorSchemeScript />
+        {/* Force light mode to prevent CSS issues in Cypress tests */}
+        {/* Remove forceColorScheme if you want to support theme switching */}
+        <ColorSchemeScript defaultColorScheme="light" forceColorScheme="light" />
       </head>
       <body>
         <QueryClientProvider client={queryClient}>
-          <MantineProvider theme={mantineTheme} defaultColorScheme="auto">
+          <MantineProvider theme={mantineTheme} defaultColorScheme="light" forceColorScheme="light">
             <Notifications />
             {children}
           </MantineProvider>

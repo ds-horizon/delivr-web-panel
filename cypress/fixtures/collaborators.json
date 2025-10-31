@@ -1,0 +1,33 @@
+{
+  "collaborators": [
+    {
+      "id": "collab-001",
+      "email": "john.doe@example.com",
+      "name": "John Doe",
+      "role": "developer",
+      "appId": "app-001",
+      "createdAt": "2024-01-05T00:00:00.000Z"
+    },
+    {
+      "id": "collab-002",
+      "email": "jane.smith@example.com",
+      "name": "Jane Smith",
+      "role": "admin",
+      "appId": "app-001",
+      "createdAt": "2024-01-06T00:00:00.000Z"
+    },
+    {
+      "id": "collab-003",
+      "email": "bob.wilson@example.com",
+      "name": "Bob Wilson",
+      "role": "viewer",
+      "appId": "app-001",
+      "createdAt": "2024-01-07T00:00:00.000Z"
+    }
+  ]
+}
+
+
+
+
+

@@ -1,5 +1,6 @@
-import { Center, Group, Paper, Stack, Text } from "@mantine/core";
+import { Center, Group, Paper, Stack, Text, Box } from "@mantine/core";
 import { GoogleButton } from "~/components/GoogleButton";
+import { Logo } from "~/components/Logo";
 
 type LoginProps = {
   onClickLogin: () => void;
@@ -21,7 +22,7 @@ export function LoginForm({ onClickLogin }: LoginProps) {
           </Text>
           <Text size="sm">Instantly manage your app updates with ease.</Text>
           <Group grow mb="md" mt="md">
-            <GoogleButton radius="xl" fullWidth onClick={onClickLogin}>
+            <GoogleButton data-testid="google-login-btn" radius="xl" fullWidth onClick={onClickLogin}>
               Continue with Google
             </GoogleButton>
           </Group>

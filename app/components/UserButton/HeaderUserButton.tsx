@@ -22,7 +22,7 @@ export function HeaderUserButton({ user }: HeaderUserButtonProps) {
     <>
       <Menu shadow="md" width={240} position="bottom-end">
         <Menu.Target>
-          <UnstyledButton>
+          <UnstyledButton data-testid="user-menu">
             <Avatar 
               name={user.user.name} 
               radius="xl" 
@@ -39,7 +39,7 @@ export function HeaderUserButton({ user }: HeaderUserButtonProps) {
           </UnstyledButton>
         </Menu.Target>
 
-      <Menu.Dropdown>
+      <Menu.Dropdown data-testid="user-dropdown">
         <Menu.Label 
           style={{ 
             overflow: 'hidden', 
@@ -93,10 +93,12 @@ export function HeaderUserButton({ user }: HeaderUserButtonProps) {
               method="post"
               action="/logout"
               style={{ display: "flex", alignItems: "center", gap: "8px" }}
+              data-testid="logout-form"
             >
               <IconLogout size={14} />
               <button
                 type="submit"
+                data-testid="logout-btn"
                 style={{
                   all: "unset",
                   cursor: "pointer",

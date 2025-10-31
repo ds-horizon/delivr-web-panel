@@ -11,9 +11,14 @@ enum EnvArgs {
   aws_secret_access_key = "aws_secret_access_key",
   aws_access_key_id = "aws_access_key_id",
   DELIVR_BACKEND_URL = "DELIVR_BACKEND_URL",
+  NODE_ENV = "NODE_ENV",
+  OAUTH_TEST_MODE = "OAUTH_TEST_MODE",
 }
 
-type TEnv = Record<EnvArgs, string>;
+type TEnv = Record<EnvArgs, string> & {
+  NODE_ENV?: string;
+  OAUTH_TEST_MODE?: string;
+};
 
 const initialValue: TEnv = {
   [EnvArgs.GITHUB_TOKEN]: "",
@@ -28,6 +33,8 @@ const initialValue: TEnv = {
   [EnvArgs.aws_secret_access_key]: "",
   [EnvArgs.aws_access_key_id]: "",
   [EnvArgs.DELIVR_BACKEND_URL]: "",
+  [EnvArgs.NODE_ENV]: "",
+  [EnvArgs.OAUTH_TEST_MODE]: "",
 };
 
 const makeConfig = (): TEnv => {
@@ -36,9 +43,20 @@ const makeConfig = (): TEnv => {
     initial = "VAULT_SERVICE_";
   }
 
-  return Object.keys(EnvArgs).reduce((prev, curr) => {
+  const config = Object.keys(EnvArgs).reduce((prev, curr) => {
+    // NODE_ENV and OAUTH_TEST_MODE don't use vault prefix
+    if (curr === 'NODE_ENV' || curr === 'OAUTH_TEST_MODE') {
+      return { ...prev, [curr]: process.env[curr] ?? "" };
+    }
     return { ...prev, [curr]: process.env[`${initial}${curr}`] ?? "" };
   }, initialValue);
+  
+  // Ensure NODE_ENV and OAUTH_TEST_MODE are always read directly
+  return {
+    ...config,
+    NODE_ENV: process.env.NODE_ENV,
+    OAUTH_TEST_MODE: process.env.OAUTH_TEST_MODE,
+  };
 };
 
 export const env: TEnv = makeConfig();

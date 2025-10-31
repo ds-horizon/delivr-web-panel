@@ -1,0 +1,11 @@
+{
+  "id": "mock-user-123",
+  "email": "test@delivr.com",
+  "name": "Test User",
+  "picture": "https://ui-avatars.com/api/?name=Test+User",
+  "given_name": "Test",
+  "family_name": "User",
+  "locale": "en",
+  "verified_email": true
+}
+

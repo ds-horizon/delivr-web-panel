@@ -5,14 +5,22 @@
  */
 
 import { RemixBrowser } from "@remix-run/react";
-import { startTransition, StrictMode } from "react";
+import { startTransition } from "react";
 import { hydrateRoot } from "react-dom/client";
 
-startTransition(() => {
-  hydrateRoot(
-    document,
-    <StrictMode>
-      <RemixBrowser />
-    </StrictMode>
-  );
-});
+// Wait for the browser to be idle before hydrating
+// This prevents hydration mismatches and ensures CSS is loaded
+if (typeof window.requestIdleCallback === 'function') {
+  window.requestIdleCallback(() => {
+    startTransition(() => {
+      hydrateRoot(document, <RemixBrowser />);
+    });
+  });
+} else {
+  // Fallback for browsers that don't support requestIdleCallback
+  setTimeout(() => {
+    startTransition(() => {
+      hydrateRoot(document, <RemixBrowser />);
+    });
+  }, 1);
+}

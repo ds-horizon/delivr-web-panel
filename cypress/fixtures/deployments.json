@@ -1,0 +1,33 @@
+{
+  "deployments": [
+    {
+      "id": "deployment-001",
+      "name": "Production",
+      "key": "production-key-12345",
+      "appId": "app-001",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "deployment-002",
+      "name": "Staging",
+      "key": "staging-key-67890",
+      "appId": "app-001",
+      "createdAt": "2024-01-02T00:00:00.000Z",
+      "updatedAt": "2024-01-02T00:00:00.000Z"
+    },
+    {
+      "id": "deployment-003",
+      "name": "Development",
+      "key": "development-key-11111",
+      "appId": "app-001",
+      "createdAt": "2024-01-03T00:00:00.000Z",
+      "updatedAt": "2024-01-03T00:00:00.000Z"
+    }
+  ]
+}
+
+
+
+
+

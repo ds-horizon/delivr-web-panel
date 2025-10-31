@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   Stack,
@@ -59,6 +59,32 @@ const getSuccessRate = (installed: number, failed: number) => {
   if (total === 0) return 100;
   return Math.round((installed / total) * 100);
 };
+
+// Client-side only relative time component to avoid hydration mismatch
+function RelativeTime({ timestamp }: { timestamp: number }) {
+  const [relativeTime, setRelativeTime] = useState<string>('');
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    // Only render relative time on client-side after hydration
+    setIsMounted(true);
+    setRelativeTime(formatRelativeTime(timestamp));
+
+    // Optional: Update every minute for live updates
+    const interval = setInterval(() => {
+      setRelativeTime(formatRelativeTime(timestamp));
+    }, 60000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, [timestamp]);
+
+  // During SSR and initial hydration, show a static format
+  if (!isMounted) {
+    return <>{new Date(timestamp).toLocaleDateString()}</>;
+  }
+
+  return <>{relativeTime}</>;
+}
 
 function ReleaseCard({
   release,
@@ -158,7 +184,7 @@ function ReleaseCard({
               )}
             </Group>
             <Text size="xs" c="dimmed" mt={4}>
-              Target: {release.targetVersions} • {formatRelativeTime(release.releasedAt)}
+              Target: {release.targetVersions} • <RelativeTime timestamp={release.releasedAt} />
             </Text>
           </Box>
         </Group>

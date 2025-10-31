@@ -32,20 +32,51 @@ export class Auth {
   );
 
   constructor() {
-    Auth.authenticator.use(
-      new GoogleStrategy(
-        {
-          clientID: env.GOOGLE_CLIENT_ID ?? "",
-          clientSecret: env.GOOGLE_CLIENT_SECRET ?? "",
-          callbackURL: getAuthenticatorCallbackUrl(SocialsProvider.GOOGLE),
-          prompt: "consent",
-        },
-        async (args) => {
-          console.log("args in constructing Auth:", args);
-          return CodepushService.getUser(args.extraParams.id_token);
-        }
-      )
-    );
+    // In test mode, don't initialize real Google OAuth
+    const isTestMode = env.NODE_ENV === 'test' || env.OAUTH_TEST_MODE === 'true';
+    
+    if (!isTestMode) {
+      // Initialize real Google OAuth strategy
+      Auth.authenticator.use(
+        new GoogleStrategy(
+          {
+            clientID: env.GOOGLE_CLIENT_ID ?? "",
+            clientSecret: env.GOOGLE_CLIENT_SECRET ?? "",
+            callbackURL: getAuthenticatorCallbackUrl(SocialsProvider.GOOGLE),
+            prompt: "consent",
+          },
+          async (args) => {
+            return CodepushService.getUser(args.extraParams.id_token);
+          }
+        )
+      );
+    } else {
+      // Register a mock strategy so remix-auth doesn't throw "Strategy not found"
+      // This strategy will never actually be called - we handle auth in authenticate() and callback()
+      Auth.authenticator.use(
+        new GoogleStrategy(
+          {
+            clientID: "mock-client-id",
+            clientSecret: "mock-client-secret",
+            callbackURL: "http://localhost:3000/auth/google/callback",
+          },
+          async () => {
+            // This should never be called in test mode - return mock user as fallback
+            return {
+              authenticated: true,
+              user: {
+                id: 'mock-user',
+                email: 'mock@test.com',
+                name: 'Mock User',
+                createdTime: Date.now(),
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              },
+            };
+          }
+        )
+      );
+    }
   }
 
   async getUser(request: AuthRequest): Promise<UserReturnType> {
@@ -76,8 +107,53 @@ export class Auth {
   }
 
   async callback(provider: SocialsProvider, request: AuthRequest) {
+    const isTestMode = env.NODE_ENV === 'test' || env.OAUTH_TEST_MODE === 'true';
     const redirectUri = await redirectTo.parse(request.headers.get("Cookie"));
-    console.log("redirectUri:", redirectUri, request.headers.get("Cookie"));
+    
+    // In test mode, handle mock OAuth callback
+    if (isTestMode) {
+      const url = new URL(request.url);
+      const code = url.searchParams.get('code');
+      const error = url.searchParams.get('error');
+      
+      if (error) {
+        // Handle test OAuth error
+        return redirect(`${AuthenticatorRoutes.LOGIN}?error=${error}`);
+      }
+      
+      if (code && code.startsWith('mock-auth-code')) {
+        // Create test session with mock user
+        const session = await SessionStorageService.sessionStorage.getSession(
+          request.headers.get("Cookie")
+        );
+        
+        const mockUser: User = {
+          authenticated: true,
+          user: {
+            id: 'test-user-id',
+            email: 'test@delivr.com',
+            name: 'Test User',
+            createdTime: Date.now(),
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+        };
+        
+        session.set('_session', mockUser);
+        
+        const cookieHeader = await SessionStorageService.sessionStorage.commitSession(session);
+        
+        const finalRedirect = redirectUri ?? "/dashboard";
+        
+        return redirect(finalRedirect, {
+          headers: {
+            "Set-Cookie": cookieHeader,
+          },
+        });
+      }
+    }
+    
+    // Use real OAuth authenticator
     return Auth.authenticator.authenticate(provider, request, {
       failureRedirect: AuthenticatorRoutes.LOGIN,
       successRedirect: redirectUri ?? "/dashboard",
@@ -85,13 +161,22 @@ export class Auth {
   }
 
   async authenticate(provider: SocialsProvider, request: AuthRequest) {
+    const isTestMode = env.NODE_ENV === 'test' || env.OAUTH_TEST_MODE === 'true';
+    
+    // In test mode, redirect to mock callback
+    if (isTestMode) {
+      const url = new URL(request.url);
+      const callbackUrl = `${url.origin}/auth/google/callback?code=mock-auth-code-${Date.now()}&state=mock-state`;
+      return redirect(callbackUrl);
+    }
+    
+    // Use real OAuth authenticator
     return Auth.authenticator.authenticate(provider, request);
   }
 
   async isAuthenticated(
     request: AuthRequest
   ): Promise<User | TypedResponse<never>> {
-    console.log("headers:", request.headers.entries());
     const apiKey = request.headers.get("api-key") ?? "";
 
     if (apiKey.length) {
@@ -100,7 +185,6 @@ export class Auth {
     }
 
     try {
-      console.log("Trying to authenticate:")
       return await Auth.authenticator.authenticate(
         SocialsProvider.GOOGLE,
         request,
@@ -109,7 +193,6 @@ export class Auth {
         }
       );
     } catch (e) {
-      console.log("error", e);
       return redirect(AuthenticatorRoutes.LOGIN, {
         headers: {
           "Set-Cookie": await redirectTo.serialize(

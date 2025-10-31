@@ -79,6 +79,7 @@ export function CreateAppForm({ onSuccess }: CreateAppFormProps = {}) {
     <>
       <Skeleton visible={shouldShowLoader}>
         <TextInput
+          data-testid="app-name-input"
           label="App Name"
           placeholder="App Name"
           withAsterisk
@@ -89,6 +90,7 @@ export function CreateAppForm({ onSuccess }: CreateAppFormProps = {}) {
       </Skeleton>
       <Skeleton visible={shouldShowLoader} mt={"md"}>
         <Autocomplete
+          data-testid="org-select"
           mt="md"
           label="Select Organization"
           withAsterisk
@@ -113,6 +115,7 @@ export function CreateAppForm({ onSuccess }: CreateAppFormProps = {}) {
       </Skeleton> */}
       <Group justify="flex-end" mt="md">
         <Button
+          data-testid="submit-app-btn"
           onClick={() => {
             // Validate form
             if (form.validate().hasErrors) {

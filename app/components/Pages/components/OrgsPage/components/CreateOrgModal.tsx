@@ -80,6 +80,7 @@ export function CreateOrgModal({ onSuccess }: CreateOrgModalProps) {
         </Text>
 
         <TextInput
+          data-testid="org-name-input"
           label="Organization Name"
           placeholder="My Company"
           leftSection={<IconBuilding size={18} />}
@@ -91,6 +92,7 @@ export function CreateOrgModal({ onSuccess }: CreateOrgModalProps) {
         />
 
         <TextInput
+          data-testid="initial-app-name-input"
           label="Initial App Name"
           placeholder="My First App"
           description="Every organization needs at least one app"
@@ -102,6 +104,7 @@ export function CreateOrgModal({ onSuccess }: CreateOrgModalProps) {
         />
 
         <Button
+          data-testid="submit-org-btn"
           type="submit"
           fullWidth
           loading={isLoading}

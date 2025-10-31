@@ -48,7 +48,9 @@ import {
 
 class Codepush {
   private __client = axios.create({
-    baseURL: env.DELIVR_BACKEND_URL,
+    baseURL: env.NODE_ENV === 'test' || env.OAUTH_TEST_MODE === 'true'
+      ? 'http://localhost:3011' // Mock server for testing
+      : env.DELIVR_BACKEND_URL,   // Real backend for production
     timeout: 10000,
   });
 
