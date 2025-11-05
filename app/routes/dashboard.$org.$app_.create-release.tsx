@@ -204,6 +204,7 @@ export default function CreateReleasePage() {
           variant="subtle"
           size="lg"
           onClick={() => navigate(-1)}
+          data-testid="close-create-release"
         >
           <IconArrowLeft size={20} />
         </ActionIcon>
@@ -423,7 +424,12 @@ export default function CreateReleasePage() {
 
         {/* Navigation Buttons */}
         <Group justify="space-between" mt="xl">
-          <Button variant="default" onClick={prevStep} disabled={active === 0}>
+          <Button 
+            variant="default" 
+            onClick={prevStep} 
+            disabled={active === 0}
+            data-testid="step-back-button"
+          >
             Back
           </Button>
           
@@ -577,6 +583,7 @@ export default function CreateReleasePage() {
               variant="default" 
               onClick={() => setReviewModalOpened(false)}
               disabled={isUploading}
+              data-testid="review-modal-cancel"
             >
               Cancel
             </Button>
