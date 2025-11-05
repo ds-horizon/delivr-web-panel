@@ -8,9 +8,15 @@ const __dirname = path.dirname(__filename);
 
 test.describe('Create Release Flow', () => {
   
+  // Reset releases before each test for isolation
+  test.beforeEach(async () => {
+    await fetch('http://localhost:3001/api/test/reset-releases', { method: 'POST' });
+    console.log('🔄 Reset releases before test');
+  });
+  
   test('should successfully create a new release', async ({ page }) => {
     // Use the fixtures we already created
-    const testFixturesDir = path.join(__dirname, '../fixtures');
+    const testFixturesDir = path.join(__dirname, '../../fixtures');
     const testBundleDir = path.join(testFixturesDir, 'test-bundle');
     
     // Capture console errors and network failures for debugging
@@ -131,11 +137,35 @@ test.describe('Create Release Flow', () => {
     // Wait for rollout step to load
     await page.waitForTimeout(1000);
     
-    // Step 8: Set rollout slider
-    const rolloutInput = page.getByLabel(/rollout/i);
-    if (await rolloutInput.isVisible()) {
-      await rolloutInput.fill('100');
-      console.log('✅ Set rollout to 100%');
+    // Step 8: Set rollout slider to 100%
+    console.log('📝 Setting rollout to 100%...');
+    
+    // Find the rollout percentage display
+    const rolloutDisplay = page.locator('text=/\\d+%/').first();
+    await rolloutDisplay.waitFor({ state: 'visible', timeout: 5000 });
+    
+    // Get current rollout value
+    const currentRolloutText = await rolloutDisplay.textContent();
+    const currentRollout = parseInt(currentRolloutText?.match(/\d+/)?.[0] || '1');
+    console.log(`Current rollout: ${currentRollout}%`);
+    
+    // If not already at 100%, adjust the slider
+    if (currentRollout !== 100) {
+      const sliderThumb = page.locator('[role="slider"]').first();
+      if (await sliderThumb.isVisible()) {
+        await sliderThumb.focus();
+        
+        // Move to 100% (press ArrowRight from current position)
+        const steps = 100 - currentRollout;
+        for (let i = 0; i < steps; i++) {
+          await page.keyboard.press('ArrowRight');
+          await page.waitForTimeout(10);
+        }
+        
+        console.log('✅ Set rollout to 100%');
+      }
+    } else {
+      console.log('✅ Rollout already at 100%');
     }
     
     // Step 9: Click "Review Changes" button
@@ -167,12 +197,36 @@ test.describe('Create Release Flow', () => {
     console.log('✅ Submitted release from review modal');
     
     // Step 11: Wait for success notification
-    await page.waitForSelector('text=/success|created|uploaded/i', { timeout: 30000 });
+    await page.waitForSelector('text=/Release Created Successfully/i', { timeout: 30000 });
     
-    console.log('✅ Release created successfully');
+    console.log('✅ Release created successfully - notification displayed');
+    
+    // Step 12: Verify release appears in listing
+    console.log('📝 Step 12: Verifying release in listing...');
+    
+    // Wait for modal to close and page to reload/refresh
+    await page.waitForTimeout(3000);
+    
+    // Check current URL - should be back on app page
+    const currentUrl = page.url();
+    console.log(`Current URL: ${currentUrl}`);
+    
+    // Look for the release v1.0.0 in the list
+    // Note: Ignore console errors about packageHistory - they don't prevent display
+    console.log('📝 Looking for release v1.0.0 in listing...');
+    const releaseCard = page.locator('text=/v1/i').first();
+    
+    // Wait for the release to appear (it should be visible)
+    await releaseCard.waitFor({ state: 'visible', timeout: 10000 });
+    console.log('✅ Release v1.0.0 found in listing');
+    
+    // Verify it's actually visible
+    const isVisible = await releaseCard.isVisible();
+    expect(isVisible).toBe(true);
+    console.log('✅ Release listing verified');
     
     // Wait a bit to see the result
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(1000);
     
     // Take a final screenshot for verification
     await page.screenshot({ 
