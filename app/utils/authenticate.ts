@@ -24,6 +24,21 @@ type AuthenticatedLoaderFunction = (
 
 export const authenticateLoaderRequest = (cb?: AuthenticatedLoaderFunction) => {
   return async (args: LoaderFunctionArgs) => {
+    // Short-circuit auth in mock E2E mode
+    if (process.env.OAUTH_TEST_MODE === "true") {
+      const user = { user: { id: "test-user-playwright" } } as unknown as User;
+      try {
+        return (await cb?.({ ...args, user })) ?? user;
+      } catch (e) {
+        return json(
+          {
+            message: (e as AxiosError)?.response?.data ?? "Something Went Wrong",
+          },
+          { status: (e as AxiosError)?.response?.status ?? 500 }
+        );
+      }
+    }
+
     const user = (await AuthenticatorService.isAuthenticated(
       args.request
     )) as User;
@@ -59,6 +74,21 @@ export const authenticateActionRequest = (
         { status: 405 }
       );
     }
+    // Short-circuit auth in mock E2E mode
+    if (process.env.OAUTH_TEST_MODE === "true") {
+      const user = { user: { id: "test-user-playwright" } } as unknown as User;
+      try {
+        return await cb[method]!({ ...args, user });
+      } catch (e) {
+        return json(
+          {
+            message: (e as AxiosError)?.response?.data ?? "Something Went Wrong",
+          },
+          { status: (e as AxiosError)?.response?.status ?? 500 }
+        );
+      }
+    }
+
     const user = (await AuthenticatorService.isAuthenticated(
       args.request
     )) as User;

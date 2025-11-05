@@ -51,6 +51,9 @@ export function CreateOrgModal({ onSuccess }: CreateOrgModalProps) {
         {
           orgName: values.orgName,
           name: values.appName,
+        },
+        {
+          withCredentials: true,
         }
       );
 
@@ -62,9 +65,15 @@ export function CreateOrgModal({ onSuccess }: CreateOrgModalProps) {
 
       onSuccess();
     } catch (error: any) {
+      const errorMessage = typeof error.response?.data?.message === 'string' 
+        ? error.response.data.message 
+        : typeof error.response?.data === 'string'
+        ? error.response.data
+        : error.message || "Failed to create organization";
+      
       notifications.show({
         title: "Error",
-        message: error.response?.data?.message || "Failed to create organization",
+        message: errorMessage,
         color: "red",
       });
     } finally {

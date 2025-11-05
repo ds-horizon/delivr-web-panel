@@ -14,7 +14,48 @@ export const action: ActionFunction = authenticateActionRequest({
     }
 
     try {
-      // Parse the multipart form data
+      const userId = user.user.id;
+
+      // Use proxy only in mock mode
+      if (process.env.OAUTH_TEST_MODE === "true") {
+        const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+        
+        // Parse the multipart form data
+        const formData = await request.formData();
+        
+        // Create new FormData for forwarding to mock backend
+        const forwardFormData = new FormData();
+        
+        // Copy all fields from the original form data
+        for (const [key, value] of formData.entries()) {
+          forwardFormData.append(key, value);
+        }
+        
+        // Forward to mock backend
+        const appIdentifier = `${org}/${app}`;
+        const resp = await fetch(
+          `${backendUrl}/apps/${appIdentifier}/deployments/${deploymentName}/release`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${userId}`,
+            },
+            body: forwardFormData,
+          }
+        );
+
+        const ct = resp.headers.get("content-type") || "";
+        if (ct.includes("application/json")) {
+          const data = await resp.json();
+          return new Response(JSON.stringify(data), {
+            status: resp.status,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+        return new Response(await resp.text(), { status: resp.status });
+      }
+
+      // Real dashboard path (unchanged)
       const formData = await request.formData();
       const packageFile = formData.get("package") as File;
       const packageInfoStr = formData.get("packageInfo") as string;

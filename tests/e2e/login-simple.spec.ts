@@ -108,7 +108,7 @@ test.describe('Login Flow - Simple', () => {
     console.log('✅ Successfully reached dashboard');
     
     // Wait 3 seconds to see the dashboard
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(30000);
     
     // Verify session cookie exists
     const cookies = await page.context().cookies();

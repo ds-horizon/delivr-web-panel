@@ -1,0 +1,312 @@
+Test ID,Module,Sub-Module,Test Case Title,Priority,Status,Pre-requisites,Test Steps,Expected Result
+TC-001,Authentication,Login,User can view login page with Google login button,P0,Pending,None,"1. Navigate to /login URL
+2. Wait for page to load","Login page is displayed
+Google login button is visible
+Button text reads 'Continue with Google'"
+TC-002,Authentication,Login,User can successfully login with Google OAuth,P0,Pending,None,"1. Navigate to /login
+2. Click 'Continue with Google' button
+3. Wait for redirect","User is redirected to /dashboard
+Session cookie is created
+User information is displayed in header"
+TC-003,Authentication,Login,Logged-in user is auto-redirected to dashboard,P0,Pending,User is already logged in,"1. Navigate to /login URL","User is automatically redirected to /dashboard"
+TC-004,Authentication,Login,Mock OAuth works without real Google API calls,P0,Pending,OAUTH_TEST_MODE=true,"1. Navigate to /login
+2. Click login button
+3. Monitor network requests","No requests to accounts.google.com
+No requests to oauth2.googleapis.com
+User successfully reaches dashboard"
+TC-005,Authentication,Logout,User can logout from user menu,P0,Pending,User is logged in,"1. Click user menu in header
+2. Click 'Logout' option","Logout confirmation or immediate logout
+User is redirected to /login
+Session cookie is cleared"
+TC-006,Authentication,Logout,User cannot access dashboard after logout,P0,Pending,User just logged out,"1. Try to navigate to /dashboard","User is redirected to /login"
+TC-007,Authentication,Protected Routes,Unauthenticated users redirected to login,P0,Pending,User is not logged in,"1. Try to access /dashboard or any protected route","User is redirected to /login
+Original URL is preserved for redirect after login"
+TC-008,Authentication,Protected Routes,Session persists across page refreshes,P0,Pending,User is logged in,"1. Refresh the page (F5 or Cmd+R)","User remains logged in
+Dashboard content is displayed
+No redirect to login"
+TC-009,Dashboard,Loading,Dashboard displays user information,P1,Pending,User is logged in,"1. Login and view dashboard","User name is displayed in header
+User email/avatar is shown
+User menu is accessible"
+TC-010,Dashboard,Loading,Dashboard shows loading states,P1,Pending,User is logging in,"1. Login and observe page load","Skeleton loaders appear during data fetch
+Loading spinners show for async operations
+Content appears after loading completes"
+TC-011,Dashboard,Navigation,User can navigate to Organizations page,P1,Pending,User is logged in,"1. Click 'Organizations' in sidebar","Organizations page is displayed
+URL changes to /organizations or /dashboard
+Organization list is loaded"
+TC-012,Dashboard,Navigation,User can navigate to Apps page,P1,Pending,User is logged in,"1. Click 'Apps' in sidebar","Apps page is displayed
+App list is loaded"
+TC-013,Dashboard,Navigation,Active navigation item is highlighted,P1,Pending,User is logged in,"1. Click different sidebar items","Currently active page is highlighted
+Previous highlight is removed"
+TC-014,Organizations,List,User can view list of organizations,P0,Pending,User has organizations,"1. Navigate to organizations page","All user's organizations are displayed
+Each org shows name, role, and app count
+Organization cards are clickable"
+TC-015,Organizations,List,Empty state shown when no organizations,P1,Pending,User has no organizations,"1. Navigate to organizations page","Empty state message is displayed
+'Create Organization' button is shown
+Helpful message guides user to create first org"
+TC-016,Organizations,List,User role displayed correctly,P1,Pending,User has organizations with different roles,"1. View organizations list","Owner role is displayed for owned orgs
+Collaborator role is shown where applicable"
+TC-017,Organizations,Create,User can open create organization modal,P0,Pending,User is logged in,"1. Click 'Create Organization' button","Modal opens with create form
+Form fields are visible
+Organization name field is present
+Initial app name field is present"
+TC-018,Organizations,Create,Organization name is required,P0,Pending,Create org modal is open,"1. Leave organization name empty
+2. Click submit","Validation error is shown
+'Organization name is required' message appears
+Form is not submitted"
+TC-019,Organizations,Create,Initial app name is required,P0,Pending,Create org modal is open,"1. Enter organization name
+2. Leave initial app name empty
+3. Click submit","Validation error is shown
+'App name is required' message appears
+Form is not submitted"
+TC-020,Organizations,Create,User can successfully create organization,P0,Pending,Create org modal is open,"1. Enter organization name
+2. Enter initial app name
+3. Click submit","Organization is created successfully
+Success notification is shown
+Modal closes
+New organization appears in list
+User is set as Owner"
+TC-021,Organizations,Delete,User can delete organization they own,P1,Pending,User owns at least one organization,"1. Click delete button on organization
+2. Confirm deletion","Delete confirmation dialog appears
+User confirms deletion
+Organization is removed from list
+Success notification is shown"
+TC-022,Organizations,Delete,Delete disabled for non-owner,P1,Pending,User is collaborator (not owner),"1. View organization where user is not owner","Delete button is disabled or hidden"
+TC-023,Apps,List,User can view list of apps,P0,Pending,Organization has apps,"1. Select an organization
+2. View apps list","All apps for organization are displayed
+Each app shows name and deployment count
+App cards are clickable"
+TC-024,Apps,Create,User can open create app modal,P0,Pending,User is logged in,"1. Click 'Create App' button","Modal opens with create form
+App name field is visible
+Organization selector is visible"
+TC-025,Apps,Create,App name is required,P0,Pending,Create app modal is open,"1. Leave app name empty
+2. Click submit","Validation error is shown
+'App name is required' message
+Form is not submitted"
+TC-026,Apps,Create,User can create app in existing organization,P0,Pending,Create app modal is open,"1. Enter app name
+2. Select existing organization
+3. Click submit","App is created successfully
+Default deployments (Staging, Production) are created
+Success notification is shown
+User is navigated to app details"
+TC-027,Apps,Create,User can create app with new organization,P0,Pending,Create app modal is open,"1. Enter app name
+2. Enter new organization name
+3. Click submit","New organization is created
+App is created in new organization
+Success notification is shown"
+TC-028,Apps,View,User can view app details,P1,Pending,App exists,"1. Click on an app card","App details page is displayed
+App name and metadata are shown
+Deployments list is visible
+Collaborators section is visible"
+TC-029,Apps,Delete,User can delete app from organization,P1,Pending,User has delete permissions,"1. Click delete app button
+2. Confirm deletion","Delete confirmation dialog appears
+App is removed after confirmation
+Success notification is shown"
+TC-030,Apps,Delete,Deleting last app removes organization,P1,Pending,Organization has only one app,"1. Delete the only app in organization
+2. Confirm deletion","App is deleted successfully
+Organization is automatically removed from list
+Organization no longer appears in organizations page
+Success notification is shown"
+TC-031,Deployments,List,User can view deployments for app,P1,Pending,App has deployments,"1. Navigate to app details
+2. View deployments section","All deployments are listed
+Deployment name and key (masked) are shown
+Latest release info is displayed"
+TC-032,Deployments,List,Default deployments shown for new app,P1,Pending,App was just created,"1. View newly created app","Staging deployment exists
+Production deployment exists"
+TC-033,Deployments,Create,User can create deployment,P1,Pending,User is on app details page,"1. Click 'Create Deployment'
+2. Enter deployment name
+3. Submit","New deployment is created
+Deployment key is generated
+Success notification is shown
+Deployment appears in list"
+TC-034,Deployments,View,User can view deployment key,P1,Pending,Deployment exists,"1. Click on deployment
+2. View deployment key","Deployment key is shown (masked)
+Option to reveal/copy key is available"
+TC-035,Deployments,Delete,User can delete deployment,P2,Pending,App has multiple deployments,"1. Click delete on deployment
+2. Confirm deletion","Deployment is removed
+Success notification is shown"
+TC-036,Deployments,Delete,Cannot delete last deployment,P2,Pending,App has only one deployment,"1. Try to delete last deployment","Error message is shown
+'Cannot delete last deployment'
+Deletion is prevented"
+TC-037,Releases,List,User can view release history,P1,Pending,Deployment has releases,"1. Navigate to deployment
+2. View releases tab","All releases are listed
+Each release shows version, description, date
+Active release is highlighted
+Rollout percentage is displayed"
+TC-038,Releases,Create,User can open create release modal,P1,Pending,User is on deployment page,"1. Click 'Create Release' button","Create release modal opens
+File upload area is visible
+Target version field is visible
+Description and settings fields are visible"
+TC-039,Releases,Create,User can upload release bundle,P1,Pending,Create release modal is open,"1. Click upload area
+2. Select .zip file
+3. Fill required fields
+4. Submit","File upload shows progress
+Release is created successfully
+Success notification is shown
+New release appears in history"
+TC-040,Releases,Create,Target version is required,P1,Pending,Create release modal is open,"1. Upload file
+2. Leave target version empty
+3. Submit","Validation error is shown
+'Target version is required'
+Form is not submitted"
+TC-041,Releases,Update,User can edit release description,P2,Pending,Release exists,"1. Click edit on release
+2. Update description
+3. Save","Description is updated
+Success notification is shown"
+TC-042,Releases,Update,User can update rollout percentage,P1,Pending,Release exists,"1. Click edit rollout
+2. Change percentage (0-100)
+3. Save","Rollout percentage is updated
+Success notification is shown
+Changes take effect immediately"
+TC-043,Releases,Update,User can toggle mandatory flag,P2,Pending,Release exists,"1. Toggle mandatory switch
+2. Confirm change","Mandatory flag is updated
+Success notification is shown"
+TC-044,Releases,Update,User can disable/enable release,P2,Pending,Release exists,"1. Toggle enabled/disabled switch
+2. Confirm change","Release status is updated
+Status indicator changes
+Success notification is shown"
+TC-045,Releases,Rollback,User can rollback to previous release,P2,Pending,Multiple releases exist,"1. Click rollback on previous release
+2. Confirm rollback","Rollback confirmation dialog appears
+Active release changes after confirmation
+Success notification is shown"
+TC-046,Releases,Promote,User can promote release between deployments,P2,Pending,Release exists in Staging,"1. Click promote on release
+2. Select target deployment (Production)
+3. Confirm","Promotion confirmation appears
+New release is created in target deployment
+Success notification is shown"
+TC-047,Access Keys,List,User can view list of access keys,P1,Pending,User has access keys,"1. Navigate to access keys page","All access keys are listed
+Each key shows name, created date, expiry
+Active/expired status is shown"
+TC-048,Access Keys,Create,User can create access key,P1,Pending,User is on access keys page,"1. Click 'Create Access Key'
+2. Enter key name
+3. Set TTL (optional)
+4. Submit","Access key is created
+Generated key is displayed (one-time view)
+Copy button is available
+Success notification is shown"
+TC-049,Access Keys,Create,Key name is required,P1,Pending,Create key modal is open,"1. Leave key name empty
+2. Submit","Validation error is shown
+'Key name is required'
+Form is not submitted"
+TC-050,Access Keys,Create,Generated key displayed only once,P1,Pending,Key just created,"1. View generated key
+2. Close modal
+3. Reopen key details","Warning about saving key is shown
+Key value is not shown again after closing
+Only masked/partial key is visible"
+TC-051,Access Keys,Revoke,User can revoke access key,P1,Pending,Active key exists,"1. Click revoke on key
+2. Confirm revocation","Revoke confirmation appears
+Key status changes to Revoked
+Revoked key cannot authenticate
+Success notification is shown"
+TC-052,Access Keys,Delete,User can delete access key,P2,Pending,Key exists,"1. Click delete on key
+2. Confirm deletion","Key is removed from list
+Success notification is shown"
+TC-053,Collaborators,List,User can view collaborators list,P1,Pending,App has collaborators,"1. Navigate to app details
+2. View collaborators tab","All collaborators are listed
+Each shows email, role, status
+Pending invitations are indicated"
+TC-054,Collaborators,Add,User can add collaborator,P1,Pending,User has owner/admin permissions,"1. Click 'Add Collaborator'
+2. Enter email
+3. Select role
+4. Submit","Invitation is sent
+Collaborator appears with Pending status
+Success notification is shown"
+TC-055,Collaborators,Add,Email validation works,P1,Pending,Add collaborator modal is open,"1. Enter invalid email
+2. Submit","Validation error is shown
+'Invalid email format'
+Form is not submitted"
+TC-056,Collaborators,Update,User can change collaborator role,P2,Pending,Collaborator exists,"1. Click edit on collaborator
+2. Change role
+3. Confirm","Role update confirmation appears
+Role is changed after confirmation
+Success notification is shown"
+TC-057,Collaborators,Remove,User can remove collaborator,P1,Pending,Multiple collaborators exist,"1. Click remove on collaborator
+2. Confirm removal","Remove confirmation appears
+Collaborator is removed
+Success notification is shown"
+TC-058,Collaborators,Remove,Cannot remove last owner,P1,Pending,Only one owner exists,"1. Try to remove last owner","Error message is shown
+'Cannot remove last owner'
+Removal is prevented"
+TC-059,UI/UX,Loading States,Skeleton loaders shown during fetch,P1,Pending,User is loading data,"1. Login or navigate to new page
+2. Observe loading state","Skeleton loaders appear
+Smooth transition to actual content
+No layout shift"
+TC-060,UI/UX,Loading States,Progress bars show upload progress,P1,Pending,User is uploading file,"1. Upload release bundle
+2. Observe progress","Progress bar shows upload percentage
+Upload status updates in real-time
+Success state shown on completion"
+TC-061,UI/UX,Empty States,Empty state for no organizations,P1,Pending,User has no organizations,"1. View organizations page","Empty state with illustration/message
+'Create Organization' CTA button
+Helpful text guiding user"
+TC-062,UI/UX,Empty States,Empty state for no releases,P1,Pending,Deployment has no releases,"1. View releases for new deployment","Empty state with message
+'Create Release' CTA button
+Guidance on creating first release"
+TC-063,UI/UX,Error Handling,401 Unauthorized redirects to login,P0,Pending,Session expired,"1. Let session expire
+2. Make API request","User is redirected to /login
+Original URL is saved for redirect
+Error notification is shown"
+TC-064,UI/UX,Error Handling,403 Forbidden shows error message,P1,Pending,User lacks permissions,"1. Try unauthorized action","Error notification appears
+'You don't have permission' message
+Action is not performed"
+TC-065,UI/UX,Error Handling,404 Not Found shows error,P1,Pending,None,"1. Navigate to non-existent resource","404 error page or message is shown
+'Resource not found' message
+Option to go back home"
+TC-066,UI/UX,Error Handling,500 Server error handled gracefully,P1,Pending,Server returns 500,"1. Trigger server error","Error notification appears
+'Something went wrong' message
+Retry option is available"
+TC-067,UI/UX,Error Handling,Network timeout handled,P1,Pending,Slow/no network,"1. Disconnect or slow down network
+2. Try API request","Timeout error message is shown
+Retry option is available
+User is not left hanging"
+TC-068,UI/UX,Notifications,Success notifications appear,P1,Pending,User completes action,"1. Complete any successful action","Success notification appears
+Green checkmark or success icon
+Auto-dismisses after timeout
+Can be manually dismissed"
+TC-069,UI/UX,Notifications,Error notifications appear,P1,Pending,Action fails,"1. Trigger error condition","Error notification appears
+Red/warning icon
+Descriptive error message
+Can be manually dismissed"
+TC-070,UI/UX,Notifications,Notifications auto-dismiss,P1,Pending,Notification is shown,"1. Wait after notification appears","Notification auto-dismisses after 3-5 seconds
+Dismissal animation is smooth"
+TC-071,UI/UX,Form Validation,Required fields validated,P0,Pending,Any form is open,"1. Leave required field empty
+2. Submit form","Validation error appears
+Field is highlighted
+Error message describes issue
+Form is not submitted"
+TC-072,UI/UX,Form Validation,Email format validated,P1,Pending,Email field exists,"1. Enter invalid email
+2. Blur field or submit","Email validation error appears
+'Invalid email format' message
+Form is not submitted with invalid email"
+TC-073,UI/UX,Form Validation,Numeric fields accept only numbers,P2,Pending,Numeric field exists,"1. Try to enter letters in numeric field","Only numbers can be entered
+Invalid characters are blocked/removed"
+TC-074,UI/UX,Responsive,Desktop resolution works correctly,P2,Pending,None,"1. Set browser to 1920x1080
+2. Navigate through app","All features work correctly
+Layout is appropriate for desktop
+No horizontal scroll
+All elements accessible"
+TC-075,UI/UX,Responsive,Laptop resolution works correctly,P1,Pending,None,"1. Set browser to 1440x900
+2. Navigate through app","All features work correctly
+Layout adapts to laptop screen
+Navigation remains accessible"
+TC-076,UI/UX,Responsive,Tablet resolution works correctly,P3,Pending,None,"1. Set browser to 768x1024
+2. Navigate through app","Layout adapts to tablet
+Touch targets are appropriately sized
+Navigation is accessible"
+TC-077,UI/UX,Responsive,Mobile resolution works correctly,P3,Pending,None,"1. Set browser to 375x667
+2. Navigate through app","Layout adapts to mobile
+Mobile navigation works
+All features accessible on mobile"
+TC-078,Integration,Mock Server,Mock server connected successfully,P0,Pending,Mock server running,"1. Start mock server
+2. Register expectations
+3. Run tests","Mock server responds to requests
+Frontend connects to localhost:1080
+Mock data is returned correctly"
+TC-079,Integration,Mock Server,Mock OAuth bypasses real Google,P0,Pending,OAUTH_TEST_MODE=true,"1. Login via mock OAuth
+2. Monitor network requests","No requests to Google domains
+Mock authentication succeeds
+Session is created correctly"
+TC-080,Integration,Mock Server,CRUD operations work with mock APIs,P0,Pending,Mock server running,"1. Create resource
+2. Read resource
+3. Update resource
+4. Delete resource","All CRUD operations succeed
+Mock server returns appropriate responses
+Data state is maintained correctly"
