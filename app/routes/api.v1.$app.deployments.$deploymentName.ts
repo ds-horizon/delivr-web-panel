@@ -11,7 +11,46 @@ const updateRelease: AuthenticatedActionFunction = async ({
   request,
   params,
 }) => {
+  const userId = user.user.id;
   const body = await request.json();
+
+  // Use proxy in test mode
+  if (process.env.OAUTH_TEST_MODE === "true") {
+    const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+    const appId = params.app ?? "";
+    const deploymentName = params.deploymentName ?? "";
+    const tenant = body.tenant ?? "";
+
+    // Mock backend expects PATCH /apps/:appId/deployments/:deploymentName/release
+    const resp = await fetch(
+      `${backendUrl}/apps/${appId}/deployments/${deploymentName}/release`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userId}`,
+          ...(tenant ? { tenant } : {}),
+        },
+        body: JSON.stringify({
+          appVersion: body.appVersion ?? "",
+          description: body.description ?? "",
+          isDisabled: body.isDisabled ?? true,
+          isMandatory: body.isMandatory ?? false,
+          label: body.label ?? "",
+          rollout: body.rollout ?? 0,
+        }),
+      }
+    );
+
+    const ct = resp.headers.get("content-type") || "";
+    if (ct.includes("application/json")) {
+      const data = await resp.json();
+      return json(data, { status: resp.status });
+    }
+    return new Response(await resp.text(), { status: resp.status });
+  }
+
+  // Real dashboard path (unchanged)
   const { data, status } =
     await CodepushService.updateReleaseForDeployentForApp({
       userId: user.user.id,
