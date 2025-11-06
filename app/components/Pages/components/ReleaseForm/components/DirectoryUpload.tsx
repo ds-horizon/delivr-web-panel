@@ -339,6 +339,7 @@ export function DirectoryUpload({ onDirectorySelect, onCancel, resetTrigger, dis
                   color="red"
                   onClick={handleCancelDirectory}
                   title="Remove directory"
+                  data-testid="remove-bundle-button"
                 >
                   <IconX style={{ width: rem(16), height: rem(16) }} />
                 </ActionIcon>

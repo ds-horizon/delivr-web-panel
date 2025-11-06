@@ -7,7 +7,35 @@ import {
 } from "~/utils/authenticate";
 
 const createToken: AuthenticatedActionFunction = async ({ user, request }) => {
+  const userId = user.user.id;
   const body = await request.json();
+
+  // Use proxy in test mode
+  if (process.env.OAUTH_TEST_MODE === "true") {
+    const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+
+    const resp = await fetch(`${backendUrl}/accessKeys`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userId}`,
+      },
+      body: JSON.stringify({
+        name: body.name ?? "",
+        friendlyName: body.name ?? "",
+        ttl: body.ttl || null,
+      }),
+    });
+
+    const ct = resp.headers.get("content-type") || "";
+    if (ct.includes("application/json")) {
+      const data = await resp.json();
+      return json(data, { status: resp.status });
+    }
+    return new Response(await resp.text(), { status: resp.status });
+  }
+
+  // Real dashboard path (unchanged)
   const { data, status } = await CodepushService.createAccessKey({
     userId: user.user.id,
     name: body.name ?? "",
@@ -17,14 +45,61 @@ const createToken: AuthenticatedActionFunction = async ({ user, request }) => {
 };
 
 const deleteToken: AuthenticatedActionFunction = async ({ user, request }) => {
+  const userId = user.user.id;
+  const tokenName = request.headers.get("name") ?? "";
+
+  // Use proxy in test mode
+  if (process.env.OAUTH_TEST_MODE === "true") {
+    const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+
+    const resp = await fetch(`${backendUrl}/accessKeys/${encodeURIComponent(tokenName)}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userId}`,
+      },
+    });
+
+    const ct = resp.headers.get("content-type") || "";
+    if (ct.includes("application/json")) {
+      const data = await resp.json();
+      return json(data, { status: resp.status });
+    }
+    return new Response(await resp.text(), { status: resp.status });
+  }
+
+  // Real dashboard path (unchanged)
   const { data, status } = await CodepushService.deleteAccessKey({
     userId: user.user.id,
-    name: request.headers.get("name") ?? "",
+    name: tokenName,
   });
   return json(data, { status });
 };
 
 export const loader = authenticateLoaderRequest(async ({ user }) => {
+  const userId = user.user.id;
+
+  // Use proxy in test mode
+  if (process.env.OAUTH_TEST_MODE === "true") {
+    const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+
+    const resp = await fetch(`${backendUrl}/accessKeys`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userId}`,
+      },
+    });
+
+    const ct = resp.headers.get("content-type") || "";
+    if (ct.includes("application/json")) {
+      const data = await resp.json();
+      return json(data, { status: resp.status });
+    }
+    return new Response(await resp.text(), { status: resp.status });
+  }
+
+  // Real dashboard path (unchanged)
   const { data, status } = await CodepushService.getAccessKeys({
     userId: user.user.id,
   });

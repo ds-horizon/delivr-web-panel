@@ -22,7 +22,7 @@ export function HeaderUserButton({ user }: HeaderUserButtonProps) {
     <>
       <Menu shadow="md" width={240} position="bottom-end">
         <Menu.Target>
-          <UnstyledButton>
+          <UnstyledButton data-testid="user-profile-button">
             <Avatar 
               name={user.user.name} 
               radius="xl" 
@@ -88,7 +88,7 @@ export function HeaderUserButton({ user }: HeaderUserButtonProps) {
             Delete Account
           </Menu.Item>
           <Menu.Divider />
-          <Menu.Item color="red">
+          <Menu.Item color="red" data-testid="logout-menu-item">
             <Form
               method="post"
               action="/logout"
@@ -97,6 +97,7 @@ export function HeaderUserButton({ user }: HeaderUserButtonProps) {
               <IconLogout size={14} />
               <button
                 type="submit"
+                data-testid="logout-button"
                 style={{
                   all: "unset",
                   cursor: "pointer",
