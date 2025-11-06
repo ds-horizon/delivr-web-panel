@@ -11,7 +11,37 @@ const createDeployment: AuthenticatedActionFunction = async ({
   params,
   request,
 }) => {
+  const userId = user.user.id;
   const body = await request.json();
+
+  // Use proxy in test mode
+  if (process.env.OAUTH_TEST_MODE === "true") {
+    const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+    const appId = params.app ?? "";
+    const tenant = body.tenant ?? "";
+
+    const resp = await fetch(
+      `${backendUrl}/apps/${appId}/deployments`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userId}`,
+          ...(tenant ? { tenant } : {}),
+        },
+        body: JSON.stringify({ name: body.name ?? "" }),
+      }
+    );
+
+    const ct = resp.headers.get("content-type") || "";
+    if (ct.includes("application/json")) {
+      const data = await resp.json();
+      return json(data, { status: resp.status });
+    }
+    return new Response(await resp.text(), { status: resp.status });
+  }
+
+  // Real dashboard path (unchanged)
   const { data, status } = await CodepushService.createDeployentsForApp({
     userId: user.user.id,
     appId: params.app ?? "",

@@ -129,6 +129,7 @@ export function CreateDeploymentForm({ open, onClose }: CreateTokenFormProps) {
                 leftSection={<IconSparkles size={theme.other.sizes.icon.lg} />}
                 disabled={!!Object.keys(form.errors).length}
                 loading={isLoading}
+                data-testid="create-deployment-submit"
                 onClick={() => {
                   // Validate form before submitting
                   if (form.validate().hasErrors) {
