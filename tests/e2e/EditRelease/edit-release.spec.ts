@@ -143,30 +143,13 @@ test.describe('Edit Release Tests', () => {
     // Wait a bit for the detail modal to be fully loaded
     await page.waitForTimeout(2000);
     
-    // Debug: Take screenshot to see what's visible
-    await page.screenshot({ path: 'test-results/debug-before-edit-click.png', fullPage: true });
-    console.log('📸 Screenshot taken - checking for Edit button');
+    // Try data-testid first, fallback to text selector
+    let editButton = page.locator('[data-testid="release-detail-edit"]');
+    const hasTestId = await editButton.count();
     
-    // Try to find Edit button by different methods
-    const editButton = page.locator('[data-testid="release-detail-edit"]');
-    
-    // Check if button exists in DOM
-    const buttonCount = await editButton.count();
-    console.log(`📊 Edit buttons found: ${buttonCount}`);
-    
-    if (buttonCount === 0) {
-      // Try fallback selector
-      console.log('⚠️ data-testid not found, trying text selector...');
-      const editButtonFallback = page.getByRole('button', { name: /^edit$/i });
-      const fallbackCount = await editButtonFallback.count();
-      console.log(`📊 Edit buttons (fallback) found: ${fallbackCount}`);
-      
-      if (fallbackCount > 0) {
-        await editButtonFallback.first().click();
-        await page.waitForTimeout(2000);
-        console.log('✅ Opened Edit Release modal (using fallback)');
-        return;
-      }
+    if (hasTestId === 0) {
+      console.log('⚠️ data-testid not found, using fallback selector');
+      editButton = page.getByRole('button', { name: /Edit/i });
     }
     
     await editButton.waitFor({ state: 'visible', timeout: 10000 });
@@ -565,7 +548,7 @@ test.describe('Edit Release Tests', () => {
     await page.waitForTimeout(2000);
     console.log('✅ Canceled edit modal');
     
-    // Close the detail modal entirely to force refetch
+    // Close the detail modal entirely
     const closeDetailButton = page.locator('button[aria-label="Close modal"]').first();
     if (await closeDetailButton.isVisible().catch(() => false)) {
       await closeDetailButton.click();
@@ -573,11 +556,16 @@ test.describe('Edit Release Tests', () => {
       console.log('✅ Closed detail modal');
     }
     
-    // Reopen release detail (this will fetch fresh data from backend)
-    await openReleaseDetail(page, '2.1.0');
+    // Refresh the page to force fresh data fetch from backend
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(2000);
+    console.log('✅ Refreshed page to fetch fresh data');
     
-    // Open edit modal again to verify changes were NOT saved
+    // Reopen release detail and edit modal to verify changes were NOT saved
+    await openReleaseDetail(page, '2.1.0');
     await openEditModal(page);
+    
     const savedDescription = await descriptionInput.inputValue();
     expect(savedDescription).toBe(originalDescription);
     console.log('✅ Verified - Original description preserved');
