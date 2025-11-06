@@ -385,5 +385,69 @@ test.describe('Create Release - Validation Tests', () => {
       console.log('✅ Test 7 passed - Empty bundle rejected by browser');
     }
   });
+
+  test('Validation 8: Should allow removing uploaded bundle and require re-upload', async ({ page }) => {
+    console.log('🚀 Test 8: Remove Uploaded Bundle');
+    
+    const testBundleDir = path.join(__dirname, '../../fixtures/test-bundle');
+    
+    await navigateToCreateRelease(page);
+    console.log('✅ Navigated to create release modal');
+    
+    // Step 1: Upload bundle
+    console.log('📝 Uploading bundle...');
+    const fileInput = page.locator('input[type="file"][webkitdirectory]');
+    await fileInput.setInputFiles(testBundleDir);
+    await page.waitForTimeout(5000);
+    console.log('✅ Bundle uploaded');
+    
+    // Verify bundle is uploaded (check for "Bundle Selected" or similar text)
+    const bundleSelectedText = page.locator('text=/bundle selected|scripts/i');
+    await bundleSelectedText.waitFor({ state: 'visible', timeout: 5000 });
+    console.log('✅ Bundle upload confirmed');
+    
+    // Find and click the remove/delete button (X icon)
+    console.log('📝 Looking for remove bundle button...');
+    
+    // Use data-testid selector for the remove button
+    const removeButton = page.locator('[data-testid="remove-bundle-button"]');
+    await removeButton.waitFor({ state: 'visible', timeout: 5000 });
+    console.log('✅ Found remove button');
+    
+    // Click the remove button
+    await removeButton.click();
+    await page.waitForTimeout(2000);
+    console.log('✅ Clicked remove button');
+    
+    // Verify bundle is removed (file input should be visible again)
+    const fileInputVisibleAgain = await fileInput.isVisible();
+    expect(fileInputVisibleAgain).toBe(true);
+    console.log('✅ File input visible again after removal');
+    
+    // Verify "Bundle Selected" text is no longer visible
+    const bundleStillSelected = await bundleSelectedText.isVisible().catch(() => false);
+    expect(bundleStillSelected).toBe(false);
+    console.log('✅ Bundle removed successfully');
+    
+    // Try to proceed without re-uploading
+    console.log('📝 Attempting to proceed without re-uploading...');
+    const nextButton = page.getByRole('button', { name: /^next step$/i });
+    await nextButton.click();
+    await page.waitForTimeout(1000);
+    
+    // Verify error message appears
+    const errorMessage = page.locator('text=/Please select a directory to upload/i');
+    await errorMessage.waitFor({ state: 'visible', timeout: 5000 });
+    const errorText = await errorMessage.textContent();
+    expect(errorText).toContain('Please select a directory to upload');
+    console.log(`✅ Error message displayed: "${errorText}"`);
+    
+    // Verify we're still on step 1
+    const stillOnStep1 = await fileInput.isVisible();
+    expect(stillOnStep1).toBe(true);
+    console.log('✅ Still on step 1 - cannot proceed without bundle');
+    
+    console.log('✅ Test 8 passed - Bundle removal and re-upload requirement verified');
+  });
 });
 
