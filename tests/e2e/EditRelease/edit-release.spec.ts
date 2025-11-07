@@ -10,20 +10,6 @@ test.describe('Edit Release Tests', () => {
   // Reset releases before each test for isolation
   test.beforeEach(async ({ page }) => {
     await fetch('http://localhost:3001/api/test/reset-releases', { method: 'POST' });
-    console.log('🔄 Reset releases before test');
-    
-    // Add error listeners for debugging
-    page.on('console', (msg) => {
-      if (msg.type() === 'error') {
-        console.error('Browser console error:', msg.text());
-      }
-    });
-    
-    page.on('response', async (response) => {
-      if (response.status() >= 400) {
-        console.error(`HTTP ${response.status()}: ${response.url()}`);
-      }
-    });
   });
   
   // Helper function to create a release
@@ -120,7 +106,6 @@ test.describe('Edit Release Tests', () => {
     await page.waitForSelector('text=/Release Created Successfully/i', { timeout: 30000 });
     await page.waitForTimeout(2000);
     
-    console.log(`✅ Created test release: v${releaseData.version}`);
   }
   
   // Helper function to open release detail modal
@@ -130,12 +115,10 @@ test.describe('Edit Release Tests', () => {
     await releaseCard.waitFor({ state: 'visible', timeout: 10000 });
     await releaseCard.click();
     await page.waitForTimeout(2000);
-    console.log(`✅ Clicked on release v${version}`);
     
     // Wait for release detail modal to appear
     const detailModalTitle = page.locator('text=/Release Information/i');
     await detailModalTitle.waitFor({ state: 'visible', timeout: 5000 });
-    console.log(`✅ Release detail modal opened for v${version}`);
   }
   
   // Helper function to open edit modal
@@ -148,19 +131,16 @@ test.describe('Edit Release Tests', () => {
     const hasTestId = await editButton.count();
     
     if (hasTestId === 0) {
-      console.log('⚠️ data-testid not found, using fallback selector');
       editButton = page.getByRole('button', { name: /Edit/i });
     }
     
     await editButton.waitFor({ state: 'visible', timeout: 10000 });
     await editButton.click();
     await page.waitForTimeout(2000);
-    console.log('✅ Opened Edit Release modal');
   }
 
   test('Edit Release 1: Update Description', async ({ page }) => {
     test.setTimeout(60000); // 60 seconds
-    console.log('🚀 Test: Edit Release - Update Description');
     
     // Create a release
     await createTestRelease(page, {
@@ -182,7 +162,6 @@ test.describe('Edit Release Tests', () => {
     const descriptionInput = page.getByLabel(/description/i);
     await descriptionInput.clear();
     await descriptionInput.fill(newDescription);
-    console.log(`✅ Updated description to: "${newDescription}"`);
     
     // Save changes
     const saveButton = page.locator('[data-testid="edit-release-save"]');
@@ -191,13 +170,10 @@ test.describe('Edit Release Tests', () => {
     // Wait for success notification or modal to close
     try {
       await page.waitForSelector('text=/success|updated/i', { timeout: 5000 });
-      console.log('✅ Success notification shown');
     } catch {
-      console.log('⚠️ No success notification (might have auto-closed)');
     }
     
     await page.waitForTimeout(2000);
-    console.log('✅ Saved changes');
     
     // Close the detail modal if still open, then reopen
     const closeButton = page.locator('button[aria-label="Close modal"]').first();
@@ -213,14 +189,11 @@ test.describe('Edit Release Tests', () => {
     await openEditModal(page);
     const descriptionValue = await descriptionInput.inputValue();
     expect(descriptionValue).toBe(newDescription);
-    console.log('✅ Description verified - changes persisted');
     
-    console.log('✅ Test passed - Description updated successfully');
   });
 
   test('Edit Release 2: Change Rollout Percentage', async ({ page }) => {
     test.setTimeout(60000); // 60 seconds
-    console.log('🚀 Test: Edit Release - Change Rollout');
     
     // Create a release with 50% rollout
     await createTestRelease(page, {
@@ -240,7 +213,6 @@ test.describe('Edit Release Tests', () => {
     const rolloutDisplay = page.locator('text=/\\d+%/').first();
     const currentRolloutText = await rolloutDisplay.textContent();
     const currentRollout = parseInt(currentRolloutText?.match(/\d+/)?.[0] || '50');
-    console.log(`📊 Current rollout: ${currentRollout}%`);
     
     if (currentRollout !== targetRollout) {
       const sliderThumb = page.locator('[role="slider"]').first();
@@ -254,13 +226,11 @@ test.describe('Edit Release Tests', () => {
         }
       }
     }
-    console.log(`✅ Changed rollout to: ${targetRollout}%`);
     
     // Save changes
     const saveButton = page.locator('[data-testid="edit-release-save"]');
     await saveButton.click();
     await page.waitForTimeout(2000);
-    console.log('✅ Saved changes');
     
     // Close and reopen if needed
     const closeButton = page.locator('button[aria-label="Close modal"]').first();
@@ -275,14 +245,11 @@ test.describe('Edit Release Tests', () => {
     const newRolloutText = await rolloutDisplay.textContent();
     const newRollout = parseInt(newRolloutText?.match(/\d+/)?.[0] || '0');
     expect(newRollout).toBe(targetRollout);
-    console.log(`✅ Rollout verified: ${newRollout}%`);
     
-    console.log('✅ Test passed - Rollout updated successfully');
   });
 
   test('Edit Release 3: Toggle Disabled Status', async ({ page }) => {
     test.setTimeout(60000); // 60 seconds (creates release + edits it)
-    console.log('🚀 Test: Edit Release - Toggle Disabled Status');
     
     // Create an active release (disabled = false)
     await createTestRelease(page, {
@@ -303,13 +270,11 @@ test.describe('Edit Release Tests', () => {
     await statusLabel.waitFor({ state: 'visible', timeout: 5000 });
     await statusLabel.click();
     await page.waitForTimeout(500);
-    console.log('✅ Toggled Release Status to Inactive');
     
     // Save changes
     const saveButton = page.locator('[data-testid="edit-release-save"]');
     await saveButton.click();
     await page.waitForTimeout(2000);
-    console.log('✅ Saved changes');
     
     // Close edit modal and detail modal
     let closeButton = page.locator('button[aria-label="Close modal"]').first();
@@ -329,13 +294,10 @@ test.describe('Edit Release Tests', () => {
     const inactiveBadge = page.locator('text=/inactive/i').first();
     const isInactive = await inactiveBadge.isVisible().catch(() => false);
     expect(isInactive).toBe(true);
-    console.log('✅ Status verified - Release is now INACTIVE');
     
-    console.log('✅ Test passed - Disabled status toggled successfully');
   });
 
   test.skip('Edit Release 4: Toggle Mandatory Flag (Feature Disabled)', async ({ page }) => {
-    console.log('🚀 Test: Edit Release - Toggle Mandatory Flag');
     
     // Create a non-mandatory release
     await createTestRelease(page, {
@@ -355,13 +317,11 @@ test.describe('Edit Release Tests', () => {
     await mandatoryLabel.waitFor({ state: 'visible', timeout: 5000 });
     await mandatoryLabel.click();
     await page.waitForTimeout(500);
-    console.log('✅ Toggled Mandatory flag ON');
     
     // Save changes
     const saveButton = page.locator('[data-testid="edit-release-save"]');
     await saveButton.click();
     await page.waitForTimeout(2000);
-    console.log('✅ Saved changes');
     
     // Close and reopen if needed
     const closeButton = page.locator('button[aria-label="Close modal"]').first();
@@ -379,14 +339,11 @@ test.describe('Edit Release Tests', () => {
     
     // Check if checkbox is checked (implementation may vary)
     const isChecked = await mandatoryCheckbox.isChecked().catch(() => false);
-    console.log(`✅ Mandatory flag verified: ${isChecked ? 'ON' : 'OFF'}`);
     
-    console.log('✅ Test passed - Mandatory flag toggled successfully');
   });
 
   test('Edit Release 5: Update Target Version', async ({ page }) => {
     test.setTimeout(60000); // 60 seconds
-    console.log('🚀 Test: Edit Release - Update Target Version');
     
     // Create a release
     await createTestRelease(page, {
@@ -406,13 +363,11 @@ test.describe('Edit Release Tests', () => {
     const versionInput = page.getByLabel(/target version|app version/i);
     await versionInput.clear();
     await versionInput.fill(newVersion);
-    console.log(`✅ Updated target version to: ${newVersion}`);
     
     // Save changes
     const saveButton = page.locator('[data-testid="edit-release-save"]');
     await saveButton.click();
     await page.waitForTimeout(2000);
-    console.log('✅ Saved changes');
     
     // Close and reopen if needed
     const closeButton = page.locator('button[aria-label="Close modal"]').first();
@@ -426,14 +381,11 @@ test.describe('Edit Release Tests', () => {
     await openEditModal(page);
     const versionValue = await versionInput.inputValue();
     expect(versionValue).toContain(newVersion);
-    console.log(`✅ Target version verified: ${versionValue}`);
     
-    console.log('✅ Test passed - Target version updated successfully');
   });
 
   test('Edit Release 6: Multiple Fields - Comprehensive Edit', async ({ page }) => {
     test.setTimeout(60000); // 60 seconds
-    console.log('🚀 Test: Edit Release - Update Multiple Fields');
     
     // Create a release with initial values
     await createTestRelease(page, {
@@ -449,14 +401,12 @@ test.describe('Edit Release Tests', () => {
     await openEditModal(page);
     
     // Update multiple fields
-    console.log('📝 Updating multiple fields...');
     
     // 1. Update description
     const newDescription = 'Completely revised description with all new features';
     const descriptionInput = page.getByLabel(/description/i);
     await descriptionInput.clear();
     await descriptionInput.fill(newDescription);
-    console.log(`  ✅ Description: "${newDescription}"`);
     
     // 2. Change rollout from 25% to 75%
     const targetRollout = 75;
@@ -476,23 +426,19 @@ test.describe('Edit Release Tests', () => {
         }
       }
     }
-    console.log(`  ✅ Rollout: ${targetRollout}%`);
     
     // 3. Toggle mandatory (skip if not available - currently hidden in Edit modal)
     const mandatoryLabel = page.locator('text=/mandatory/i').first();
     if (await mandatoryLabel.isVisible().catch(() => false)) {
       await mandatoryLabel.click();
       await page.waitForTimeout(500);
-      console.log('  ✅ Mandatory: ON');
     } else {
-      console.log('  ⚠️ Mandatory toggle not available (feature disabled)');
     }
     
     // Save all changes
     const saveButton = page.locator('[data-testid="edit-release-save"]');
     await saveButton.click();
     await page.waitForTimeout(2000);
-    console.log('✅ Saved all changes');
     
     // Close and reopen if needed
     const closeButton = page.locator('button[aria-label="Close modal"]').first();
@@ -507,19 +453,15 @@ test.describe('Edit Release Tests', () => {
     
     const savedDescription = await descriptionInput.inputValue();
     expect(savedDescription).toBe(newDescription);
-    console.log('✅ Description persisted');
     
     const savedRolloutText = await rolloutDisplay.textContent();
     const savedRollout = parseInt(savedRolloutText?.match(/\d+/)?.[0] || '0');
     expect(savedRollout).toBe(targetRollout);
-    console.log(`✅ Rollout persisted: ${savedRollout}%`);
     
-    console.log('✅ Test passed - Multiple fields updated successfully');
   });
 
   test('Edit Release 7: Cancel Edit - Changes Not Saved', async ({ page }) => {
     test.setTimeout(60000); // 60 seconds
-    console.log('🚀 Test: Edit Release - Cancel Without Saving');
     
     const originalDescription = 'Original description that should remain';
     
@@ -540,27 +482,23 @@ test.describe('Edit Release Tests', () => {
     const descriptionInput = page.getByLabel(/description/i);
     await descriptionInput.clear();
     await descriptionInput.fill('This should NOT be saved');
-    console.log('✅ Made changes (not saved)');
     
     // Cancel/close the edit modal
     const cancelButton = page.locator('[data-testid="edit-release-cancel"]');
     await cancelButton.click();
     await page.waitForTimeout(2000);
-    console.log('✅ Canceled edit modal');
     
     // Close the detail modal entirely
     const closeDetailButton = page.locator('button[aria-label="Close modal"]').first();
     if (await closeDetailButton.isVisible().catch(() => false)) {
       await closeDetailButton.click();
       await page.waitForTimeout(1000);
-      console.log('✅ Closed detail modal');
     }
     
     // Refresh the page to force fresh data fetch from backend
     await page.reload();
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
-    console.log('✅ Refreshed page to fetch fresh data');
     
     // Reopen release detail and edit modal to verify changes were NOT saved
     await openReleaseDetail(page, '2.1.0');
@@ -568,9 +506,7 @@ test.describe('Edit Release Tests', () => {
     
     const savedDescription = await descriptionInput.inputValue();
     expect(savedDescription).toBe(originalDescription);
-    console.log('✅ Verified - Original description preserved');
     
-    console.log('✅ Test passed - Cancel works, changes not saved');
   });
 });
 

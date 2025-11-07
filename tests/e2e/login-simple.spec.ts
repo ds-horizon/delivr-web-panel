@@ -28,7 +28,6 @@ test.describe('Login Flow - Simple', () => {
       fullPage: true 
     });
     
-    console.log('✅ Login page loaded successfully with all elements');
   });
   
   test('should have a clickable Google login button', async ({ page }) => {
@@ -43,7 +42,6 @@ test.describe('Login Flow - Simple', () => {
     // Verify button text
     await expect(loginButton).toContainText('Continue with Google');
     
-    console.log('✅ Google login button is interactive');
   });
   
   test('should initiate OAuth flow when clicking login button', async ({ page }) => {
@@ -65,7 +63,6 @@ test.describe('Login Flow - Simple', () => {
     
     // Verify we're on dashboard
     expect(page.url()).toContain('/dashboard');
-    console.log('✅ Successfully redirected to dashboard');
     
     // Wait 3 seconds to see the dashboard
     await page.waitForTimeout(3000);
@@ -74,7 +71,6 @@ test.describe('Login Flow - Simple', () => {
     const cookies = await page.context().cookies();
     const sessionCookie = cookies.find(c => c.name === '_session');
     expect(sessionCookie).toBeDefined();
-    console.log('✅ Session cookie found');
     
     // Take screenshot of dashboard
     await page.screenshot({ 
@@ -105,7 +101,6 @@ test.describe('Login Flow - Simple', () => {
     
     // Verify we're on the dashboard
     expect(page.url()).toContain('/dashboard');
-    console.log('✅ Successfully reached dashboard');
     
     // Wait 3 seconds to see the dashboard
     await page.waitForTimeout(30000);
@@ -114,7 +109,6 @@ test.describe('Login Flow - Simple', () => {
     const cookies = await page.context().cookies();
     const sessionCookie = cookies.find(c => c.name === '_session');
     expect(sessionCookie).toBeDefined();
-    console.log('✅ Session cookie found');
     
     // Verify no real Google OAuth requests were made
     const hasGoogleOAuthRequest = requests.some(r => 
@@ -122,7 +116,6 @@ test.describe('Login Flow - Simple', () => {
       r.includes('oauth2.googleapis.com')
     );
     expect(hasGoogleOAuthRequest).toBe(false);
-    console.log('✅ OAUTH_TEST_MODE is working - no real Google OAuth calls');
   });
 });
 

@@ -3,23 +3,6 @@ import { test, expect } from '@playwright/test';
 test.describe('Create Organization Flow', () => {
   
   test('should successfully create a new organization with app', async ({ page }) => {
-    // Capture console errors and network failures for debugging
-    page.on('console', (msg) => {
-      if (msg.type() === 'error') {
-        console.error('Browser console error:', msg.text());
-      }
-    });
-    
-    page.on('pageerror', (error) => {
-      console.error('Page error:', error.message);
-    });
-    
-    page.on('response', async (response) => {
-      if (response.status() >= 400) {
-        console.error(`HTTP ${response.status()}: ${response.url()}`);
-      }
-    });
-    
     // Step 1: Login (mock mode: use /test-login; otherwise click Google)
     // if (process.env.OAUTH_TEST_MODE === 'true') {
      
@@ -82,12 +65,10 @@ test.describe('Create Organization Flow', () => {
     // Step 5: Wait for success notification
     await page.waitForSelector('text=/success|created/i', { timeout: 10000 });
     
-    console.log('✅ Organization created successfully');
     
     // Wait for modal to close
     await page.waitForTimeout(2000);
     
-    console.log('✅ Test completed - Organization creation verified');
     
     // Take a final screenshot for verification
     await page.screenshot({ 

@@ -10,14 +10,6 @@ test.describe('Promote Release Tests', () => {
   // Reset releases before each test for isolation
   test.beforeEach(async ({ page }) => {
     await fetch('http://localhost:3001/api/test/reset-releases', { method: 'POST' });
-    console.log('🔄 Reset releases before test');
-    
-    // Add error listeners
-    page.on('response', async (response) => {
-      if (response.status() >= 400) {
-        console.error(`HTTP ${response.status()}: ${response.url()}`);
-      }
-    });
   });
   
   // Helper function to create a release
@@ -106,12 +98,10 @@ test.describe('Promote Release Tests', () => {
     await page.waitForSelector('text=/Release Created Successfully/i', { timeout: 30000 });
     await page.waitForTimeout(2000);
     
-    console.log(`✅ Created release v${releaseData.version} on ${releaseData.deployment}`);
   }
 
   test('Promote Release 1: Promote from Staging to Production', async ({ page }) => {
     test.setTimeout(90000); // 90 seconds (creates + promotes)
-    console.log('🚀 Test: Promote Release - Staging to Production');
     
     // Step 1: Create a release on Staging
     await createTestRelease(page, {
@@ -125,13 +115,11 @@ test.describe('Promote Release Tests', () => {
     await page.goto('http://localhost:3000/dashboard/test-org-1/TestApp?deployment=Staging');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
-    console.log('✅ On Staging deployment view');
     
     // Step 3: Click on the release to open detail
     const releaseCard = page.locator('text=/1\\.0\\.0/i').first();
     await releaseCard.click();
     await page.waitForTimeout(2000);
-    console.log('✅ Opened release detail');
     
     // Step 4: Click Promote button
     await page.waitForTimeout(1000); // Extra wait for modal to fully load
@@ -141,14 +129,12 @@ test.describe('Promote Release Tests', () => {
     
     if (!hasTestId) {
       // Fallback: find by text if data-testid not available (server not restarted)
-      console.log('⚠️ Using fallback selector for Promote button');
       promoteButton = page.getByRole('button', { name: /Promote/i });
     }
     
     await promoteButton.waitFor({ state: 'visible', timeout: 10000 });
     await promoteButton.click();
     await page.waitForTimeout(2000);
-    console.log('✅ Opened Promote modal');
     
     // Step 5: Select target deployment (Production)
     const deploymentInput = page.locator('input[placeholder*="deployment" i]').first();
@@ -160,10 +146,8 @@ test.describe('Promote Release Tests', () => {
     const productionOption = page.locator('[role="option"]:has-text("Production")');
     if (await productionOption.isVisible().catch(() => false)) {
       await productionOption.click();
-      console.log('✅ Selected Production deployment');
     } else {
       // Alternative: just keep the typed value
-      console.log('✅ Entered Production deployment');
     }
 
     
@@ -171,11 +155,9 @@ test.describe('Promote Release Tests', () => {
     const promoteSubmitButton = page.getByRole('button', { name: /Promote/i }).last();
     await promoteSubmitButton.waitFor({ state: 'visible', timeout: 10000 });
     await promoteSubmitButton.click();
-    console.log('✅ Clicked Promote button in modal');
     
     // Step 7: Wait for success notification
     await page.waitForSelector('text=/success|promoted/i', { timeout: 15000 });
-    console.log('✅ Promotion successful');
     
     await page.waitForTimeout(2000);
     
@@ -183,19 +165,15 @@ test.describe('Promote Release Tests', () => {
     await page.goto('http://localhost:3000/dashboard/test-org-1/TestApp?deployment=Production');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
-    console.log('✅ Navigated to Production deployment');
     
     // Verify release appears in Production
     const promotedRelease = page.locator('text=/1\\.0\\.0/i').first();
     await expect(promotedRelease).toBeVisible({ timeout: 10000 });
-    console.log('✅ Promoted release found in Production');
     
-    console.log('✅ Test passed - Release promoted from Staging to Production');
   });
 
   test('Promote Release 2: Promote from Production to Staging', async ({ page }) => {
     test.setTimeout(90000); // 90 seconds
-    console.log('🚀 Test: Promote Release - Production to Staging');
     
     // Step 1: Create a release on Production
     await createTestRelease(page, {
@@ -221,7 +199,6 @@ test.describe('Promote Release Tests', () => {
     }
     await promoteButton.click();
     await page.waitForTimeout(2000);
-    console.log('✅ Opened Promote modal');
     
     // Step 4: Select Staging as target
     const deploymentInput = page.locator('input[placeholder*="deployment" i]').first();
@@ -232,12 +209,10 @@ test.describe('Promote Release Tests', () => {
     if (await stagingOption.isVisible().catch(() => false)) {
       await stagingOption.click();
     }
-    console.log('✅ Selected Staging deployment');
     
     // Step 5: Promote
     const promoteSubmitButton = page.getByRole('button', { name: /Promote/i }).last();
     await promoteSubmitButton.click();
-    console.log('✅ Clicked Promote button');
     
     await page.waitForSelector('text=/success|promoted/i', { timeout: 15000 });
     await page.waitForTimeout(2000);
@@ -249,14 +224,11 @@ test.describe('Promote Release Tests', () => {
     
     const promotedRelease = page.locator('text=/2\\.0\\.0/i').first();
     await expect(promotedRelease).toBeVisible({ timeout: 10000 });
-    console.log('✅ Promoted release found in Staging');
     
-    console.log('✅ Test passed - Release promoted from Production to Staging');
   });
 
   test('Promote Release 3: Cancel Promotion', async ({ page }) => {
     test.setTimeout(60000); // 60 seconds
-    console.log('🚀 Test: Promote Release - Cancel Promotion');
     
     // Step 1: Create a release on Staging
     await createTestRelease(page, {
@@ -281,18 +253,15 @@ test.describe('Promote Release Tests', () => {
     }
     await promoteButton.click();
     await page.waitForTimeout(2000);
-    console.log('✅ Opened Promote modal');
     
     // Step 3: Select Production but then cancel
     const deploymentInput = page.locator('input[placeholder*="deployment" i]').first();
     await deploymentInput.fill('Production');
     await page.waitForTimeout(500);
-    console.log('✅ Selected Production (but will cancel)');
     
     // Step 4: Cancel/close the promote modal (ESC key or close button)
     await page.keyboard.press('Escape');
     await page.waitForTimeout(2000);
-    console.log('✅ Canceled promotion');
     
     // Step 5: Verify release was NOT promoted to Production
     await page.goto('http://localhost:3000/dashboard/test-org-1/TestApp?deployment=Production');
@@ -303,7 +272,6 @@ test.describe('Promote Release Tests', () => {
     const releaseInProduction = page.locator('text=/3\\.0\\.0/i').first();
     const existsInProduction = await releaseInProduction.isVisible().catch(() => false);
     expect(existsInProduction).toBe(false);
-    console.log('✅ Release NOT in Production (as expected)');
     
     // Step 6: Verify release still exists in Staging
     await page.goto('http://localhost:3000/dashboard/test-org-1/TestApp?deployment=Staging');
@@ -312,14 +280,11 @@ test.describe('Promote Release Tests', () => {
     
     const releaseInStaging = page.locator('text=/3\\.0\\.0/i').first();
     await expect(releaseInStaging).toBeVisible({ timeout: 10000 });
-    console.log('✅ Release still in Staging (original location)');
     
-    console.log('✅ Test passed - Promotion canceled successfully');
   });
 
   test('Promote Release 4: Verify Promoted Release Maintains Metadata', async ({ page }) => {
     test.setTimeout(90000); // 90 seconds
-    console.log('🚀 Test: Promote Release - Metadata Preservation');
     
     const originalDescription = 'Original release description with important notes';
     
@@ -360,7 +325,6 @@ test.describe('Promote Release Tests', () => {
     await promoteSubmitButton.click();
     await page.waitForSelector('text=/success|promoted/i', { timeout: 15000 });
     await page.waitForTimeout(3000);
-    console.log('✅ Promoted to Production');
     
     // Step 3: Verify promoted release has same description in Production
     await page.goto('http://localhost:3000/dashboard/test-org-1/TestApp?deployment=Production');
@@ -370,24 +334,19 @@ test.describe('Promote Release Tests', () => {
     const promotedReleaseCard = page.locator('text=/4\\.0\\.0/i').first();
     await promotedReleaseCard.click();
     await page.waitForTimeout(2000);
-    console.log('✅ Opened promoted release detail');
     
     // Check if description is visible in the detail view
     const descriptionText = page.locator(`text=/${originalDescription.substring(0, 20)}/i`);
     const hasDescription = await descriptionText.isVisible().catch(() => false);
     
     if (hasDescription) {
-      console.log('✅ Description preserved in promoted release');
     } else {
-      console.log('⚠️ Description might not be visible in detail view');
     }
     
-    console.log('✅ Test passed - Promoted release verified in Production');
   });
 
   test('Promote Release 5: Cannot Promote Without Selecting Deployment', async ({ page }) => {
     test.setTimeout(60000); // 60 seconds
-    console.log('🚀 Test: Promote Release - Validation (No Deployment Selected)');
     
     // Step 1: Create a release on Staging
     await createTestRelease(page, {
@@ -412,7 +371,6 @@ test.describe('Promote Release Tests', () => {
     }
     await promoteButton.click();
     await page.waitForTimeout(2000);
-    console.log('✅ Opened Promote modal');
     
     // Step 3: Try to promote without selecting a deployment
     const promoteSubmitButton = page.getByRole('button', { name: /^promote$/i });
@@ -421,7 +379,6 @@ test.describe('Promote Release Tests', () => {
     const isDisabled = await promoteSubmitButton.isDisabled().catch(() => false);
     
     if (isDisabled) {
-      console.log('✅ Promote button is disabled (validation working)');
       expect(isDisabled).toBe(true);
     } else {
       // Button not disabled, try to click and check for error
@@ -433,13 +390,10 @@ test.describe('Promote Release Tests', () => {
       const hasError = await errorMessage.isVisible().catch(() => false);
       
       if (hasError) {
-        console.log('✅ Error message shown (validation working)');
       } else {
-        console.log('⚠️ No error shown but promotion might have been prevented');
       }
     }
     
-    console.log('✅ Test passed - Cannot promote without selecting deployment');
   });
 });
 
