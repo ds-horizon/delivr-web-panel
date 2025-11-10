@@ -7,9 +7,9 @@ const __dirname = path.dirname(__filename);
 
 test.describe('Edit Release Tests', () => {
   
-  // Reset releases before each test for isolation
+  // Reset all data before each test for complete isolation
   test.beforeEach(async ({ page }) => {
-    await fetch('http://localhost:3001/api/test/reset-releases', { method: 'POST' });
+    await fetch('http://localhost:3001/api/test/reset-data', { method: 'POST' });
   });
   
   // Helper function to create a release
@@ -104,6 +104,16 @@ test.describe('Edit Release Tests', () => {
     
     // Wait for success
     await page.waitForSelector('text=/Release Created Successfully/i', { timeout: 30000 });
+    await page.waitForTimeout(2000);
+    
+    // Navigate explicitly to the correct deployment and version URL
+    // This ensures we're on the right page even if redirect doesn't include deployment/version
+    const org = 'test-org-1';
+    const app = 'TestApp';
+    const deployment = releaseData.deployment;
+    const version = releaseData.version;
+    await page.goto(`http://localhost:3000/dashboard/${org}/${app}?deployment=${deployment}`);
+    await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
   }

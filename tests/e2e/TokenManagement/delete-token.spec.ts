@@ -2,6 +2,11 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Delete Token Tests', () => {
   
+  // Reset all data before each test for complete isolation
+  test.beforeEach(async ({ page }) => {
+    await fetch('http://localhost:3001/api/test/reset-data', { method: 'POST' });
+  });
+  
   // Helper to navigate to token list page
   async function navigateToTokenList(page: any) {
     await page.goto('http://localhost:3000/test-login');
@@ -19,7 +24,8 @@ test.describe('Delete Token Tests', () => {
   
   // Helper to create a test token
   async function createToken(page: any, tokenName: string) {
-    const createTokenButton = page.getByRole('button', { name: /Create Token/i });
+    const createTokenButton = page.locator('[data-testid="create-token-button"]');
+    await createTokenButton.waitFor({ state: 'visible', timeout: 10000 });
     await createTokenButton.click();
     await page.waitForTimeout(2000);
     

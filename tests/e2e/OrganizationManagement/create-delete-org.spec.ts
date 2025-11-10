@@ -2,6 +2,11 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Organization Management - Create & Delete', () => {
   
+  // Restore initial test data before each test to ensure test-org-1 exists
+  test.beforeEach(async () => {
+    await fetch('http://localhost:3001/api/test/reset-data', { method: 'POST' });
+  });
+  
   test('Org 1: Create Organization with App', async ({ page }) => {
     
     // Step 1: Login
@@ -118,6 +123,69 @@ test.describe('Organization Management - Create & Delete', () => {
       
     } else {
     }
+  });
+
+  test('Org 4: Duplicate Organization Name Should Be Rejected', async ({ page }) => {
+    test.setTimeout(60000); // 60 seconds
+    
+    // Step 1: Login
+    await page.goto('http://localhost:3000/test-login');
+    await page.waitForURL('**/dashboard**', { timeout: 10000 });
+    await page.waitForTimeout(2000);
+    
+    // Step 2: Verify test-org-1 exists (from initial data)
+    const existingOrgCard = page.locator('[data-testid="org-card"]').filter({ hasText: 'test-org-1' });
+    await existingOrgCard.waitFor({ state: 'visible', timeout: 10000 });
+    
+    // Step 3: Click "Create Organization" button
+    const createOrgButton = page.getByRole('button', { name: /create organization/i });
+    await createOrgButton.waitFor({ state: 'visible', timeout: 10000 });
+    await createOrgButton.click();
+    await page.waitForTimeout(2000);
+    
+    // Step 4: Fill organization name with duplicate name (test-org-1)
+    const duplicateOrgName = 'test-org-1';
+    const orgNameInput = page.getByLabel(/organization name/i);
+    await orgNameInput.fill(duplicateOrgName);
+    
+    // Step 5: Fill initial app name (required)
+    const appName = `TestApp-${Date.now()}`;
+    const appNameInput = page.getByLabel(/initial app name/i);
+    await appNameInput.fill(appName);
+    
+    // Wait for validation
+    await page.waitForTimeout(1000);
+    
+    // Step 6: Submit the form
+    const createButton = page.getByRole('button', { name: /create organization/i }).last();
+    
+    // Wait for API response to verify duplicate rejection
+    const responsePromise = page.waitForResponse(resp => 
+      resp.url().includes('/api/v1/new/apps') && resp.request().method() === 'POST'
+    );
+    
+    await createButton.click();
+    
+    // Step 7: Verify API response shows duplicate error
+    const response = await responsePromise;
+    expect(response.status()).toBe(409); // Conflict status code
+    
+    const responseData = await response.json();
+    expect(responseData.error || responseData.message).toContain('already exists');
+    expect(responseData.error || responseData.message).toContain(duplicateOrgName);
+    
+    // Step 8: Verify error notification is shown
+    await page.waitForSelector('text=/already exists|duplicate|error/i', { timeout: 10000 });
+    
+    // Step 9: Verify modal is still open (form not submitted)
+    await expect(orgNameInput).toBeVisible();
+    
+    // Step 10: Verify only one test-org-1 exists (no duplicate created)
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+    const orgCards = page.locator('[data-testid="org-card"]').filter({ hasText: 'test-org-1' });
+    const count = await orgCards.count();
+    expect(count).toBe(1); // Should still be only one
   });
 });
 

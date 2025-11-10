@@ -83,5 +83,87 @@ test.describe('Create App Tests', () => {
     } else {
     }
   });
+
+  test('Create App 3: Duplicate App Name in Same Organization Should Be Rejected', async ({ page }) => {
+    test.setTimeout(60000); // 60 seconds
+    
+    // Step 1: Login
+    await page.goto('http://localhost:3000/test-login');
+    await page.waitForURL('**/dashboard**', { timeout: 10000 });
+    await page.waitForTimeout(2000);
+    
+    // Step 2: Navigate to organization (test-org-1)
+    const orgCard = page.locator('[data-testid="org-card"]').filter({ hasText: 'test-org-1' });
+    await orgCard.waitFor({ state: 'visible', timeout: 10000 });
+    await orgCard.click();
+    await page.waitForLoadState('networkidle');
+    
+    // Step 3: Count existing apps with "TestApp" in name before attempting duplicate
+    // We'll verify this count doesn't increase after duplicate attempt
+    const allAppCards = page.locator('[data-testid="app-card"]');
+    const cardCount = await allAppCards.count();
+    let initialTestAppCount = 0;
+    for (let i = 0; i < cardCount; i++) {
+      const card = allAppCards.nth(i);
+      const text = await card.textContent();
+      // Count cards that contain "TestApp" but not "TestApp-" (exact match, not timestamped)
+      if (text && text.includes('TestApp') && !text.match(/TestApp-\d+/)) {
+        initialTestAppCount++;
+      }
+    }
+    
+    // Step 4: Click "Create App" button
+    const createAppButton = page.getByRole('button', { name: /create.*app|new.*app|\+/i }).first();
+    await createAppButton.waitFor({ state: 'visible', timeout: 10000 });
+    await createAppButton.click();
+    await page.waitForTimeout(2000);
+    
+    // Step 5: Fill app name with duplicate name (TestApp)
+    const duplicateAppName = 'TestApp';
+    const nameInput = page.getByLabel(/app name|name/i).first();
+    await nameInput.fill(duplicateAppName);
+    await page.waitForTimeout(1000);
+    
+    // Step 6: Submit the form
+    const submitButton = page.getByRole('button', { name: /create|submit/i }).last();
+    
+    // Wait for API response to verify duplicate rejection
+    const responsePromise = page.waitForResponse(resp => 
+      resp.url().includes('/apps') && resp.request().method() === 'POST'
+    );
+    
+    await submitButton.click();
+    
+    // Step 7: Verify API response shows duplicate error
+    const response = await responsePromise;
+    expect(response.status()).toBe(409); // Conflict status code
+    
+    const responseData = await response.json();
+    expect(responseData.error || responseData.message).toContain('already exists');
+    expect(responseData.error || responseData.message).toContain(duplicateAppName);
+    
+    // Step 8: Verify error notification is shown
+    await page.waitForSelector('text=/already exists|duplicate|error/i', { timeout: 10000 });
+    
+    // Step 9: Verify form is still visible (not submitted)
+    await expect(nameInput).toBeVisible();
+    
+    // Step 10: Verify no duplicate was created (count should be same as initial)
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+    // Count apps with "TestApp" in name (excluding timestamped ones like "TestApp-123")
+    const allFinalAppCards = page.locator('[data-testid="app-card"]');
+    const finalCardCount = await allFinalAppCards.count();
+    let finalTestAppCount = 0;
+    for (let i = 0; i < finalCardCount; i++) {
+      const card = allFinalAppCards.nth(i);
+      const text = await card.textContent();
+      // Count cards that contain "TestApp" but not "TestApp-" (exact match, not timestamped)
+      if (text && text.includes('TestApp') && !text.match(/TestApp-\d+/)) {
+        finalTestAppCount++;
+      }
+    }
+    expect(finalTestAppCount).toBe(initialTestAppCount); // Count should not have increased
+  });
 });
 

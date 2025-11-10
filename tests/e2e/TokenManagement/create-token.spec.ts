@@ -2,6 +2,11 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Create Token Tests', () => {
   
+  // Reset all data before each test for complete isolation
+  test.beforeEach(async ({ page }) => {
+    await fetch('http://localhost:3001/api/test/reset-data', { method: 'POST' });
+  });
+  
   test('Token 1: Create token via user profile menu', async ({ page }) => {
     test.setTimeout(60000); // 60 seconds
     
@@ -23,7 +28,7 @@ test.describe('Create Token Tests', () => {
     await page.waitForTimeout(2000);
     
     // Step 4: Click "Create Token" button (should be on the tokens page)
-    const createTokenButton = page.getByRole('button', { name: /create.*token|new.*token|\+/i });
+    const createTokenButton = page.locator('[data-testid="create-token-button"]');
     await createTokenButton.waitFor({ state: 'visible', timeout: 10000 });
     await createTokenButton.click();
     await page.waitForTimeout(2000);
@@ -56,8 +61,10 @@ test.describe('Create Token Tests', () => {
     const copyButtonWithTokenName = page.getByRole('button', { name: new RegExp(tokenName, 'i') });
     await expect(copyButtonWithTokenName).toBeVisible({ timeout: 10000 });
     
-    // Step 10: Close the modal
+    // Step 10: Close the modal using data-testid
+    await page.waitForTimeout(1000);
     const closeModalButton = page.locator('[data-testid="close-token-modal"]');
+    await closeModalButton.waitFor({ state: 'visible', timeout: 5000 });
     await closeModalButton.click();
     await page.waitForTimeout(1000);
     
@@ -84,17 +91,30 @@ test.describe('Create Token Tests', () => {
     await page.waitForTimeout(2000);
     
     // Step 3: Open create token modal
-    const createTokenButton = page.getByRole('button', { name: /Create Token/i });
+    const createTokenButton = page.locator('[data-testid="create-token-button"]');
+    await createTokenButton.waitFor({ state: 'visible', timeout: 10000 });
     await createTokenButton.click();
     await page.waitForTimeout(2000);
     
     // Step 4: Try to create without entering name
-    const createButton = page.getByRole('button', { name: /create|generate/i }).last();
-    await createButton.click();
-    await page.waitForTimeout(1000);
+    // First, trigger validation by touching the field
+    const nameInput = page.getByLabel(/token name|enter token name/i);
+    await nameInput.focus();
+    await nameInput.blur();
+    await page.waitForTimeout(500);
     
-    // Step 5: Verify error message
-    const errorMessage = page.locator("text=/Name Can't be Empty/i");
+    // Check if button is disabled (form validation prevents submission)
+    const createButton = page.getByRole('button', { name: /create|generate/i }).last();
+    const isDisabled = await createButton.isDisabled();
+    
+    // If button is not disabled, try clicking it
+    if (!isDisabled) {
+      await createButton.click();
+      await page.waitForTimeout(1000);
+    }
+    
+    // Step 5: Verify error message (note: actual message has double space "Name  Can't be Empty")
+    const errorMessage = page.locator("text=/Name\\s+Can't be Empty/i");
     await expect(errorMessage).toBeVisible({ timeout: 5000 });
     const errorText = await errorMessage.textContent();
     
@@ -126,8 +146,26 @@ test.describe('Create Token Tests', () => {
         await page.waitForTimeout(2000);
       }
       
-      // Open create token modal
-      const createTokenButton = page.getByRole('button', { name: /Create Token/i });
+      // Ensure any previous modal is closed before opening a new one
+      const existingModal = page.locator('h3:has-text("Create Token")');
+      const isModalOpen = await existingModal.isVisible().catch(() => false);
+      if (isModalOpen) {
+        // Close existing modal using data-testid
+        const closeButton = page.locator('[data-testid="close-token-modal"]');
+        const isCloseButtonVisible = await closeButton.isVisible().catch(() => false);
+        if (isCloseButtonVisible) {
+          await closeButton.click();
+          await page.waitForTimeout(1000);
+        } else {
+          // Fallback to Escape key
+          await page.keyboard.press('Escape');
+          await page.waitForTimeout(1000);
+        }
+      }
+      
+      // Open create token modal using data-testid
+      const createTokenButton = page.locator('[data-testid="create-token-button"]');
+      await createTokenButton.waitFor({ state: 'visible', timeout: 10000 });
       await createTokenButton.click();
       await page.waitForTimeout(2000);
       
