@@ -46,12 +46,14 @@ export const PromoteReleaseForm = ({
         placeholder="Search for deployment"
         value={value}
         onChange={(value) => setValue(value)}
+        data-testid="promote-deployment-select"
       />
       <Flex justify={"flex-end"}>
         <Button
           mt={"md"}
           disabled={!value.length}
           loading={isLoading}
+          data-testid="promote-submit-button"
           onClick={() => {
             mutate(
               {

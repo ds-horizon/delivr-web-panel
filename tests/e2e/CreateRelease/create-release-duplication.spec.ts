@@ -57,16 +57,31 @@ test.describe('Create Release - Incomplete Rollout Validation', () => {
     const nextButton = page.getByRole('button', { name: /next/i });
     await nextButton.waitFor({ state: 'visible', timeout: 5000 });
     await nextButton.click();
-    await page.waitForTimeout(1000);
     
-    // Step 2: Fill metadata
-    const appVersionInput = page.getByLabel(/app version/i);
-    await appVersionInput.waitFor({ state: 'visible', timeout: 5000 });
+    // Wait for step 2 to load - wait for the stepper to transition and form to render
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(2000); // Give stepper time to transition
+    
+    // Step 2: Fill metadata - wait for the input field with fallback
+    let appVersionInput = page.locator('[data-testid="app-version-input"]');
+    const hasTestId = await appVersionInput.isVisible().catch(() => false);
+    if (!hasTestId) {
+      // Fallback: use label if data-testid not available
+      appVersionInput = page.getByLabel(/app version/i);
+    }
+    await appVersionInput.waitFor({ state: 'visible', timeout: 15000 });
     await appVersionInput.fill(config.version);
     
-    // Select deployment
-    const deploymentSelect = page.locator('input[placeholder*="deployment" i]').first();
-    await deploymentSelect.waitFor({ state: 'visible', timeout: 5000 });
+    // Select deployment with fallback
+    let deploymentSelect = page.locator('[data-testid="deployment-select-input"]');
+    const hasDeploymentTestId = await deploymentSelect.isVisible().catch(() => false);
+    if (!hasDeploymentTestId) {
+      // Try wrapper first, then fallback to placeholder selector
+      const wrapper = page.locator('[data-testid="deployment-select-wrapper"] input').first();
+      const hasWrapper = await wrapper.isVisible().catch(() => false);
+      deploymentSelect = hasWrapper ? wrapper : page.locator('input[placeholder*="deployment" i]').first();
+    }
+    await deploymentSelect.waitFor({ state: 'visible', timeout: 10000 });
     await deploymentSelect.click();
     await page.waitForTimeout(500);
     
@@ -75,7 +90,7 @@ test.describe('Create Release - Incomplete Rollout Validation', () => {
     await deploymentOption.click();
     
     // Fill description
-    const descriptionInput = page.getByLabel(/description/i);
+    const descriptionInput = page.locator('[data-testid="release-description-input"]');
     if (await descriptionInput.isVisible()) {
       await descriptionInput.fill(`Release ${config.version} with ${config.rollout}% rollout`);
     }

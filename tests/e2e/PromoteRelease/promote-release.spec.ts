@@ -151,8 +151,8 @@ test.describe('Promote Release Tests', () => {
     }
 
     
-    // Step 6: Click Promote button in modal (use .last() to get the one in the modal)
-    const promoteSubmitButton = page.getByRole('button', { name: /Promote/i }).last();
+    // Step 6: Click Promote button in modal
+    const promoteSubmitButton = page.locator('[data-testid="promote-submit-button"]');
     await promoteSubmitButton.waitFor({ state: 'visible', timeout: 10000 });
     await promoteSubmitButton.click();
     
@@ -211,7 +211,8 @@ test.describe('Promote Release Tests', () => {
     }
     
     // Step 5: Promote
-    const promoteSubmitButton = page.getByRole('button', { name: /Promote/i }).last();
+    const promoteSubmitButton = page.locator('[data-testid="promote-submit-button"]');
+    await promoteSubmitButton.waitFor({ state: 'visible', timeout: 10000 });
     await promoteSubmitButton.click();
     
     await page.waitForSelector('text=/success|promoted/i', { timeout: 15000 });
@@ -321,7 +322,8 @@ test.describe('Promote Release Tests', () => {
       await productionOption.click();
     }
     
-    const promoteSubmitButton = page.getByRole('button', { name: /Promote/i }).last();
+    const promoteSubmitButton = page.locator('[data-testid="promote-submit-button"]');
+    await promoteSubmitButton.waitFor({ state: 'visible', timeout: 10000 });
     await promoteSubmitButton.click();
     await page.waitForSelector('text=/success|promoted/i', { timeout: 15000 });
     await page.waitForTimeout(3000);
@@ -373,7 +375,7 @@ test.describe('Promote Release Tests', () => {
     await page.waitForTimeout(2000);
     
     // Step 3: Try to promote without selecting a deployment
-    const promoteSubmitButton = page.getByRole('button', { name: /^promote$/i });
+    const promoteSubmitButton = page.locator('[data-testid="promote-submit-button"]');
     
     // Check if button is disabled
     const isDisabled = await promoteSubmitButton.isDisabled().catch(() => false);

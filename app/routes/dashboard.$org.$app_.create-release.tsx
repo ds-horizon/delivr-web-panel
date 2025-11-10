@@ -326,20 +326,22 @@ export default function CreateReleasePage() {
                   key={form.key("appVersion")}
                   {...form.getInputProps("appVersion")}
                   description="Semantic version of your app (e.g., 1.0.0, 2.1.3)"
+                  data-testid="app-version-input"
                 />
                 
-                <Select
-                  label="Select Deployment Key"
-                  placeholder="Select deployment target"
-                  required
-                  data={deploymentOptions}
-                  key={form.key("deploymentName")}
-                  {...form.getInputProps("deploymentName")}
-                  disabled={deploymentsLoading}
-                  searchable
-                  description="Choose the deployment environment"
-                />
-
+                <div data-testid="deployment-select-wrapper">
+                  <Select
+                    label="Select Deployment Key"
+                    placeholder="Select deployment target"
+                    required
+                    data={deploymentOptions}
+                    key={form.key("deploymentName")}
+                    {...form.getInputProps("deploymentName")}
+                    disabled={deploymentsLoading}
+                    searchable
+                    description="Choose the deployment environment"
+                  />
+                </div>
                 <Textarea
                   label="Description"
                   placeholder="Describe what's new in this release..."
@@ -347,6 +349,7 @@ export default function CreateReleasePage() {
                   {...form.getInputProps("description")}
                   minRows={3}
                   description="Optional: Add release notes or description"
+                  data-testid="release-description-input"
                 />
               </Stack>
             </Box>
