@@ -61,6 +61,7 @@ export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
       centered
       padding="xl"
       radius="md"
+      closeButtonProps={{ "data-testid": "close-token-modal" } as any}
     >
       <Box>
         <Stack gap="lg" mt="md">
