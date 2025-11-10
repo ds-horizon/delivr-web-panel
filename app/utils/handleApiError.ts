@@ -2,8 +2,10 @@ import { AxiosError } from "axios";
 
 export const handleApiError = (e: unknown, fallback: string): string => {
   try {
-    const message = (e as AxiosError<{ message: unknown }>)?.response?.data
-      ?.message;
+    const responseData = (e as AxiosError<{ message?: unknown; error?: unknown }>)?.response?.data;
+    
+    // Check for both 'message' and 'error' fields (different APIs use different field names)
+    const message = responseData?.message ?? responseData?.error;
 
     if (typeof message === "object") {
       return JSON.stringify(message);
