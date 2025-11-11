@@ -5,6 +5,7 @@ import {
   AuthenticatedActionFunction,
   authenticateLoaderRequest,
 } from "~/utils/authenticate";
+import { isTestMode, getBackendUrl } from "~/utils/test-mode";
 
 const createDeployment: AuthenticatedActionFunction = async ({
   user,
@@ -15,8 +16,8 @@ const createDeployment: AuthenticatedActionFunction = async ({
   const body = await request.json();
 
   // Use proxy in test mode
-  if (process.env.OAUTH_TEST_MODE === "true") {
-    const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+  if (isTestMode()) {
+    const backendUrl = getBackendUrl();
     const appId = params.app ?? "";
     const tenant = body.tenant ?? "";
 
@@ -68,9 +69,9 @@ const deleteDeployment: AuthenticatedActionFunction = async ({
 export const loader = authenticateLoaderRequest(async ({ user, params, request }) => {
   const userId = user.user.id;
 
-  // Use proxy only in mock mode
-  if (process.env.OAUTH_TEST_MODE === "true") {
-    const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+  // Use proxy in test mode
+  if (isTestMode()) {
+    const backendUrl = getBackendUrl();
     const tenant = request.headers.get("tenant") ?? "";
     const appId = params.app ?? "";
 

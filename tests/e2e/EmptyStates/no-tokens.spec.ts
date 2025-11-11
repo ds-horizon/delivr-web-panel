@@ -11,7 +11,7 @@ test.describe('Empty State - No Tokens', () => {
     test.setTimeout(30000);
     
     // Step 1: Login
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     

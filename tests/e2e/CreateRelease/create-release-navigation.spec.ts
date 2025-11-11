@@ -15,7 +15,7 @@ test.describe('Create Release - Navigation & Flow Tests', () => {
   test('Navigation 1: Cancel via Back Arrow at Step 1 (Bundle Upload)', async ({ page }) => {
     
     // Step 1: Login and navigate to create release page
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -61,7 +61,7 @@ test.describe('Create Release - Navigation & Flow Tests', () => {
     const testBundleDir = path.join(__dirname, '../../fixtures/test-bundle');
     
     // Step 1-3: Login and navigate to create release modal
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -112,7 +112,7 @@ test.describe('Create Release - Navigation & Flow Tests', () => {
     const testBundleDir = path.join(__dirname, '../../fixtures/test-bundle');
     
     // Step 1-3: Login and navigate to create release modal
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -178,7 +178,7 @@ test.describe('Create Release - Navigation & Flow Tests', () => {
     const testBundleDir = path.join(__dirname, '../../fixtures/test-bundle');
     
     // Step 1-3: Login and navigate to create release modal
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -253,7 +253,7 @@ test.describe('Create Release - Navigation & Flow Tests', () => {
     const testBundleDir = path.join(__dirname, '../../fixtures/test-bundle');
     
     // Step 1-3: Login and navigate to create release modal
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -309,7 +309,7 @@ test.describe('Create Release - Navigation & Flow Tests', () => {
     const testBundleDir = path.join(__dirname, '../../fixtures/test-bundle');
     
     // Step 1-3: Login and navigate to create release modal
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     

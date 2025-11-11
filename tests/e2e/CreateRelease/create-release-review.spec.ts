@@ -26,7 +26,7 @@ test.describe('Create Release - Review Modal Verification', () => {
     };
     
     // Step 1: Login and navigate to create release page
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -146,7 +146,7 @@ test.describe('Create Release - Review Modal Verification', () => {
     const testBundleDir = path.join(__dirname, '../../fixtures/test-bundle');
     
     // Step 1: Login and navigate to create release page
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     

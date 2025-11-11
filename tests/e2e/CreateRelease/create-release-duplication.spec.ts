@@ -25,7 +25,7 @@ test.describe('Create Release - Incomplete Rollout Validation', () => {
     const testBundleDir = path.join(__dirname, '../../fixtures/test-bundle');
     
     // Login
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -196,7 +196,7 @@ test.describe('Create Release - Incomplete Rollout Validation', () => {
     const currentUrl = page.url();
     if (!currentUrl.includes('/dashboard/')) {
       // If not on app page, navigate to it
-      await page.goto('http://localhost:3000/dashboard');
+      await page.goto('/dashboard');
       await page.waitForTimeout(2000);
       
       const firstOrgCard = page.locator('[data-testid="org-card"]').first();
@@ -319,7 +319,7 @@ test.describe('Create Release - Incomplete Rollout Validation', () => {
     // Verify release in listing (on Staging deployment)
     
     // Navigate directly to Staging deployment
-    await page.goto('http://localhost:3000/dashboard/test-org-1/TestApp?deployment=Staging');
+    await page.goto('/dashboard/test-org-1/TestApp?deployment=Staging');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     

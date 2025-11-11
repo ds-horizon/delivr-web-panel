@@ -5,7 +5,7 @@ test.describe('Create App Tests', () => {
   test('Create App 1: Successfully create a new app under existing org', async ({ page }) => {
     
     // Step 1: Login
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -45,7 +45,7 @@ test.describe('Create App Tests', () => {
   
   test('Create App 2: Validation - Empty app name', async ({ page }) => {
     
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -88,7 +88,7 @@ test.describe('Create App Tests', () => {
     test.setTimeout(60000); // 60 seconds
     
     // Step 1: Login
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     

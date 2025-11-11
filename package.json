@@ -47,7 +47,7 @@
     "routes-gen": "^0.6.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.56.1",
+    "@playwright/test": "1.56.1",
     "@remix-run/dev": "^2.13.1",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",

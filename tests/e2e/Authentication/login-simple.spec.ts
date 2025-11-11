@@ -47,7 +47,7 @@ test.describe('Login Flow - Simple', () => {
   test('should initiate OAuth flow when clicking login button', async ({ page }) => {
     // In test mode, use the test-login endpoint instead of clicking Google button
     // This avoids redirecting to real Google OAuth
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     
     // Wait for redirect to dashboard
     await page.waitForURL('**/dashboard**', { timeout: 30000 });
@@ -70,16 +70,16 @@ test.describe('Login Flow - Simple', () => {
     });
   });
   
-  test('should check if OAUTH_TEST_MODE is working', async ({ page }) => {
+  test('should check if NODE_ENV=test bypasses OAuth', async ({ page }) => {
     // Listen for network requests
     const requests: string[] = [];
     page.on('request', request => {
       requests.push(`${request.method()} ${request.url()}`);
     });
     
-    // In test mode, use the test-login endpoint
-    // This verifies that OAUTH_TEST_MODE bypasses real Google OAuth
-    await page.goto('http://localhost:3000/test-login');
+    // In test mode (NODE_ENV=test without VITEST), use the test-login endpoint
+    // This verifies that test mode bypasses real Google OAuth
+    await page.goto('/test-login');
     
     // Wait for redirect to dashboard
     await page.waitForURL('**/dashboard**', { timeout: 30000 });

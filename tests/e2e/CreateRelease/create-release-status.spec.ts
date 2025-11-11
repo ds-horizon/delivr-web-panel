@@ -24,7 +24,7 @@ test.describe('Create Release - Status Tests (Active/Inactive)', () => {
     const testBundleDir = path.join(__dirname, '../../fixtures/test-bundle');
     
     // Login
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     

@@ -5,6 +5,7 @@ import {
   AuthenticatedActionFunction,
   authenticateLoaderRequest,
 } from "~/utils/authenticate";
+import { isTestMode, getBackendUrl } from "~/utils/test-mode";
 
 const updateRelease: AuthenticatedActionFunction = async ({
   user,
@@ -15,8 +16,8 @@ const updateRelease: AuthenticatedActionFunction = async ({
   const body = await request.json();
 
   // Use proxy in test mode
-  if (process.env.OAUTH_TEST_MODE === "true") {
-    const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+  if (isTestMode()) {
+    const backendUrl = getBackendUrl();
     const appId = params.app ?? "";
     const deploymentName = params.deploymentName ?? "";
     const tenant = body.tenant ?? "";
@@ -72,8 +73,8 @@ export const loader = authenticateLoaderRequest(async ({ user, params, request }
   const userId = user.user.id;
 
   // Use proxy in test mode
-  if (process.env.OAUTH_TEST_MODE === "true") {
-    const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+  if (isTestMode()) {
+    const backendUrl = getBackendUrl();
     const tenant = request.headers.get("tenant") ?? "";
     const appId = params.app ?? "";
     const deploymentName = params.deploymentName ?? "";

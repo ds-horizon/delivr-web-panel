@@ -4,7 +4,7 @@ test.describe('Logout Tests', () => {
   
   test('Logout 1: Successfully logout from application', async ({ page }) => {
     // Step 1: Login first
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     

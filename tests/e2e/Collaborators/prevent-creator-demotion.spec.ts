@@ -11,7 +11,7 @@ test.describe('Collaborators - Prevent App Creator Demotion', () => {
     test.setTimeout(60000);
     
     // Step 1: Login as app owner/creator
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     

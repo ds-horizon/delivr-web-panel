@@ -23,7 +23,7 @@ test.describe('Edit Release Tests', () => {
     const testBundleDir = path.join(__dirname, '../../fixtures/test-bundle');
     
     // Navigate to create release page
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -112,7 +112,7 @@ test.describe('Edit Release Tests', () => {
     const app = 'TestApp';
     const deployment = releaseData.deployment;
     const version = releaseData.version;
-    await page.goto(`http://localhost:3000/dashboard/${org}/${app}?deployment=${deployment}`);
+    await page.goto(`/dashboard/${org}/${app}?deployment=${deployment}`);
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     

@@ -1,8 +1,10 @@
 import { redirect } from "@remix-run/node";
 import { SessionStorageService } from "~/.server/services/SessionStorage";
+import { isTestMode } from "~/utils/test-mode";
 
 export const loader = async () => {
-  if (process.env.OAUTH_TEST_MODE !== "true") {
+  // Only allow test login in test mode
+  if (!isTestMode()) {
     return redirect("/login");
   }
 

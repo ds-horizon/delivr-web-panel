@@ -6,6 +6,7 @@ import {
   AuthenticatedActionFunction,
   authenticateLoaderRequest,
 } from "~/utils/authenticate";
+import { isTestMode, getBackendUrl } from "~/utils/test-mode";
 
 export const loader = authenticateLoaderRequest();
 
@@ -14,8 +15,8 @@ const deleteTenant: AuthenticatedActionFunction = async ({ user, params }) => {
   const tenantId = params.org ?? "";
 
   // Use proxy in test mode
-  if (process.env.OAUTH_TEST_MODE === "true") {
-    const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+  if (isTestMode()) {
+    const backendUrl = getBackendUrl();
 
     const resp = await fetch(`${backendUrl}/tenants/${tenantId}`, {
       method: "DELETE",

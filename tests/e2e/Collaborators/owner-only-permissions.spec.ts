@@ -11,7 +11,7 @@ test.describe('Collaborators - Owner Only Permissions', () => {
     test.setTimeout(60000);
     
     // Step 1: Login as app owner
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -76,7 +76,7 @@ test.describe('Collaborators - Owner Only Permissions', () => {
     test.setTimeout(60000);
     
     // Step 1: Login as app owner
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -146,7 +146,7 @@ test.describe('Collaborators - Owner Only Permissions', () => {
     // In a real scenario with different user accounts, you'd logout and login as collaborator
     
     // Step 1: Login
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -186,7 +186,7 @@ test.describe('Collaborators - Owner Only Permissions', () => {
     test.setTimeout(60000);
     
     // Step 1: Login as owner
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     

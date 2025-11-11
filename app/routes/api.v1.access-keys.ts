@@ -5,14 +5,15 @@ import {
   AuthenticatedActionFunction,
   authenticateLoaderRequest,
 } from "~/utils/authenticate";
+import { isTestMode, getBackendUrl } from "~/utils/test-mode";
 
 const createToken: AuthenticatedActionFunction = async ({ user, request }) => {
   const userId = user.user.id;
   const body = await request.json();
 
   // Use proxy in test mode
-  if (process.env.OAUTH_TEST_MODE === "true") {
-    const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+  if (isTestMode()) {
+    const backendUrl = getBackendUrl();
 
     const resp = await fetch(`${backendUrl}/accessKeys`, {
       method: "POST",
@@ -49,8 +50,8 @@ const deleteToken: AuthenticatedActionFunction = async ({ user, request }) => {
   const tokenName = request.headers.get("name") ?? "";
 
   // Use proxy in test mode
-  if (process.env.OAUTH_TEST_MODE === "true") {
-    const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+  if (isTestMode()) {
+    const backendUrl = getBackendUrl();
 
     const resp = await fetch(`${backendUrl}/accessKeys/${encodeURIComponent(tokenName)}`, {
       method: "DELETE",
@@ -80,8 +81,8 @@ export const loader = authenticateLoaderRequest(async ({ user }) => {
   const userId = user.user.id;
 
   // Use proxy in test mode
-  if (process.env.OAUTH_TEST_MODE === "true") {
-    const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+  if (isTestMode()) {
+    const backendUrl = getBackendUrl();
 
     const resp = await fetch(`${backendUrl}/accessKeys`, {
       method: "GET",

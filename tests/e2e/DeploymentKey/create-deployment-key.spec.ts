@@ -9,7 +9,7 @@ test.describe('Create Deployment Key Tests', () => {
   
   // Helper function to navigate to app page
   async function navigateToApp(page: any) {
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     

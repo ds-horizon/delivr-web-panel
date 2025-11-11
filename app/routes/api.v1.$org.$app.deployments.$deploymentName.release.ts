@@ -1,6 +1,7 @@
 import { ActionFunction } from "@remix-run/node";
 import { authenticateActionRequest } from "~/utils/authenticate";
 import { CodepushService } from "~/.server/services/Codepush";
+import { isTestMode, getBackendUrl } from "~/utils/test-mode";
 
 export const action: ActionFunction = authenticateActionRequest({
   POST: async ({ request, params, user }) => {
@@ -16,9 +17,9 @@ export const action: ActionFunction = authenticateActionRequest({
     try {
       const userId = user.user.id;
 
-      // Use proxy only in mock mode
-      if (process.env.OAUTH_TEST_MODE === "true") {
-        const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+      // Use proxy in test mode
+      if (isTestMode()) {
+        const backendUrl = getBackendUrl();
         
         // Parse the multipart form data
         const formData = await request.formData();

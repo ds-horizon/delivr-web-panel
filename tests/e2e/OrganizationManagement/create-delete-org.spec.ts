@@ -10,7 +10,7 @@ test.describe('Organization Management - Create & Delete', () => {
   test('Org 1: Create Organization with App', async ({ page }) => {
     
     // Step 1: Login
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -53,7 +53,7 @@ test.describe('Organization Management - Create & Delete', () => {
     test.setTimeout(60000); // 60 seconds
     
     // Step 1: Login
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -93,7 +93,7 @@ test.describe('Organization Management - Create & Delete', () => {
   test('Org 3: Cancel Organization Deletion', async ({ page }) => {
     
     // Step 1: Login
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -129,7 +129,7 @@ test.describe('Organization Management - Create & Delete', () => {
     test.setTimeout(60000); // 60 seconds
     
     // Step 1: Login
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     

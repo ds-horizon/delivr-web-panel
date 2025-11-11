@@ -5,7 +5,7 @@ test.describe('Delete App Tests', () => {
   test('Delete App 1: Successfully delete an app', async ({ page }) => {
     
     // Step 1: Login and navigate to org
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -55,7 +55,7 @@ test.describe('Delete App Tests', () => {
   test('Delete App 2: Cancel app deletion', async ({ page }) => {
     
     // Step 1: Login and navigate to org
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     

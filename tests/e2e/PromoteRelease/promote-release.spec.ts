@@ -22,7 +22,7 @@ test.describe('Promote Release Tests', () => {
     const testBundleDir = path.join(__dirname, '../../fixtures/test-bundle');
     
     // Navigate to create release page
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -112,7 +112,7 @@ test.describe('Promote Release Tests', () => {
     });
     
     // Step 2: Navigate to Staging deployment view
-    await page.goto('http://localhost:3000/dashboard/test-org-1/TestApp?deployment=Staging');
+    await page.goto('/dashboard/test-org-1/TestApp?deployment=Staging');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
@@ -162,7 +162,7 @@ test.describe('Promote Release Tests', () => {
     await page.waitForTimeout(2000);
     
     // Step 8: Navigate to Production and verify release exists there
-    await page.goto('http://localhost:3000/dashboard/test-org-1/TestApp?deployment=Production');
+    await page.goto('/dashboard/test-org-1/TestApp?deployment=Production');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
@@ -184,7 +184,7 @@ test.describe('Promote Release Tests', () => {
     });
     
     // Step 2: Navigate to Production deployment view
-    await page.goto('http://localhost:3000/dashboard/test-org-1/TestApp?deployment=Production');
+    await page.goto('/dashboard/test-org-1/TestApp?deployment=Production');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
@@ -219,7 +219,7 @@ test.describe('Promote Release Tests', () => {
     await page.waitForTimeout(2000);
     
     // Step 6: Verify in Staging
-    await page.goto('http://localhost:3000/dashboard/test-org-1/TestApp?deployment=Staging');
+    await page.goto('/dashboard/test-org-1/TestApp?deployment=Staging');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
@@ -240,7 +240,7 @@ test.describe('Promote Release Tests', () => {
     });
     
     // Step 2: Open release detail and promote modal
-    await page.goto('http://localhost:3000/dashboard/test-org-1/TestApp?deployment=Staging');
+    await page.goto('/dashboard/test-org-1/TestApp?deployment=Staging');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
@@ -265,7 +265,7 @@ test.describe('Promote Release Tests', () => {
     await page.waitForTimeout(2000);
     
     // Step 5: Verify release was NOT promoted to Production
-    await page.goto('http://localhost:3000/dashboard/test-org-1/TestApp?deployment=Production');
+    await page.goto('/dashboard/test-org-1/TestApp?deployment=Production');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
@@ -275,7 +275,7 @@ test.describe('Promote Release Tests', () => {
     expect(existsInProduction).toBe(false);
     
     // Step 6: Verify release still exists in Staging
-    await page.goto('http://localhost:3000/dashboard/test-org-1/TestApp?deployment=Staging');
+    await page.goto('/dashboard/test-org-1/TestApp?deployment=Staging');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
@@ -298,7 +298,7 @@ test.describe('Promote Release Tests', () => {
     });
     
     // Step 2: Promote to Production
-    await page.goto('http://localhost:3000/dashboard/test-org-1/TestApp?deployment=Staging');
+    await page.goto('/dashboard/test-org-1/TestApp?deployment=Staging');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
@@ -329,7 +329,7 @@ test.describe('Promote Release Tests', () => {
     await page.waitForTimeout(3000);
     
     // Step 3: Verify promoted release has same description in Production
-    await page.goto('http://localhost:3000/dashboard/test-org-1/TestApp?deployment=Production');
+    await page.goto('/dashboard/test-org-1/TestApp?deployment=Production');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     
@@ -359,7 +359,7 @@ test.describe('Promote Release Tests', () => {
     });
     
     // Step 2: Open promote modal
-    await page.goto('http://localhost:3000/dashboard/test-org-1/TestApp?deployment=Staging');
+    await page.goto('/dashboard/test-org-1/TestApp?deployment=Staging');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
     

@@ -5,6 +5,7 @@ import {
   AuthenticatedActionFunction,
   authenticateLoaderRequest,
 } from "~/utils/authenticate";
+import { isTestMode, getBackendUrl } from "~/utils/test-mode";
 
 const addCollabarator: AuthenticatedActionFunction = async ({
   user,
@@ -15,8 +16,8 @@ const addCollabarator: AuthenticatedActionFunction = async ({
   const body = await request.json();
 
   // Use proxy in test mode
-  if (process.env.OAUTH_TEST_MODE === "true") {
-    const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+  if (isTestMode()) {
+    const backendUrl = getBackendUrl();
     const appId = params.app ?? "";
     const email = body.email ?? "";
     const tenant = body.tenant ?? "";
@@ -63,8 +64,8 @@ const removeCollabarator: AuthenticatedActionFunction = async ({
   const tenant = request.headers.get("tenant") ?? "";
 
   // Use proxy in test mode
-  if (process.env.OAUTH_TEST_MODE === "true") {
-    const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+  if (isTestMode()) {
+    const backendUrl = getBackendUrl();
     const appId = params.app ?? "";
 
     // Mock backend expects DELETE /apps/:appName/collaborators/:email with tenant header
@@ -107,8 +108,8 @@ const updateCollabarator: AuthenticatedActionFunction = async ({
   const body = await request.json();
 
   // Use proxy in test mode
-  if (process.env.OAUTH_TEST_MODE === "true") {
-    const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+  if (isTestMode()) {
+    const backendUrl = getBackendUrl();
     const appId = params.app ?? "";
     const email = body.email ?? "";
     const tenant = body.tenant ?? "";
@@ -153,8 +154,8 @@ export const loader = authenticateLoaderRequest(
     const userId = user.user.id;
 
     // Use proxy in test mode
-    if (process.env.OAUTH_TEST_MODE === "true") {
-      const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+    if (isTestMode()) {
+      const backendUrl = getBackendUrl();
       const tenant = request.headers.get("tenant") ?? "";
       const appId = params.app ?? "";
 

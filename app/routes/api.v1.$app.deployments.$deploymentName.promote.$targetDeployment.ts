@@ -4,6 +4,7 @@ import {
   authenticateActionRequest,
   AuthenticatedActionFunction,
 } from "~/utils/authenticate";
+import { isTestMode, getBackendUrl } from "~/utils/test-mode";
 
 const promoteRelease: AuthenticatedActionFunction = async ({
   user,
@@ -14,8 +15,8 @@ const promoteRelease: AuthenticatedActionFunction = async ({
   const body = await request.json();
 
   // Use proxy in test mode
-  if (process.env.OAUTH_TEST_MODE === "true") {
-    const backendUrl = process.env.DELIVR_BACKEND_URL || "http://localhost:3001";
+  if (isTestMode()) {
+    const backendUrl = getBackendUrl();
     const appId = params.app ?? "";
     const sourceDeployment = params.deploymentName ?? "";
     const targetDeployment = params.targetDeployment ?? "";

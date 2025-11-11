@@ -11,7 +11,7 @@ test.describe('Create Token Tests', () => {
     test.setTimeout(60000); // 60 seconds
     
     // Step 1: Login
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -77,7 +77,7 @@ test.describe('Create Token Tests', () => {
   test('Token 2: Validation - Empty token name', async ({ page }) => {
     
     // Step 1: Login and navigate to token page
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
@@ -133,7 +133,7 @@ test.describe('Create Token Tests', () => {
       
       // Login and navigate to token page
       if (accessType === 'Read') {
-        await page.goto('http://localhost:3000/test-login');
+        await page.goto('/test-login');
         await page.waitForURL('**/dashboard**', { timeout: 10000 });
         await page.waitForTimeout(2000);
         

@@ -9,7 +9,7 @@ test.describe('Create Release - Validation Tests', () => {
   
   // Helper function to navigate to create release page
   async function navigateToCreateRelease(page: any) {
-    await page.goto('http://localhost:3000/test-login');
+    await page.goto('/test-login');
     await page.waitForURL('**/dashboard**', { timeout: 10000 });
     await page.waitForTimeout(2000);
     
