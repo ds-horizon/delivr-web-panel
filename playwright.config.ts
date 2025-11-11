@@ -56,8 +56,10 @@ export default defineConfig({
   ],
 
   // Run your local dev server before starting the tests
+  // Use NODE_ENV=development to avoid hydration issues
+  // Test mode is detected by DELIVR_BACKEND_URL pointing to mock server
   webServer: {
-    command: 'OAUTH_TEST_MODE=true DELIVR_BACKEND_URL=http://localhost:3001 pnpm dev',
+    command: 'NODE_ENV=development DELIVR_BACKEND_URL=http://localhost:3001 pnpm dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,

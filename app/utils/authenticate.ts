@@ -8,6 +8,7 @@ import {
 import { AxiosError } from "axios";
 import { AuthenticatorService } from "~/.server/services/Auth/Auth";
 import { User } from "~/.server/services/Auth/Auth.interface";
+import { isTestMode } from "~/utils/test-mode";
 
 export enum ActionMethods {
   POST = "POST",
@@ -24,8 +25,8 @@ type AuthenticatedLoaderFunction = (
 
 export const authenticateLoaderRequest = (cb?: AuthenticatedLoaderFunction) => {
   return async (args: LoaderFunctionArgs) => {
-    // Short-circuit auth in mock E2E mode
-    if (process.env.OAUTH_TEST_MODE === "true") {
+    // Short-circuit auth in test mode
+    if (isTestMode()) {
       const user = { user: { id: "test-user-playwright" } } as unknown as User;
       try {
         return (await cb?.({ ...args, user })) ?? user;
@@ -74,8 +75,8 @@ export const authenticateActionRequest = (
         { status: 405 }
       );
     }
-    // Short-circuit auth in mock E2E mode
-    if (process.env.OAUTH_TEST_MODE === "true") {
+    // Short-circuit auth in test mode
+    if (isTestMode()) {
       const user = { user: { id: "test-user-playwright" } } as unknown as User;
       try {
         return await cb[method]!({ ...args, user });
