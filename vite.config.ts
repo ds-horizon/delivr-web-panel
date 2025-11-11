@@ -4,7 +4,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [
-    process.env.VITEST
+    process.env.NODE_ENV === "test"
       ? null
       : remix({
           future: {
