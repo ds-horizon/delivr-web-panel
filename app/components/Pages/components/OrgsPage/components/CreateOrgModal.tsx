@@ -10,6 +10,7 @@ import { useState } from "react";
 import { notifications } from "@mantine/notifications";
 import axios from "axios";
 import { route } from "routes-gen";
+import { extractErrorMessage } from "~/utils/extractErrorMessage";
 
 type CreateOrgModalProps = {
   onSuccess: () => void;
@@ -65,11 +66,7 @@ export function CreateOrgModal({ onSuccess }: CreateOrgModalProps) {
 
       onSuccess();
     } catch (error: any) {
-      const errorMessage = typeof error.response?.data?.message === 'string' 
-        ? error.response.data.message 
-        : typeof error.response?.data === 'string'
-        ? error.response.data
-        : error.message || "Failed to create organization";
+      const errorMessage = extractErrorMessage(error, "Failed to create organization");
       
       notifications.show({
         title: "Error",
