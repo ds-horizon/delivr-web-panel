@@ -74,8 +74,14 @@ pnpm start
 ### Additional Commands
 
 ```bash
-# Run tests
+# Run unit tests
 pnpm test
+
+# Run E2E tests (requires mock server - see E2E_TESTING_GUIDE.md)
+pnpm test:e2e              # Headless mode
+pnpm test:e2e:headed        # Visible browser
+pnpm test:e2e:ui           # Interactive UI mode
+pnpm test:e2e:debug        # Debug mode
 
 # Run linting
 pnpm lint
@@ -86,6 +92,18 @@ pnpm typecheck
 # Generate routes and config
 pnpm gen:routes && pnpm gen:config
 ```
+
+### Documentation
+
+- **[E2E Testing Guide](./E2E_TESTING_GUIDE.md)** - Complete guide for running and maintaining end-to-end tests
+
+### E2E Testing
+
+For complete E2E testing setup and instructions, see **[E2E_TESTING_GUIDE.md](./E2E_TESTING_GUIDE.md)**.
+
+**Quick Start:**
+1. Start mock server: `cd code-push-server/e2e-mocks && docker-compose up -d && ./register-expectations.sh`
+2. Run tests: `pnpm test:e2e:headed`
 
 ## 📱 How to Use Delivr
 

@@ -85,7 +85,7 @@ pnpm test:e2e:debug
 
 That's it! Playwright automatically:
 - ✅ Starts the frontend dev server with test mode enabled
-- ✅ Sets `OAUTH_TEST_MODE=true` and `DELIVR_BACKEND_URL=http://localhost:3001`
+- ✅ Sets `NODE_ENV=development` and `DELIVR_BACKEND_URL=http://localhost:3001`
 - ✅ Enables test login bypass (`/test-login` route)
 - ✅ Points all API calls to the mock server
 
@@ -252,8 +252,13 @@ test.describe('Feature Name', () => {
 
 When running E2E tests, Playwright automatically sets:
 
-- `OAUTH_TEST_MODE=true` - Enables test login bypass
+- `NODE_ENV=development` - Keeps dev server in development mode (avoids hydration issues)
 - `DELIVR_BACKEND_URL=http://localhost:3001` - Points to mock server
+
+**Test Mode Detection:**
+- Test mode is automatically detected when `DELIVR_BACKEND_URL` points to the mock server (`http://localhost:3001`)
+- The `isTestMode()` utility function checks this condition
+- This enables test login bypass and routes API calls to the mock server
 
 **Important:** These are set automatically by `playwright.config.ts`. You don't need to set them manually.
 
@@ -264,7 +269,7 @@ If you want to manually test the application in test mode:
 ```bash
 # Start frontend in test mode manually
 cd delivr-web-panel
-OAUTH_TEST_MODE=true DELIVR_BACKEND_URL=http://localhost:3001 pnpm dev
+NODE_ENV=development DELIVR_BACKEND_URL=http://localhost:3001 pnpm dev
 
 # Then in browser:
 # 1. Go to http://localhost:3000/test-login
@@ -272,14 +277,17 @@ OAUTH_TEST_MODE=true DELIVR_BACKEND_URL=http://localhost:3001 pnpm dev
 # 3. Should use mock server at http://localhost:3001
 ```
 
+**Note:** Test mode is detected automatically when `DELIVR_BACKEND_URL=http://localhost:3001` is set.
+
 ### Why Not NODE_ENV=test?
 
-We use `OAUTH_TEST_MODE=true` instead of `NODE_ENV=test` because:
+We use `DELIVR_BACKEND_URL` to detect test mode instead of `NODE_ENV=test` because:
 
-- `NODE_ENV=test` caused hydration errors (Remix plugin was excluded in `vite.config.ts`)
-- `OAUTH_TEST_MODE` is a custom variable that doesn't interfere with build tools
-- `NODE_ENV` remains `"development"` for the dev server, preventing build issues
-- `process.env.VITEST` is used to distinguish unit tests from e2e dev server
+- `NODE_ENV=test` caused hydration errors with Remix/Vite (asset manifest issues)
+- `NODE_ENV` remains `"development"` for the dev server, preventing build and hydration issues
+- Test mode is detected by checking if `DELIVR_BACKEND_URL === "http://localhost:3001"`
+- This approach is simpler and doesn't interfere with build tools
+- The `isTestMode()` utility function in `app/utils/test-mode.ts` centralizes this logic
 
 ## Mock Server
 
@@ -553,6 +561,9 @@ If you encounter issues:
 
 ---
 
-**Last Updated:** Based on current implementation using `OAUTH_TEST_MODE=true` and mock server at `http://localhost:3001`
+**Last Updated:** Based on current implementation using `DELIVR_BACKEND_URL=http://localhost:3001` for test mode detection and mock server at `http://localhost:3001`
+
+
+
 
 
