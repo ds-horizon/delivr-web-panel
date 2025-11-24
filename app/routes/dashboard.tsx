@@ -1,5 +1,4 @@
 import { Flex, Group, Text, Box, Skeleton, useMantineTheme } from "@mantine/core";
-import { IconRocket } from "@tabler/icons-react";
 import { Outlet, useLoaderData, useNavigate, useParams, useLocation } from "@remix-run/react";
 import { route } from "routes-gen";
 import type { User } from "~/.server/services/Auth/Auth.interface";import { authenticateLoaderRequest } from "~/utils/authenticate";
@@ -8,6 +7,7 @@ import { ActionIcon, Tooltip } from "@mantine/core";
 import { IconHelp } from "@tabler/icons-react";
 import { CombinedSidebar } from "~/components/Pages/components/AppDetailPage/components/CombinedSidebar";
 import { useGetOrgList } from "~/components/Pages/components/OrgListNavbar/hooks/useGetOrgList";
+import delivrFavicon from "~/assets/images/delivr-favicon.svg";
 
 export const loader = authenticateLoaderRequest();
 
@@ -38,7 +38,7 @@ export default function Dashboard() {
       <Flex h="100vh" direction="column">
         <Box
           style={{
-            background: theme.other.brand.gradient,
+            background: theme.other.backgrounds.subtle,
             borderBottom: "none",
             paddingTop: theme.other.spacing.lg,
             paddingBottom: theme.other.spacing.lg,
@@ -50,11 +50,19 @@ export default function Dashboard() {
               style={{ cursor: "pointer" }} 
               onClick={() => navigate(route("/dashboard"))}
             >
-              <IconRocket size={theme.other.sizes.icon["3xl"]} color={theme.other.text.white} stroke={2} />
+              <img
+                src={delivrFavicon}
+                alt="Delivr"
+                style={{
+                  height: theme.other.sizes.icon["3xl"],
+                  width: "auto",
+                  display: "block",
+                }}
+              />
               <Text 
                 size="xl" 
                 fw={theme.other.typography.fontWeight.bold} 
-                c="white"
+                c={theme.other.text.primary}
                 style={{
                   fontSize: theme.other.typography.fontSize["2xl"],
                   letterSpacing: theme.other.typography.letterSpacing.wide,
@@ -70,7 +78,7 @@ export default function Dashboard() {
                   fw={600}
                   onClick={() => window.open('https://delivr.live/dota', '_blank')}
                   style={{ 
-                    color: theme.other.text.white,
+                    color: theme.other.text.primary,
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
                     letterSpacing: '0.5px'
