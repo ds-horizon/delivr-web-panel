@@ -68,7 +68,7 @@ export default function Dashboard() {
                 <Text
                   size="md"
                   fw={600}
-                  onClick={() => window.open('https://dota.dreamsportslabs.com/', '_blank')}
+                  onClick={() => window.open('https://delivr.live/dota', '_blank')}
                   style={{ 
                     color: theme.other.text.white,
                     cursor: 'pointer',
