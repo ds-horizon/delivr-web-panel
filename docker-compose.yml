@@ -4,7 +4,7 @@ services:
   delivr-web-panel:
     build:
       context: .
-      dockerfile:   
+      dockerfile: Dockerfile
     container_name: delivr-web-panel
     ports:
       - "3000:3000"
