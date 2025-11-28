@@ -12,6 +12,7 @@ import {
   useMantineTheme,
   ThemeIcon,
   Stack,
+  ModalBaseCloseButtonProps,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useCreateToken } from "./hooks/useCreateToken";
@@ -36,6 +37,9 @@ export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
       },
     },
   });
+  const closeButtonProps = {
+    "data-testid": "close-token-modal",
+  } as ModalBaseCloseButtonProps;
   return (
     <Modal
       opened={open}
@@ -61,6 +65,7 @@ export function CreateTokenForm({ open, onClose }: CreateTokenFormProps) {
       centered
       padding="xl"
       radius="md"
+      closeButtonProps={closeButtonProps}
     >
       <Box>
         <Stack gap="lg" mt="md">

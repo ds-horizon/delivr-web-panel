@@ -1,4 +1,4 @@
-import { json } from "@remix-run/react";
+import { json } from "@remix-run/node";
 import { CodepushService } from "~/.server/services/Codepush";
 import { CreateAppRequest } from "~/.server/services/Codepush/types";
 import {
@@ -6,11 +6,65 @@ import {
   AuthenticatedActionFunction,
   authenticateLoaderRequest,
 } from "~/utils/authenticate";
+import { isTestMode, getBackendUrl } from "~/utils/test-mode";
 
 const createDeployment: AuthenticatedActionFunction = async ({
   user,
   request,
+  params,
 }) => {
+  const userId = user.user.id;
+  const { org } = params;
+
+  // Use proxy in test mode
+  if (isTestMode()) {
+    const backendUrl = getBackendUrl();
+    const bodyText = await request.text();
+    const bodyData = JSON.parse(bodyText);
+
+    // If org is "new", use the tenant creation endpoint
+    if (org === "new") {
+      const resp = await fetch(`${backendUrl}/api/v1/new/apps`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userId}`,
+        },
+        body: bodyText,
+      });
+
+      const ct = resp.headers.get("content-type") || "";
+      if (ct.includes("application/json")) {
+        const data = await resp.json();
+        return json(data, { status: resp.status });
+      }
+      return new Response(await resp.text(), { status: resp.status });
+    }
+
+    // For existing org, POST to /apps with tenantId in body
+    const appPayload = {
+      name: bodyData.name,
+      tenantId: org,
+    };
+
+    const resp = await fetch(`${backendUrl}/apps`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userId}`,
+      },
+      body: JSON.stringify(appPayload),
+    });
+
+    const ct = resp.headers.get("content-type") || "";
+    if (ct.includes("application/json")) {
+      const data = await resp.json();
+      return json(data, { status: resp.status });
+    }
+    return new Response(await resp.text(), { status: resp.status });
+  }
+
+  // Real dashboard path (unchanged)
   const body = await request.json();
 
   const payload: CreateAppRequest = body.orgId?.length
@@ -30,6 +84,31 @@ const createDeployment: AuthenticatedActionFunction = async ({
 };
 
 export const loader = authenticateLoaderRequest(async ({ user, params }) => {
+  const userId = user.user.id;
+
+  // Use proxy in test mode
+  if (isTestMode()) {
+    const backendUrl = getBackendUrl();
+    const { org } = params;
+
+    const resp = await fetch(`${backendUrl}/apps`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userId}`,
+        tenant: org, // Mock backend expects tenant header
+      },
+    });
+
+    const ct = resp.headers.get("content-type") || "";
+    if (ct.includes("application/json")) {
+      const data = await resp.json();
+      return json(data, { status: resp.status });
+    }
+    return new Response(await resp.text(), { status: resp.status });
+  }
+
+  // Real dashboard path (unchanged)
   const { data, status } = await CodepushService.getAppsForTenants({
     userId: user.user.id,
     tenant: params.org ?? "",

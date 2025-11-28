@@ -10,3 +10,11 @@ app/routes.d.ts
 coverage
 
 app/config.json
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/tests/e2e/screenshots/*.png
+!tests/e2e/screenshots/.gitkeep
+.DS_Store

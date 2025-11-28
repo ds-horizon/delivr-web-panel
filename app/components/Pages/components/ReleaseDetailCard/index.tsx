@@ -192,11 +192,11 @@ export function ReleaseDetailCard({
             </Tooltip>
           </Flex>
           <Group>
-            <Button radius="xl" onClick={onEditClick}>
+            <Button radius="xl" onClick={onEditClick} data-testid="release-detail-edit">
               Edit
             </Button>
 
-            <Button radius="xl" onClick={onPromoteClick}>
+            <Button radius="xl" onClick={onPromoteClick} data-testid="release-detail-promote">
               Promote
             </Button>
           </Group>

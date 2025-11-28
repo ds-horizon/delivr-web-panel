@@ -90,6 +90,7 @@ export default function AppDetails() {
           <CTAButton
             leftSection={<IconUserPlus size={theme.other.sizes.icon.lg} />}
             onClick={() => setAddCollaboratorOpen(true)}
+            data-testid="add-collaborator-button"
           >
             Add Collaborator
           </CTAButton>

@@ -55,6 +55,7 @@ export function AddCollboratorForm({ open, onClose, onSuccess }: AddCollboratorF
           required
           withAsterisk
           size="md"
+          data-testid="add-collaborator-email-input"
           styles={{
             input: {
               "&:focus": {
@@ -68,6 +69,7 @@ export function AddCollboratorForm({ open, onClose, onSuccess }: AddCollboratorF
           size="md"
           disabled={!!Object.keys(form.errors).length || isLoading}
           loading={isLoading}
+          data-testid="add-collaborator-submit-button"
           onClick={() => {
             // Validate before submitting
             if (form.validate().hasErrors) {

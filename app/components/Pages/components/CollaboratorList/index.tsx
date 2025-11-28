@@ -86,6 +86,7 @@ export function CollabaratorList({
           <CTAButton
             leftSection={<IconUserPlus size={theme.other.sizes.icon.lg} />}
             onClick={() => setOpen(true)}
+            data-testid="add-collaborator-button-empty"
           >
             Add Collaborator
           </CTAButton>
@@ -241,7 +242,12 @@ function CollaboratorRow({
               {initials}
             </Text>
           </Box>
-          <Text fw={theme.other.typography.fontWeight.medium} size="sm" style={{ wordBreak: "break-all" }}>
+          <Text 
+            fw={theme.other.typography.fontWeight.medium} 
+            size="sm" 
+            style={{ wordBreak: "break-all" }}
+            data-testid={`collaborator-email-${collaborator.name.replace(/[@.]/g, '-')}`}
+          >
             {collaborator.name}
           </Text>
         </Group>
@@ -282,6 +288,7 @@ function CollaboratorRow({
           onChange={handlePermissionChange}
           disabled={isLoading}
           size="sm"
+          data-testid={`collaborator-permission-select-${collaborator.name.replace(/[@.]/g, '-')}`}
           styles={{
             input: {
               borderColor: theme.other.borders.primary,
@@ -301,6 +308,7 @@ function CollaboratorRow({
             onClick={handleDelete}
             loading={isDeleting}
             disabled={isLoading}
+            data-testid={`remove-collaborator-button-${collaborator.name.replace(/[@.]/g, '-')}`}
           >
             <IconTrash size={theme.other.sizes.icon.md} />
           </ActionIcon>

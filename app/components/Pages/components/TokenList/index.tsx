@@ -113,6 +113,7 @@ const TokenAction = ({ selected, refetch }: TokenActionProps) => {
             onClick={() => setOpen(true)}
             variant="gradient"
             gradient={{ from: theme.other.brand.primary, to: theme.other.brand.secondary, deg: 135 }}
+            data-testid="create-token-button"
             styles={{
               root: {
                 transition: "all 200ms ease",

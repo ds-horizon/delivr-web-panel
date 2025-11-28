@@ -1,6 +1,7 @@
 import { ActionFunction } from "@remix-run/node";
 import { authenticateActionRequest } from "~/utils/authenticate";
 import { CodepushService } from "~/.server/services/Codepush";
+import { isTestMode, getBackendUrl } from "~/utils/test-mode";
 
 export const action: ActionFunction = authenticateActionRequest({
   POST: async ({ request, params, user }) => {
@@ -14,7 +15,48 @@ export const action: ActionFunction = authenticateActionRequest({
     }
 
     try {
-      // Parse the multipart form data
+      const userId = user.user.id;
+
+      // Use proxy in test mode
+      if (isTestMode()) {
+        const backendUrl = getBackendUrl();
+        
+        // Parse the multipart form data
+        const formData = await request.formData();
+        
+        // Create new FormData for forwarding to mock backend
+        const forwardFormData = new FormData();
+        
+        // Copy all fields from the original form data
+        for (const [key, value] of formData.entries()) {
+          forwardFormData.append(key, value);
+        }
+        
+        // Forward to mock backend
+        const appIdentifier = `${org}/${app}`;
+        const resp = await fetch(
+          `${backendUrl}/apps/${appIdentifier}/deployments/${deploymentName}/release`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${userId}`,
+            },
+            body: forwardFormData,
+          }
+        );
+
+        const ct = resp.headers.get("content-type") || "";
+        if (ct.includes("application/json")) {
+          const data = await resp.json();
+          return new Response(JSON.stringify(data), {
+            status: resp.status,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+        return new Response(await resp.text(), { status: resp.status });
+      }
+
+      // Real dashboard path (unchanged)
       const formData = await request.formData();
       const packageFile = formData.get("package") as File;
       const packageInfoStr = formData.get("packageInfo") as string;

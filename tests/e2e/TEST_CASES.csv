@@ -1,0 +1,78 @@
+Category,Test ID,Test Name,File Path
+Authentication,LOGIN-1,should display the login page correctly,Authentication/login-simple.spec.ts
+Authentication,LOGIN-2,should have a clickable Google login button,Authentication/login-simple.spec.ts
+Authentication,LOGIN-3,should initiate OAuth flow when clicking login button,Authentication/login-simple.spec.ts
+Authentication,LOGIN-4,should check if OAUTH_TEST_MODE is working,Authentication/login-simple.spec.ts
+Authentication,LOGOUT-1,Successfully logout from application,Authentication/logout.spec.ts
+Organization Management,ORG-1,Create Organization with App,OrganizationManagement/create-delete-org.spec.ts
+Organization Management,ORG-2,Delete Organization (Owner Only),OrganizationManagement/create-delete-org.spec.ts
+Organization Management,ORG-3,Cancel Organization Deletion,OrganizationManagement/create-delete-org.spec.ts
+Organization Management,ORG-4,Duplicate Organization Name Should Be Rejected,OrganizationManagement/create-delete-org.spec.ts
+App Management,APP-1,Successfully create a new app under existing org,AppManagement/create-app.spec.ts
+App Management,APP-2,Validation - Empty app name,AppManagement/create-app.spec.ts
+App Management,APP-3,Duplicate App Name in Same Organization Should Be Rejected,AppManagement/create-app.spec.ts
+App Management,APP-DELETE-1,Successfully delete an app,AppManagement/delete-app.spec.ts
+App Management,APP-DELETE-2,Cancel app deletion,AppManagement/delete-app.spec.ts
+Deployment Key,DEPLOY-1,Successfully create a new deployment key,DeploymentKey/create-deployment-key.spec.ts
+Deployment Key,DEPLOY-2,Validation - Empty deployment name,DeploymentKey/create-deployment-key.spec.ts
+Deployment Key,DEPLOY-3,Validation - Name too short (< 3 characters),DeploymentKey/create-deployment-key.spec.ts
+Deployment Key,DEPLOY-4,Validation - Invalid characters,DeploymentKey/create-deployment-key.spec.ts
+Deployment Key,DEPLOY-5,Valid names with dashes and underscores,DeploymentKey/create-deployment-key.spec.ts
+Deployment Key,DEPLOY-6,Cancel deployment creation,DeploymentKey/create-deployment-key.spec.ts
+Token Management,TOKEN-1,Create token via user profile menu,TokenManagement/create-token.spec.ts
+Token Management,TOKEN-2,Validation - Empty token name,TokenManagement/create-token.spec.ts
+Token Management,TOKEN-3,Create token with different access types,TokenManagement/create-token.spec.ts
+Token Management,TOKEN-DELETE-1,Delete a single token,TokenManagement/delete-token.spec.ts
+Token Management,TOKEN-DELETE-2,Delete multiple tokens,TokenManagement/delete-token.spec.ts
+Token Management,TOKEN-DELETE-3,Select and deselect token,TokenManagement/delete-token.spec.ts
+Create Release - Validations,RELEASE-VAL-1,Should prevent proceeding without bundle upload (Step 1),CreateRelease/create-release-validations.spec.ts
+Create Release - Validations,RELEASE-VAL-2,Should prevent proceeding without app version (Step 2),CreateRelease/create-release-validations.spec.ts
+Create Release - Validations,RELEASE-VAL-3,Should prevent proceeding without deployment selection (Step 2),CreateRelease/create-release-validations.spec.ts
+Create Release - Validations,RELEASE-VAL-4,Should accept valid semver format and reject invalid,CreateRelease/create-release-validations.spec.ts
+Create Release - Validations,RELEASE-VAL-5,Should allow optional description field,CreateRelease/create-release-validations.spec.ts
+Create Release - Validations,RELEASE-VAL-6,Should handle long description text,CreateRelease/create-release-validations.spec.ts
+Create Release - Validations,RELEASE-VAL-7,Should handle empty/minimal bundle appropriately,CreateRelease/create-release-validations.spec.ts
+Create Release - Validations,RELEASE-VAL-8,Should allow removing uploaded bundle and require re-upload,CreateRelease/create-release-validations.spec.ts
+Create Release - Navigation,RELEASE-NAV-1,Cancel via Back Arrow at Step 1 (Bundle Upload),CreateRelease/create-release-navigation.spec.ts
+Create Release - Navigation,RELEASE-NAV-2,Cancel via Back Arrow at Step 2 (Metadata),CreateRelease/create-release-navigation.spec.ts
+Create Release - Navigation,RELEASE-NAV-3,Cancel via Back Arrow at Step 3 (Rollout),CreateRelease/create-release-navigation.spec.ts
+Create Release - Navigation,RELEASE-NAV-4,Cancel from Review Modal,CreateRelease/create-release-navigation.spec.ts
+Create Release - Navigation,RELEASE-NAV-5,Back Navigation - Data Retention (Step 2 → Step 1),CreateRelease/create-release-navigation.spec.ts
+Create Release - Navigation,RELEASE-NAV-6,Close and Reopen Modal - Verify Reset,CreateRelease/create-release-navigation.spec.ts
+Create Release - Status,RELEASE-STATUS-1,Create ACTIVE release (Disabled toggle OFF),CreateRelease/create-release-status.spec.ts
+Create Release - Status,RELEASE-STATUS-2,Create INACTIVE release (Disabled toggle ON),CreateRelease/create-release-status.spec.ts
+Create Release - Configurations,RELEASE-CONFIG-1,Create release with 1% rollout (minimum),CreateRelease/create-release-configurations.spec.ts
+Create Release - Configurations,RELEASE-CONFIG-2,Create release with 50% rollout,CreateRelease/create-release-configurations.spec.ts
+Create Release - Configurations,RELEASE-CONFIG-3,Create release with 100% rollout (maximum),CreateRelease/create-release-configurations.spec.ts
+Create Release - Configurations,RELEASE-CONFIG-4,Create release for Staging deployment,CreateRelease/create-release-configurations.spec.ts
+Create Release - Configurations,RELEASE-CONFIG-5,Create release for Production deployment,CreateRelease/create-release-configurations.spec.ts
+Create Release - Review,RELEASE-REVIEW-1,All details should be displayed correctly in review modal,CreateRelease/create-release-review.spec.ts
+Create Release - Review,RELEASE-REVIEW-2,Edit from Review - Go back and modify details,CreateRelease/create-release-review.spec.ts
+Create Release - Duplication,RELEASE-DUP-1,Should ALLOW new release when previous has 100% rollout,CreateRelease/create-release-duplication.spec.ts
+Create Release - Duplication,RELEASE-DUP-2,Should prevent creating new release when previous has <100% rollout,CreateRelease/create-release-duplication.spec.ts
+Create Release - Duplication,RELEASE-DUP-3,Should ALLOW new release when previous is DISABLED (inactive),CreateRelease/create-release-duplication.spec.ts
+Edit Release,EDIT-1,Update Description,EditRelease/edit-release.spec.ts
+Edit Release,EDIT-2,Change Rollout Percentage,EditRelease/edit-release.spec.ts
+Edit Release,EDIT-3,Toggle Disabled Status,EditRelease/edit-release.spec.ts
+Edit Release,EDIT-5,Update Target Version,EditRelease/edit-release.spec.ts
+Edit Release,EDIT-6,Multiple Fields - Comprehensive Edit,EditRelease/edit-release.spec.ts
+Edit Release,EDIT-7,Cancel Edit - Changes Not Saved,EditRelease/edit-release.spec.ts
+Promote Release,PROMOTE-1,Promote from Staging to Production,PromoteRelease/promote-release.spec.ts
+Promote Release,PROMOTE-2,Promote from Production to Staging,PromoteRelease/promote-release.spec.ts
+Promote Release,PROMOTE-3,Cancel Promotion,PromoteRelease/promote-release.spec.ts
+Promote Release,PROMOTE-4,Verify Promoted Release Maintains Metadata,PromoteRelease/promote-release.spec.ts
+Promote Release,PROMOTE-5,Cannot Promote Without Selecting Deployment,PromoteRelease/promote-release.spec.ts
+Empty States,EMPTY-1,No Releases Message Displayed,EmptyStates/no-releases.spec.ts
+Empty States,EMPTY-2,No Tokens Message Displayed,EmptyStates/no-tokens.spec.ts
+Empty States,EMPTY-3,No Organizations - Welcome Message Displayed,EmptyStates/no-organizations.spec.ts
+Collaborators,COLLAB-1,Cannot Change App Creator Permission from Owner to Collaborator,Collaborators/prevent-creator-demotion.spec.ts
+Collaborators,COLLAB-2,Only Owner Can Add Collaborator,Collaborators/owner-only-permissions.spec.ts
+Collaborators,COLLAB-3,Only Owner Can Remove Collaborator,Collaborators/owner-only-permissions.spec.ts
+Collaborators,COLLAB-4,Collaborator Cannot Add Other Collaborators,Collaborators/owner-only-permissions.spec.ts
+Collaborators,COLLAB-5,Collaborator Cannot Remove Other Collaborators,Collaborators/owner-only-permissions.spec.ts
+
+
+
+
+
+

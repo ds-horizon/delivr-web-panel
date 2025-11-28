@@ -35,6 +35,7 @@ export function AppListRow({ app, onNavigate, onDelete }: AppListRowProps) {
       withBorder
       padding={0}
       radius="lg"
+      data-testid="app-card"
       style={{
         cursor: "pointer",
         transition: theme.other.transitions.normal,

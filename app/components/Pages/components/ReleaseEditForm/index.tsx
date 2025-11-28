@@ -298,6 +298,7 @@ export function ReleaseEditFormModal({ data, refetch }: ReleaseEditProps) {
             color="gray"
             onClick={close}
             disabled={isLoading}
+            data-testid="edit-release-cancel"
           >
             Cancel
           </Button>
@@ -306,6 +307,7 @@ export function ReleaseEditFormModal({ data, refetch }: ReleaseEditProps) {
             onClick={onSubmit}
             disabled={!!Object.keys(form.errors).length}
             loading={isLoading}
+            data-testid="edit-release-save"
           >
             Save Changes
           </CTAButton>

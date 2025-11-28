@@ -40,6 +40,7 @@ export function OrgCard({ org, onNavigate, onDelete }: OrgCardProps) {
       withBorder
       padding={0}
       radius="lg"
+      data-testid="org-card"
       style={{
         cursor: "pointer",
         transition: theme.other.transitions.normal,
