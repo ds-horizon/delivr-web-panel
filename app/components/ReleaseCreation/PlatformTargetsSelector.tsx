@@ -199,7 +199,10 @@ export function PlatformTargetsSelector({
           <IconTarget size={20} color={theme.colors.brand[6]} />
           <Box style={{ flex: 1 }}>
             <Text fw={600} size="sm" mb={4}>
-              Platform Targets
+              Platform Targets{' '}
+              <Text component="span" c="red" fw={600}>
+                *
+              </Text>
             </Text>
             <Text size="xs" c={theme.colors.slate[5]}>
               Select the platforms and distribution targets for this release. At least one must be selected.
