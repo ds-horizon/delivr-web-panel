@@ -383,27 +383,6 @@ export function PlatformSelector({ platformTargets, onChange }: PlatformSelector
           </Paper>
         );
       })}
-
-      {/* No Selection Warning */}
-      {platformTargets.length === 0 && (
-        <Paper
-          p="md"
-          radius="md"
-          style={{
-            backgroundColor: theme.colors.red[0],
-            border: `1px solid ${theme.colors.red[2]}`,
-          }}
-        >
-          <Group gap="sm">
-            <ThemeIcon size={32} radius="md" variant="light" color="red">
-              <IconTarget size={18} />
-            </ThemeIcon>
-            <Text size="sm" fw={500} c={theme.colors.red[8]}>
-              Please select at least one distribution target to continue
-            </Text>
-          </Group>
-        </Paper>
-      )}
     </Stack>
   );
 }
