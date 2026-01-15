@@ -8,7 +8,7 @@
  * which uses offset-based format.
  */
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import {
   Box,
   Paper,
@@ -80,13 +80,12 @@ export function RegressionSlotCardForRelease({
 }: RegressionSlotCardForReleaseProps) {
   const theme = useMantineTheme();
   const [localSlot, setLocalSlot] = useState<RegressionBuildSlotBackend>(slot);
+  const originalSlotRef = useRef<RegressionBuildSlotBackend | null>(null);
   
-  // Extract date and time from ISO string for editing
   const { date: slotDateStr, time: slotTimeStr } = extractDateAndTime(localSlot.date);
   const [localDate, setLocalDate] = useState(slotDateStr);
   const [localTime, setLocalTime] = useState(slotTimeStr);
   
-  // Update local slot when prop changes
   useEffect(() => {
     setLocalSlot(slot);
     const { date, time } = extractDateAndTime(slot.date);
@@ -94,13 +93,25 @@ export function RegressionSlotCardForRelease({
     setLocalTime(time);
   }, [slot]);
   
-  // Update slot date when date/time changes
   useEffect(() => {
     if (localDate && localTime) {
       const newISO = combineDateAndTime(localDate, localTime);
       setLocalSlot((prev) => ({ ...prev, date: newISO }));
     }
   }, [localDate, localTime]);
+
+  // Reset local state to original slot when canceling edit
+  useEffect(() => {
+    if (isEditing) {
+      originalSlotRef.current = { ...slot };
+    } else if (originalSlotRef.current && originalSlotRef.current.date === slot.date) {
+      setLocalSlot(originalSlotRef.current);
+      const { date, time } = extractDateAndTime(originalSlotRef.current.date);
+      setLocalDate(date);
+      setLocalTime(time);
+      originalSlotRef.current = null;
+    }
+  }, [isEditing, slot]);
 
   // Notify parent when editing slot changes
   useEffect(() => {
